@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account - Conquista Beblio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-bg: #f8e8d4; /* Fine-tuned background color */
+      --card-bg: #fff;
+      --accent-color: #111;
+      --text-color: #333;
+      --secondary-text: #666;
+      --border-color: rgba(102, 102, 102, 0.35);
+      --button-bg: #111;
+      --button-hover: #222;
+      --gold-accent: #ebc374;
+    }
+
+    a:link {
+      text-decoration: none;
+      color: var(--accent-color);
+    }
+    a:visited {
+      text-decoration: none;
+      color: var(--accent-color);
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--primary-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--accent-color);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--accent-color);
+    }
+
+    .logo-icon {
+      width: 30px;
+      height: 30px;
+      background-color: var(--gold-accent);
+      border-radius: 4px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent-color);
+      font-family: 'Poppins', sans-serif; /* Reverted to Poppins font */
+    }
+
+    .subtext {
+      font-size: 16px;
+      margin-bottom: 32px;
+      color: var(--secondary-text);
+      line-height: 1.5;
+    }
+
+    .subtext a {
+      font-weight: 500;
+      color: var(--accent-color);
+    }
+
+    .row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .input-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 24px;
+    }
+
+    label {
+      font-size: 15px;
+      color: var(--secondary-text);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      height: 48px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0 16px;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.2s;
+      background-color: #fafafa;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background-color: #fff;
+    }
+
+    .note {
+      font-size: 14px;
+      color: var(--secondary-text);
+      margin-top: -12px;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-group input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--accent-color);
+    }
+
+    .checkbox-group label {
+      font-size: 15px;
+      margin-bottom: 0;
+      line-height: 1.4;
+    }
+
+    .button {
+      background: var(--button-bg);
+      color: white;
+      padding: 14px;
+    
+      border-radius: 8px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-bottom: 24px;
+      width: 95%;
+    }
+    
+    .button:hover {
+      background: var(--button-hover);
+    }
+    
+    .button.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-size: 14px;
+      color: var(--secondary-text);
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .footer div {
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .footer div:hover {
+      color: var(--accent-color);
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: var(--secondary-text);
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(0,0,0,0.1);
+    }
+    
+    .divider::before {
+      margin-right: 16px;
+    }
+    
+    .divider::after {
+      margin-left: 16px;
+    }
+    
+    @media (max-width: 600px) {
+      .row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .card {
+        padding: 24px 20px;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">CB</div>
+      Conquista Beblio
+    </div>
+    <div class="nav-links">
+      <a href="#">Browse</a>
+      <a href="#">Page</a>
+      <a href="aboutUs.html">About us</a>
+      <a href="log in.html" style="background: #111; color: white; padding: 5px 12px; border-radius: 16px;">Log in</a>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>Create an account</h2>
+    <div class="subtext">Discover a great library of literary companions. Join thousands of readers who have found meaning and enrichment through our curated selection.</div>
+    
+    <div class="row">
+      <div class="input-group">
+        <label>First name</label>
+        <input type="text" />
+      </div>
+      <div class="input-group">
+        <label>Last name</label>
+        <input type="text" />
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label>Email address</label>
+      <input type="email" />
+    </div>
+    
+    <div class="row">
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" />
+      </div>
+      <div class="input-group">
+        <label>Confirm your password</label>
+        <input type="password" />
+      </div>
+    </div>
+    
+    <div class="note">Use 8 or more characters with a mix of letters, numbers & symbols</div>
+    
+    <div class="checkbox-group">
+      <input type="checkbox" id="showPassword" />
+      <label for="showPassword">Show password</label>
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="acceptTerms" />
+      <label for="acceptTerms">By continuing, you agree to the <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a></label>
+    </div>
+    
+    <div class="button">Create an account</div>
+    
+    <div class="divider">or</div>
+    
+    <div class="subtext" style="margin-bottom: 0; text-align: center;">Already have an account? <a href="log in.html">Log in</a></div>
+    
+    <div class="footer">
+      <div>Help</div>
+      <div>Privacy</div>
+      <div>Terms</div>
+    </div>
+  </div>
+</body>
+</html>
