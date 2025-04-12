@@ -173,33 +173,47 @@ body {
     background-color: var(--prime-color);
     color: black;
     padding: 40px 20px;
-  }
+}
   
-  .footer-container {
+.footer-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 10%;
-  }
+}
   
-  .footer-section h3 {
+.footer-section h3 {
     color: darkblue;
     margin-bottom: 12px;
-  }
+}
   
-  .footer-section p{
+.footer-section p{
     font-size: 15px;
     line-height: 1.6;
-  }
+}
   
-  .footer-section ul {
+.footer-section ul {
     list-style: none;
     padding: 0;
-  }
+}
 
-  .footer-bottom {
+.footer-bottom {
     text-align: center;
     margin-top: 30px;
     color: #aaa;
-  }
-  
+}
+
+.footer a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #4a90e2;
+    text-decoration: underline;
+}
+
+.footer-section h3 a {
+    color: darkblue;
+}
