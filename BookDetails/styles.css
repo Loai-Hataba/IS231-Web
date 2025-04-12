@@ -239,6 +239,11 @@ nav ul li a {
     margin-bottom: 0.5rem;
     transition: transform 0.3s ease-in-out;
 }
+.book-card img:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  cursor: pointer;
+  transform: scale(1.1);
+}
 
 .book-card-title {
     font-size: 0.9rem;
