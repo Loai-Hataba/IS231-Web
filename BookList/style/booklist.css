@@ -36,7 +36,6 @@ header {
     cursor: pointer;
     font-weight: bold;
     box-shadow: var(--box-shadow);
-    border-radius: 100%;
     transition: background-color 0.3s ease-out;
 }
 
@@ -181,7 +180,7 @@ header {
   }
   
   .footer-section h3 {
-    color: darkblue;
+    color: black;
     margin-bottom: 12px;
   }
   
