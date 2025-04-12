@@ -199,4 +199,34 @@ header {
     margin-top: 30px;
     color: #aaa;
   }
+  .footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+  
+  .footer a {
+    margin: 0 12px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .footer a:hover {
+    color: #000;
+  }
+  
+  .footer a.active {
+    font-weight: 600;
+    color: #000;
+  }
+  
+  .footer p {
+    margin: 8px 0 0;
+    color: #555;
+    font-size: 14px;
+  }
   
