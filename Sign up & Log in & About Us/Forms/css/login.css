@@ -1,0 +1,266 @@
+a:link {
+  text-decoration: none;
+  color: #111;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #fff2db;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  background: none;
+}
+
+#logo {
+  font-weight: 600;
+  font-size: 18px;
+  color: #111;
+}
+
+#nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+#nav-links a {
+  font-size: 15px;
+  color: #111;
+}
+
+#login-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 620px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  margin-top: 4px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #111;
+}
+
+#subtext-top,
+#subtext-middle,
+#subtext-bottom {
+  font-size: 14px;
+  color: #666;
+  margin: 16px 0;
+  line-height: 1.5;
+}
+
+#subtext-middle a,
+#subtext-bottom a {
+  font-weight: 500;
+  color: #111;
+}
+
+.input-group {
+  margin-bottom: 24px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid rgba(102, 102, 102, 0.35);
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 15px;
+  background-color: #fafafa;
+  box-sizing: border-box;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #111;
+  background-color: #fff;
+}
+
+/* Password field styling */
+.password-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 45px !important;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 2;
+    font-size: 18px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+/* Fix eye position when input is invalid */
+.input-group.invalid .password-toggle {
+    color: #f44336;
+}
+
+/* Add hover effect */
+.password-toggle:hover {
+    opacity: 1;
+}
+
+#remember-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 24px;
+}
+
+#remember-user input {
+  width: 16px;
+  height: 16px;
+  accent-color: #111;
+}
+
+#remember-user label {
+  font-size: 14px;
+  color: #666;
+}
+
+#login-button {
+  width: 100%;
+  background: #111;
+  color: white;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+#login-button:hover {
+  background: #222;
+}
+
+#footer {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  font-size: 14px;
+  color: #666;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+#footer a:hover {
+  color: #111;
+}
+
+@media (max-width: 660px) { /* Increased from 600px */
+  #login-card {
+    padding: 24px 20px;
+  }
+
+  #header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  #nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}
+
+#subtext-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    text-align: center;
+}
+
+#subtext-bottom a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+#subtext-bottom a:hover {
+    text-decoration: underline;
+}
+
+#subtext-bottom p {
+    margin: 0;
+    color: #666;
+}
+
+#subtext-bottom p a {
+    color: #111;
+    font-weight: 500;
+}
+/* Divider */
+#divider {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+  color: #666;
+  width: 100%;
+}
+
+#divider::before,
+#divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#divider::before { margin-right: 16px; }
+#divider::after { margin-left: 16px; }
