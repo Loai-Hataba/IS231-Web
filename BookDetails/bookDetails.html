@@ -61,8 +61,7 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn">Start Reading</button>
-                    <button class="btn btn-outline" onclick="window.location.href='../PaymentMethod/Cart/Cart.html'"> >Add to List</button>
+                    <button class="btn" onclick="window.location.href='../PaymentMethod/Cart/Cart.html'">Add to shopping cart</button>
                 </div>
                 
                 <div class="description">
@@ -122,19 +121,107 @@
                     </div>
                     <p>The concept is incredible, but I found the middle section dragged a bit. Still, the opening and conclusion are masterful, and the themes of isolation and dehumanization in modern society remain relevant more than a century later.</p>
                 </div>
+
+                <div class="review hidden">
+                    <div class="review-header">
+                        <div class="reviewer">
+                            <img src="assets/image_255.png" alt="Reviewer">
+                            <div>
+                                <h4>Anna Smith</h4>
+                                <div class="stars">★★★★★</div>
+                            </div>
+                        </div>
+                        <div class="review-date">January 10, 2025</div>
+                    </div>
+                    <p>A timeless classic that delves into the human psyche. Kafka's writing is both haunting and thought-provoking. Highly recommended!</p>
+                </div>
                 
-                <button class="btn btn-outline">Load More Reviews</button>
+                <div class="review hidden">
+                    <div class="review-header">
+                        <div class="reviewer">
+                            <img src="assets/image_255.png" alt="Reviewer">
+                            <div>
+                                <h4>John Doe</h4>
+                                <div class="stars">★★★☆☆</div>
+                            </div>
+                        </div>
+                        <div class="review-date">December 5, 2024</div>
+                    </div>
+                    <p>While the themes are profound, I found the narrative style a bit difficult to follow. Still, it's a must-read for literature enthusiasts.</p>
+                </div>
+                
+                <button class="btn" id="load-more-btn">See More</button>
+                <button class="btn hidden" id="see-less-btn">See Less</button>
             </div>
         </div>
         
         <div class="tab-content">
-            <!-- Quotes content would go here -->
-            <p>Quotes content would be displayed here when the tab is active.</p>
+            <div class="quotes-section">
+                <h2 class="section-title">Notable Quotes</h2>
+                
+                <div class="quote">
+                    <blockquote>"As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect."</blockquote>
+                    <p class="quote-context">— Opening line of The Metamorphosis</p>
+                </div>
+                
+                <div class="quote">
+                    <blockquote>"He was lying on his hard, as it were armor-plated, back and when he lifted his head a little he could see his dome-like brown belly divided into stiff arched segments."</blockquote>
+                    <p class="quote-context">— First description of Gregor's transformation</p>
+                </div>
+                
+                <div class="quote">
+                    <blockquote>"Was he an animal, that music could move him so? He felt as if the way to the unknown nourishment he longed for were coming to light."</blockquote>
+                    <p class="quote-context">— When Gregor hears his sister playing violin</p>
+                </div>
+                
+                <div class="quote">
+                    <blockquote>"The door could not be heard slamming; they had probably left it open, as is the custom in homes where a great misfortune has occurred."</blockquote>
+                    <p class="quote-context">— After Gregor's death</p>
+                </div>
+                
+                <div class="quote">
+                    <blockquote>"And it was like a confirmation of their new dreams and excellent intentions that at the end of their journey their daughter sprang to her feet first and stretched her young body."</blockquote>
+                    <p class="quote-context">— The final lines of the book</p>
+                </div>
+            </div>
         </div>
         
         <div class="tab-content">
-            <!-- Additional details content would go here -->
-            <p>Additional book details would be displayed here when the tab is active.</p>
+            <div class="details-section">
+                <h2 class="section-title">Book Details</h2>
+                
+                <div class="details-grid">
+                    <div class="details-card">
+                        <h3>Publication History</h3>
+                        <p>First published in 1915 in the October issue of the journal Die Weißen Blätter under the title "Die Verwandlung" ("The Transformation"). The first stand-alone book edition was published by Kurt Wolff Verlag in Leipzig in 1916. This edition has been widely reproduced by various publishers worldwide.</p>
+                    </div>
+                    
+                    <div class="details-card">
+                        <h3>Translation Notes</h3>
+                        <p>This edition features the renowned translation by Susan Bernofsky, considered one of the most accurate and nuanced translations of Kafka's work. Bernofsky carefully preserves Kafka's distinctive prose style while making the text accessible to modern English readers.</p>
+                    </div>
+                    
+                    <div class="details-card">
+                        <h3>Critical Reception</h3>
+                        <p>Initially received with mixed reviews, The Metamorphosis has since become recognized as one of the seminal works of 20th-century literature. Vladimir Nabokov called it "a perfect work of art," while Nobel laureate Elias Canetti credited it with having a profound influence on his own writing.</p>
+                    </div>
+                    
+                    <div class="details-card">
+                        <h3>Literary Significance</h3>
+                        <p>The Metamorphosis is considered a foundational text of existentialist literature and a pioneering work of absurdist fiction. Its themes of alienation, body horror, and family dynamics have influenced countless writers and artists across different media.</p>
+                    </div>
+                    
+                    <div class="details-card">
+                        <h3>This Edition</h3>
+                        <p>The Penguin Classics edition includes an introduction by acclaimed novelist Zadie Smith, a chronology of Kafka's life, further reading suggestions, and explanatory notes that provide context for the cultural and literary references in the text.</p>
+                    </div>
+                    
+                    <div class="details-card">
+                        <h3>Author Biography</h3>
+                        <p>Franz Kafka (1883-1924) was a German-speaking Bohemian novelist and short-story writer, widely regarded as one of the major figures of 20th-century literature. His work fuses elements of realism and the fantastic, featuring isolated protagonists facing bizarre or surrealistic predicaments and incomprehensible socio-bureaucratic powers.</p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="similar-books">
