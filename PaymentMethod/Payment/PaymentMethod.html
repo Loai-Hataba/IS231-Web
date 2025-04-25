@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - 📚 Conquista Beblio</title>
     <link rel="stylesheet" href="paymentStyles.css">
+    <script defer src="JavaScript/PaymentMethod.js"></script>
 </head>
 <body>
     <header>
-        <div class="logo">Conquista Beblio</div>
+        <div class="logo">📚 Conquista Beblio</div>
         <nav>
             <ul>
                 <li><a href="../Landing Page/Index.html">Home</a></li>
                 <li><a href="#">Shop</a></li>
                 <li><a href="../Sign up & Log in & About Us/aboutUs.html">About Us</a></li>
             </ul>
+        </nav>
     </header>
 
     <div class="container">
@@ -52,37 +54,54 @@
                 <h2 class="section-title">Payment Method</h2>
                 
                 <div class="payment-methods">
-                    <div class="payment-method active">
-                        <input type="radio" id="credit-card" name="payment" checked>
-                        <label for="credit-card">Credit Card</label>
+                    <div class="payment-method" data-payment="cash">
+                        <input type="radio" id="cash-on-delivery" name="payment">
+                        <label for="cash-on-delivery">Cash On Delivery</label>
                         <div class="payment-icons">
-                            <img src="assets/visa.png" alt="Visa">
-                            <img src="assets/mastercard.png" alt="Mastercard">
+                            <img src="../assets/cash.jpg" alt="Cash" onerror="this.src='/api/placeholder/32/32'">
                         </div>
                     </div>
                     
-                    <div class="card-details">
+                    <div class="payment-method" data-payment="credit">
+                        <input type="radio" id="credit-card" name="payment">
+                        <label for="credit-card">Credit / Debit Card</label>
+                        <div class="payment-icons">
+                            <img src="../assets/visa.png" alt="Visa" onerror="this.src='/api/placeholder/32/32'">
+                            <img src="../assets/mastercard.png" alt="Mastercard" onerror="this.src='/api/placeholder/32/32'">
+                        </div>
+                    </div>
+                    
+                    <div class="payment-details" id="credit-details">
                         <div class="form-group">
                             <label for="card-number">Card Number</label>
                             <input type="text" id="card-number" name="card-number" placeholder="XXXX XXXX XXXX XXXX">
                         </div>
                         
-                        <div class="form-group">
-                            <label for="expiry">Expiry Date</label>
-                            <input type="text" id="expiry" name="expiry" placeholder="MM/YY">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cvv">CVV</label>
-                            <input type="text" id="cvv" name="cvv" placeholder="XXX">
+                        <div class="form-group card-details-flex">
+                            <div>
+                                <label for="expiry">Expiry Date</label>
+                                <input type="text" id="expiry" name="expiry" placeholder="MM/YY">
+                            </div>
+                            
+                            <div>
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" placeholder="XXX">
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="payment-method">
+                    <div class="payment-method" data-payment="fawry">
                         <input type="radio" id="fawry" name="payment">
                         <label for="fawry">Fawry</label>
                         <div class="payment-icons">
-                            <img src="assets/fawry.png" alt="Fawry">
+                            <img src="../assets/fawry.png" alt="Fawry" onerror="this.src='/api/placeholder/32/32'">
+                        </div>
+                    </div>
+                    
+                    <div class="payment-details" id="fawry-details">
+                        <div class="form-group">
+                            <label for="fawry-number">Fawry Reference Number</label>
+                            <input type="text" id="fawry-number" name="fawry-number" placeholder="Enter your Fawry reference number">
                         </div>
                     </div>
                 </div>
@@ -95,7 +114,7 @@
                 
                 <div class="book-item">
                     <div class="book-cover">
-                        <img src="assets/the metamorphosis.png" alt="The Metamorphosis">
+                        <img src="../assets/the metamorphosis.png" alt="The Metamorphosis" onerror="this.src='/api/placeholder/80/120'">
                     </div>
                     <div class="book-info">
                         <h3>The Metamorphosis</h3>
@@ -107,7 +126,7 @@
                 
                 <div class="book-item">
                     <div class="book-cover">
-                        <img src="assets/1984.png" alt="1984">
+                        <img src="../assets/1984.png" alt="1984" onerror="this.src='/api/placeholder/80/120'">
                     </div>
                     <div class="book-info">
                         <h3>1984</h3>
@@ -132,10 +151,11 @@
                     </div>
                 </div>
                 
-                <button class="btn">Return to Cart</button>
+                <button class="btn" onclick="window.location.href='Cart.html'">Return to Cart</button>
             </div>
         </div>
     </div>
+
     <footer class="footer">
         <div>
           <a href="../Sign up & Log in & About Us/Footers/help.html">Help</a>
@@ -143,6 +163,6 @@
           <a href="../Sign up & Log in & About Us/Footers/terms.html">Terms</a>
           <a href="../Sign up & Log in & About Us/Footers/contactUs.html">Contact Us</a>
         </div>
-      </footer>
+    </footer>
 </body>
 </html>
