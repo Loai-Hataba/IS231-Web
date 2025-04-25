@@ -17,10 +17,20 @@
     --border-color: #e0d5c5;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
+    display: flex;
+    flex-direction: column;
     background-color: var(--primary-bg);
     color: var(--dark-text);
     line-height: 1.6;
+}
+
+main {
+    flex: 1;
 }
 
 header {
@@ -233,6 +243,32 @@ h1 {
     width: 100%;
     padding: 0.8rem;
 }
+
+.cart-error-msg {
+    color: #d9534f;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.arrow-down {
+    font-size: 2rem;
+    margin-top: 5px;
+    animation: bounceDown 1s infinite;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+}
+
 
 .footer {
     margin-top: 40px;
