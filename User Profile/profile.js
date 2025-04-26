@@ -29,9 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Function to initialize counters with +/- buttons
         function initCounter(cardElement, current, total) {
-            // Extract the paragraph element with the count
-            const countEl = cardElement.querySelector('p');
-            const barEl = cardElement.querySelector('.bar');
 
             // Update the UI to reflect current state
             updateCounter(cardElement, current, total);
@@ -699,10 +696,10 @@ function showCustomBookForm() {
             },
             {
                 id: '3',
-                title: '1984',
-                author: 'George Orwell',
-                image: '/assets/1984.jpg',
-                description: 'Dystopian social science fiction that explores totalitarianism.'
+                title: 'The Great Gatsby',
+                author: 'F.Scott Fitzgerald',
+                image: 'https://skyhorse-us.imgix.net/covers/9781949846386.jpg?auto=format&w=298',
+                description: 'The Great Gatsby: Jay Gatsby pursues his lost love, Daisy, in 1920s New York, exposing the hollow American Dream and materialism.'
             },
             {
                 id: '4',
