@@ -1,24 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Hide all payment details initially
     const paymentDetails = document.querySelectorAll('.payment-details');
     paymentDetails.forEach(detail => {
         detail.style.display = 'none';
     });
     
-    // Load cart data for order summary
     loadOrderSummary();
-    
-    // Add event listeners to payment method radios
+
     const paymentMethods = document.querySelectorAll('.payment-method');
     paymentMethods.forEach(method => {
         const radio = method.querySelector('input[type="radio"]');
         radio.addEventListener('change', function() {
-            // Hide all payment details
             paymentDetails.forEach(detail => {
                 detail.style.display = 'none';
             });
             
-            // Show specific payment details if applicable
             const paymentType = method.getAttribute('data-payment');
             if (paymentType === 'credit') {
                 document.getElementById('credit-details').style.display = 'block';
@@ -26,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('fawry-details').style.display = 'block';
             }
             
-            // Mark the selected payment method as active
             paymentMethods.forEach(m => {
                 m.classList.remove('active');
             });
@@ -34,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add validation styling
     const formStyles = document.createElement('style');
     formStyles.textContent = `
         .error-message {
@@ -61,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(formStyles);
 
-    // Add error message elements under each input
     const formInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
     formInputs.forEach(input => {
         const errorMsg = document.createElement('div');
@@ -69,25 +61,21 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMsg.id = input.id + '-error';
         input.parentNode.appendChild(errorMsg);
 
-        // Add input validation on blur
         input.addEventListener('blur', function() {
             validateInput(input);
         });
 
-        // Clear error on input focus
         input.addEventListener('focus', function() {
             clearError(input);
         });
     });
 
-    // Submit form handler
     const submitBtn = document.querySelector('.btn-primary');
     submitBtn.addEventListener('click', function(e) {
         e.preventDefault();
         
         let isValid = true;
         
-        // Validate general billing inputs only (excluding credit/fawry-specific)
         const requiredGeneralFields = ['fullname', 'email', 'phone', 'address', 'city'];
         requiredGeneralFields.forEach(id => {
             const input = document.getElementById(id);
@@ -97,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         
-        // Check if a payment method is selected
         const paymentSelected = document.querySelector('input[name="payment"]:checked');
         if (!paymentSelected) {
             isValid = false;
@@ -105,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
             methods.classList.add('shake');
             setTimeout(() => methods.classList.remove('shake'), 500);
             
-            // Add a temporary error message above payment methods
             let paymentError = document.getElementById('payment-method-error');
             if (!paymentError) {
                 paymentError = document.createElement('div');
@@ -117,11 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 methodsTitle.insertAdjacentElement('afterend', paymentError);
             }
         } else {
-            // Remove error if exists
             const paymentError = document.getElementById('payment-method-error');
             if (paymentError) paymentError.remove();
             
-            // Validate payment specific fields ONLY based on selected type
             const paymentType = paymentSelected.closest('.payment-method').getAttribute('data-payment');
 
             if (paymentType === 'credit') {
@@ -140,13 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // If form is valid, clear cart and redirect to success page
         if (isValid) {
-            // Clear cart as order is complete
             localStorage.setItem('cart', '[]');
             window.location.href = '../Order/OrderSuccessful.html';
         } else {
-            // Scroll to the first error
             const firstError = document.querySelector('.error-message[style="display: block;"]');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -154,19 +135,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Function to load order summary from cart
     function loadOrderSummary() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const orderSummaryContainer = document.querySelector('.order-summary');
+        const orderSummaryContainer = document.querySelector('.order-items');
 
         if (!orderSummaryContainer) return;
 
-        // Clear existing book items
-        const existingBookItems = orderSummaryContainer.querySelectorAll('.book-item');
-        existingBookItems.forEach(item => item.remove());
+        orderSummaryContainer.innerHTML = '';
 
         if (cart.length === 0) {
-            // Handle empty cart in checkout
             const emptyMessage = document.createElement('div');
             emptyMessage.className = 'empty-cart-message';
             emptyMessage.textContent = 'Your cart is empty!';
@@ -174,13 +151,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Add each book item
         cart.forEach(item => {
             const bookItem = document.createElement('div');
             bookItem.className = 'book-item';
             bookItem.innerHTML = `
                 <div class="book-cover">
-                    <img src="${item.imagePath}" alt="${item.title}">
+                    <img src="${item.imagePath}" alt="${item.title}"
                 </div>
                 <div class="book-info">
                     <h3>${item.title}</h3>
@@ -203,12 +179,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (totalElement) totalElement.textContent = '$' + total.toFixed(2);
     }
 
-    // Input validation function
     function validateInput(input) {
         const errorElement = document.getElementById(input.id + '-error');
         const value = input.value.trim();
         
-        // Input specific validations
         switch(input.id) {
             case 'fullname':
                 if (value === '') {
@@ -304,19 +278,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
         }
         
-        // Clear error if validation passes
         clearError(input);
         return true;
     }
 
-    // Show error message
     function showError(input, errorElement, message) {
         input.classList.add('error');
         errorElement.textContent = message;
         errorElement.style.display = 'block';
     }
 
-    // Clear error styling and message
     function clearError(input) {
         input.classList.remove('error');
         const errorElement = document.getElementById(input.id + '-error');
@@ -325,12 +296,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Format input fields appropriately
     document.getElementById('card-number').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 16) value = value.slice(0, 16);
         
-        // Format with spaces every 4 digits
         let formattedValue = '';
         for (let i = 0; i < value.length; i++) {
             if (i > 0 && i % 4 === 0) {
@@ -346,7 +315,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 4) value = value.slice(0, 4);
         
-        // Format as MM/YY
         if (value.length > 2) {
             e.target.value = value.slice(0, 2) + '/' + value.slice(2);
         } else {

@@ -415,6 +415,7 @@ class Book {
       ]
     )    
   ];
+
   
 
   localStorage.setItem('books', JSON.stringify(books)); // Store the books in local storage

@@ -20,71 +20,36 @@
     </header>
 
     <main>
-    <div class="container">
-        <h1>Your Cart</h1>
-        
-        <div class="cart-container">
-            <div class="cart-items">
-                <div class="cart-item">
-                    <div class="book-cover">
-                        <img src="../assets/the metamorphosis.png" alt="The Metamorphosis">
-                    </div>
-                    <div class="book-info">
-                        <h3>The Metamorphosis</h3>
-                        <p class="author">by Franz Kafka</p>
-                        <p class="rental-period">Rental Period: 30 days</p>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="number" value="1" min="1" class="quantity-input">
-                        <button class="quantity-btn plus">+</button>
-                    </div>
-                    <div class="book-price">$4.99</div>
-                    <button class="remove-btn">✕</button>
-                </div>
-                
-                <div class="cart-item">
-                    <div class="book-cover">
-                        <img src="../assets/1984.png" alt="1984">
-                    </div>
-                    <div class="book-info">
-                        <h3>1984</h3>
-                        <p class="author">by George Orwell</p>
-                        <p class="rental-period">Rental Period: 30 days</p>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="number" value="1" min="1" class="quantity-input">
-                        <button class="quantity-btn plus">+</button>
-                    </div>
-                    <div class="book-price">$3.99</div>
-                    <button class="remove-btn">✕</button>
-                </div>
-            </div>
+        <div class="container">
+            <h1>Your Cart</h1>
             
-            <div class="cart-summary">
-                <h2 class="section-title">Order Summary</h2>
-                
-                <div class="price-summary">
-                    <div class="price-row">
-                        <span>Subtotal</span>
-                        <span>$8.98</span>
-                    </div>
-                    <div class="price-row">
-                        <span>Tax</span>
-                        <span>$0.72</span>
-                    </div>
-                    <div class="price-total">
-                        <span>Total</span>
-                        <span>$9.70</span>
-                    </div>
+            <div class="cart-container">
+                <div class="cart-items">
                 </div>
                 
-                <button class="btn btn-primary checkout-btn">Proceed to Checkout</button>
-                <button class="btn btn-outline continue-btn" onclick="window.location.href='../../BookList/booklist.html'">Continue Shopping</button>
+                <div class="cart-summary">
+                    <h2 class="section-title">Order Summary</h2>
+                    
+                    <div class="price-summary">
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span>$0.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Tax</span>
+                            <span>$0.00</span>
+                        </div>
+                        <div class="price-total">
+                            <span>Total</span>
+                            <span>$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary checkout-btn">Proceed to Checkout</button>
+                    <button class="btn btn-outline continue-btn" onclick="window.location.href='../../BookList/booklist.html'">Continue Shopping</button>
+                </div>
             </div>
         </div>
-    </div>
     </main>
     
     <footer class="footer">

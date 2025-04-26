@@ -117,28 +117,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to add a book to cart
     function addToCart(book) {
-        // Get current cart or initialize empty array
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        
-        // Check if book is already in cart
         const existingItemIndex = cart.findIndex(item => item.title === book.title);
-        
+
         if (existingItemIndex !== -1) {
-            // If book exists, increase quantity
             cart[existingItemIndex].quantity += 1;
         } else {
-            // If not, add new item
+            const absoluteImagePath = new URL(book.imagePath, window.location.href).href; // Convert to absolute path
             cart.push({
                 title: book.title,
                 author: book.author,
-                price: parseFloat(book.price || '4.99'), // Default price if not specified
+                price: parseFloat(book.price || '4.99'),
                 quantity: 1,
-                imagePath: `../BookList/${book.imagePath}`,
+                imagePath: absoluteImagePath,
                 rentalPeriod: '30 days'
             });
         }
-        
-        // Save updated cart
+
         localStorage.setItem('cart', JSON.stringify(cart));
     }
 
