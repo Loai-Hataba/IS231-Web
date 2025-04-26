@@ -281,6 +281,74 @@ nav ul li a {
     color: #000;
   }
   
+/* Quotes tab styling */
+.quotes-section {
+    padding: 1rem 0;
+}
+
+.quote {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quote blockquote {
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--dark-text);
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.quote-context {
+    text-align: right;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.quote:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Details tab styling */
+.details-section {
+    padding: 1rem 0;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.details-card {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.details-card h3 {
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.details-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none;
+}
+
 
 @media (max-width: 768px) {
     .book-details {
@@ -296,5 +364,9 @@ nav ul li a {
     .tabs {
         overflow-x: auto;
         white-space: nowrap;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
     }
 }
