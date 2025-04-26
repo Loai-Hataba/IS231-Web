@@ -61,8 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('rememberedUser');
             }
 
-            // Redirect to landing page
-            window.location.href = '../../Landing Page/Index.html';
+            if(user.isAdmin ) {
+                // Redirect to landing page
+            window.location.href = '../../AdminPanel/AdminPanel.html';
+            }
+            else {
+                window.location.href = '../../Landing Page/Index.html';
+            }
 
         } catch (error) {
             console.error('Login error:', error);
