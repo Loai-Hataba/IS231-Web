@@ -685,23 +685,23 @@ function showCustomBookForm() {
         const sampleBooks = [
             {
                 id: '1',
-                title: 'The Great Gatsby',
-                author: 'F. Scott Fitzgerald',
-                image: 'https://skyhorse-us.imgix.net/covers/9781949846386.jpg?auto=format&w=298',
-                description: 'A story of wealth, love and tragedy in the Roaring Twenties.'
+                title: 'Outsider',
+                author: 'Albert Camus',
+                image: 'assets/Outsider.png',
+                description: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
             },
             {
                 id: '2',
-                title: 'To Kill a Mockingbird',
-                author: 'Harper Lee',
-                image: 'https://images.squarespace-cdn.com/content/v1/55c934b2e4b07aa63f0469cb/1442861118190-0729GUG7PF44SAMYOUDA/ZackCover.jpg',
-                description: 'Classic novel about racial inequality and moral growth.'
+                title: 'Odyssey',
+                author: 'Homer',
+                image: 'assets/odyssey.png',
+                description: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
             },
             {
                 id: '3',
                 title: '1984',
                 author: 'George Orwell',
-                image: 'assets/1984.png',
+                image: '/assets/1984.jpg',
                 description: 'Dystopian social science fiction that explores totalitarianism.'
             },
             {
