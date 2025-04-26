@@ -123,13 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (existingItemIndex !== -1) {
             cart[existingItemIndex].quantity += 1;
         } else {
-            const absoluteImagePath = new URL(book.imagePath, window.location.href).href; // Convert to absolute path
+            // Use a consistent relative path for the image
+            const relativeImagePath = `BookList/${book.imagePath}`;
             cart.push({
                 title: book.title,
                 author: book.author,
                 price: parseFloat(book.price || '4.99'),
                 quantity: 1,
-                imagePath: absoluteImagePath,
+                imagePath: relativeImagePath, // Store relative path
                 rentalPeriod: '30 days'
             });
         }

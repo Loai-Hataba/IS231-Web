@@ -61,27 +61,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function createCartItemElement(item) {
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-            <div class="book-cover">
-                <img src="${item.imagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.png'">
-            </div>
-            <div class="book-info">
-                <h3>${item.title}</h3>
-                <p class="author">by ${item.author}</p>
-                <p class="rental-period">Rental Period: ${item.rentalPeriod}</p>
-            </div>
-            <div class="quantity-control">
-                <button class="quantity-btn minus">-</button>
-                <input type="number" value="${item.quantity}" min="1" class="quantity-input">
-                <button class="quantity-btn plus">+</button>
-            </div>
-            <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
-            <button class="remove-btn">✕</button>
-        `;
-        return cartItem;
-    }
+    const cartItem = document.createElement('div');
+    cartItem.className = 'cart-item';
+    const adjustedImagePath = `../../${item.imagePath}`; // (relative) Adjust path for Cart.html
+    cartItem.innerHTML = `
+        <div class="book-cover">
+            <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.jpg'">
+        </div>
+        <div class="book-info">
+            <h3>${item.title}</h3>
+            <p class="author">by ${item.author}</p>
+            <p class="rental-period">Rental Period: ${item.rentalPeriod}</p>
+        </div>
+        <div class="quantity-control">
+            <button class="quantity-btn minus">-</button>
+            <input type="number" value="${item.quantity}" min="1" class="quantity-input">
+            <button class="quantity-btn plus">+</button>
+        </div>
+        <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
+        <button class="remove-btn">✕</button>
+    `;
+    return cartItem;
+}
 
     function updateTotals() {
         const cart = getCartItems();

@@ -125,7 +125,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (isValid) {
+            // Save the current cart to 'lastOrder' before clearing it
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            localStorage.setItem('lastOrder', JSON.stringify(cart));
+
+            // Clear the cart
             localStorage.setItem('cart', '[]');
+
+            // Redirect to Order Successful page
             window.location.href = '../Order/OrderSuccessful.html';
         } else {
             const firstError = document.querySelector('.error-message[style="display: block;"]');
@@ -136,12 +143,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function loadOrderSummary() {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const orderSummaryContainer = document.querySelector('.order-items');
+        const cart = JSON.parse(localStorage.getItem('cart')) || []; // Retrieve cart from localStorage
+        const orderSummaryContainer = document.querySelector('.book-items'); // Ensure this selector matches your HTML
 
         if (!orderSummaryContainer) return;
 
-        orderSummaryContainer.innerHTML = '';
+        orderSummaryContainer.innerHTML = ''; // Clear previous content
 
         if (cart.length === 0) {
             const emptyMessage = document.createElement('div');
@@ -152,11 +159,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         cart.forEach(item => {
+            const adjustedImagePath = `../../${item.imagePath}`; // Adjust path for PaymentMethod.html
             const bookItem = document.createElement('div');
             bookItem.className = 'book-item';
             bookItem.innerHTML = `
                 <div class="book-cover">
-                    <img src="${item.imagePath}" alt="${item.title}"
+                    <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.jpg'">
                 </div>
                 <div class="book-info">
                     <h3>${item.title}</h3>
@@ -167,6 +175,13 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             orderSummaryContainer.appendChild(bookItem);
         });
+
+        // Update totals
+        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const tax = subtotal * 0.08;
+        const total = subtotal + tax;
+
+        updateOrderSummaryTotals(subtotal, tax, total);
     }
     
     function updateOrderSummaryTotals(subtotal, tax, total) {
