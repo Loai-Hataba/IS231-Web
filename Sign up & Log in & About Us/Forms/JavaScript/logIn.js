@@ -1,95 +1,46 @@
-// Toggle password visibility
-function togglePassword(inputId) {
-  const input = document.getElementById(inputId);
-  const type = input.type === 'password' ? 'text' : 'password';
-  input.type = type;
-  
-  const toggle = input.parentElement.querySelector('.password-toggle');
-  toggle.style.opacity = type === 'text' ? '1' : '0.6';
-}
-
-// Show validation error
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    if (!field) return;
-
-    const container = field.parentElement;
-    const existingError = container.querySelector('.error-message');
-    
-    // Remove existing error if present
-    if (existingError) {
-        existingError.remove();
-    }
-
-    // Create and add new error message
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.color = '#f44336';
-    errorDiv.style.fontSize = '12px';
-    errorDiv.style.marginTop = '4px';
-    errorDiv.style.transition = 'opacity 0.3s ease';
-    errorDiv.textContent = message;
-
-    // Insert error after the input field
-    container.appendChild(errorDiv);
-
-    // Add visual feedback to the input
-    field.classList.add('invalid');
-    field.style.borderColor = '#f44336';
-}
-
-// Clear specific field error
-function clearError(container) {
-  const existingError = container.querySelector('.error-message');
-  if (existingError) {
-      existingError.remove();
-  }
-}
-
-// Clear all errors
-function clearErrors() {
-  document.querySelectorAll('.error-message').forEach(error => error.remove());
-  document.querySelectorAll('.invalid').forEach(field => {
-      field.classList.remove('invalid');
-  });
-}
-
+// The main logic of login page
 document.addEventListener('DOMContentLoaded', () => {
-    // Get form elements
     const loginForm = document.getElementById('login-form');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const rememberMeCheckbox = document.getElementById('rememberMe');
-    // Handle form submission
+    const submitButton = document.getElementById('login-button');
+
+    
     loginForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
         clearErrors();
+        setLoading(true);
 
         const email = emailInput.value.trim();
         const password = passwordInput.value;
 
-        // Validate inputs
-        if (!validateEmail(email)) {
-            showError('email', 'Please enter a valid email address');
-            return;
-        }
-        if (password.length < 8) {
-            showError('password', 'Password must be at least 8 characters long');
-            return;
-        }
-
-        // Get users from localStorage
         try {
+            // Validate inputs
+            if (!validateEmail(email)) {
+                showError(emailInput, 'Please enter a valid email address');
+                setLoading(false);
+                return;
+            }
+
+            if (password.length < 8) {
+                showError(passwordInput, 'Password must be at least 8 characters long');
+                setLoading(false);
+                return;
+            }
+
             const users = JSON.parse(localStorage.getItem('conquista_users')) || [];
             const user = users.find(u => u.email === email);
 
             if (!user) {
-                showError('email', 'No account found with this email');
+                showError(emailInput, 'No account found with this email');
+                setLoading(false);
                 return;
             }
 
             if (user.password !== password) {
-                showError('password', 'Incorrect password');
+                showError(passwordInput, 'Incorrect password');
+                setLoading(false);
                 return;
             }
 
@@ -98,20 +49,86 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('rememberedUser', email);
             }
 
-            // Redirect to dashboard/home
+            // Redirect with success message
             window.location.href = '../../Landing Page/Index.html';
+
         } catch (error) {
-            console.error('Login error:', error);
-            alert('An error occurred during login. Please try again.');
+            showError(emailInput, 'An error occurred. Please try again.');
+            setLoading(false);
         }
-    });    
-    // Check for remembered user
+    });
+
+    // Load remembered user
     const rememberedUser = localStorage.getItem('rememberedUser');
     if (rememberedUser) {
         emailInput.value = rememberedUser;
+        passwordInput.focus();
     }
 });
-// Email validation helper
+// function to set loading state
+function setLoading(isLoading) {
+    submitButton.disabled = isLoading;
+    submitButton.innerHTML = isLoading ? 
+        '<span class="loading-spinner"></span> Logging in...' : 
+        'Log In';
+}
+
+// function to validate email
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// function to toggle password visibility
+function togglePassword(inputId, toggleElement) {
+    const input = document.getElementById(inputId);
+    const type = input.type === 'password' ? 'text' : 'password';
+    input.type = type;
+    
+    // Update toggle appearance
+    toggleElement.style.opacity = type === 'text' ? '1' : '0.6';
+    toggleElement.textContent = '👁️';
+    toggleElement.setAttribute('aria-label', `${type === 'password' ? 'Show' : 'Hide'} password`);
+}
+
+// function to show error msgs
+function showError(field, message) {
+    if (!field) return;
+
+    const container = field.closest('.input-group');
+    clearError(container);
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.setAttribute('role', 'alert');
+    errorDiv.textContent = message;
+
+    if (field.id === 'password') {
+        const passwordContainer = container.querySelector('.password-container');
+        passwordContainer.after(errorDiv);
+    } else {
+        container.appendChild(errorDiv);
+    }
+    
+    field.classList.add('invalid');
+}
+
+// function to clear an error 
+function clearError(container) {
+  const existingError = container.querySelector('.error-message');
+  if (existingError) {
+      existingError.remove();
+  }
+  
+  const input = container.querySelector('input');
+  if (input && input.classList.contains('invalid')) {
+      input.classList.remove('invalid');
+  }
+}
+
+// function to clear all errors
+function clearErrors() {
+  document.querySelectorAll('.error-message').forEach(error => error.remove());
+  document.querySelectorAll('.invalid').forEach(field => {
+      field.classList.remove('invalid');
+  });
 }

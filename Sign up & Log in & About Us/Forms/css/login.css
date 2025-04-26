@@ -81,7 +81,8 @@ h2 {
 }
 
 .input-group {
-  margin-bottom: 24px;
+    position: relative;
+    margin-bottom: 24px;
 }
 
 .input-group label {
@@ -109,7 +110,49 @@ h2 {
   background-color: #fff;
 }
 
-/* Password field styling */
+.error-message {
+  color: #e53935;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+  display: block; 
+  width: 100%; 
+  position: absolute; 
+  left: 0;
+  top: 100%; 
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 32px; 
+}
+
+.password-container {
+  margin-bottom: 8px; 
+}
+
+
+.input-group input.invalid {
+  border: 2px solid #e53935 ;
+  background-color: #fff8f8;
+}
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .password-container {
     position: relative;
     width: 100%;
@@ -128,25 +171,12 @@ h2 {
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    z-index: 2;
-    font-size: 18px;
     opacity: 0.6;
-    transition: all 0.3s ease;
-    background: none;
-    border: none;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
+    transition: opacity 0.3s ease;
+    font-size: 18px;
+    user-select: none;
 }
 
-/* Fix eye position when input is invalid */
-.input-group.invalid .password-toggle {
-    color: #f44336;
-}
-
-/* Add hover effect */
 .password-toggle:hover {
     opacity: 1;
 }
@@ -186,6 +216,11 @@ h2 {
   background: #222;
 }
 
+#login-button:disabled {
+  background: #777;
+  cursor: not-allowed;
+}
+
 #footer {
   display: flex;
   justify-content: center;
@@ -200,7 +235,7 @@ h2 {
   color: #111;
 }
 
-@media (max-width: 660px) { /* Increased from 600px */
+@media (max-width: 660px) { 
   #login-card {
     padding: 24px 20px;
   }
@@ -245,7 +280,7 @@ h2 {
     color: #111;
     font-weight: 500;
 }
-/* Divider */
+
 #divider {
   display: flex;
   align-items: center;

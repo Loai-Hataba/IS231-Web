@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -35,7 +35,7 @@
         who have found meaning and enrichment through our curated selection.
       </p>
       
-      <form id = "signup-form" >
+      <form id="signup-form">
         <!-- The first name input <div> -->
           <div class="input-group">
             <label for="firstName">First name</label>
@@ -49,7 +49,7 @@
             <!-- email input div  -->
             <div class="input-group">
               <label for="email">Email address</label>
-              <input type="email" id="email" required placeholder="user@example.com"maxlength="35" />
+              <input type="email" id="email" required placeholder="user@example.com" maxlength="35" />
             </div>
             <!-- passwords input div -->
             <div id="passwords">
@@ -58,7 +58,7 @@
                 <label for="password">Password</label>
                 <div class="password-container">
                   <input type="password" id="password" required maxlength="20" />
-                  <span class="password-toggle" onclick="togglePassword('password')">
+                  <span class="password-toggle" onclick="togglePassword('password', this)">
                     👁️
                   </span>
                 </div>
@@ -68,7 +68,7 @@
                 <label for="confirmPassword">Confirm your password</label>
                 <div class="password-container">
                   <input type="password" id="confirmPassword" required maxlength="20" />
-                  <span class="password-toggle" onclick="togglePassword('confirmPassword')">
+                  <span class="password-toggle" onclick="togglePassword('confirmPassword', this)">
                     👁️
                   </span>
                 </div>
@@ -80,10 +80,6 @@
         </div>
         <!-- the row div that contains show password and is admin checkboxes -->
         <div class="checkbox-row">
-          <!-- <label class="checkbox-group">
-            <input type="checkbox" id="showPassword" />
-            Show password
-          </label> -->
           <label class="checkbox-group">
             <input type="checkbox" id="isAdmin" />
             Are you an admin?
@@ -91,7 +87,7 @@
         </div>
         <!-- accepting the terms and conditions  -->
         <div class="checkbox-group">
-          <input type="checkbox" id="acceptTerms"required />
+          <input type="checkbox" id="acceptTerms" required />
           <label for="acceptTerms">
             By continuing, you agree to the
             <a href="../Footers/terms.html">Terms of use</a> and
@@ -116,4 +112,4 @@
       <a href="../Footers/contactUs.html">Contact Us</a>
     </footer>
   </body>
-  </html>
+</html>

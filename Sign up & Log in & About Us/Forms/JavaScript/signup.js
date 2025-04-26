@@ -1,62 +1,8 @@
-function togglePassword(inputId) {
-    const input = document.getElementById(inputId);
-    const type = input.type === 'password' ? 'text' : 'password';
-    input.type = type;
-    
-    // Update the eye icon toggle state
-    const toggle = input.parentElement.querySelector('.password-toggle');
-    if (toggle) {
-        toggle.innerHTML = type === 'password' ? '👁️' : '👁️';
-        toggle.style.opacity = type === 'text' ? '1' : '0.6';
-        toggle.setAttribute('aria-label', type === 'password' ? 'Show password' : 'Hide password');
-    }
-}
-
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    if (!field) return;
-
-    const container = field.parentElement;
-    const existingError = container.querySelector('.error-message');
-    
-    // Remove existing error if present
-    if (existingError) {
-        existingError.remove();
-    }
-
-    // Create and add new error message
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.color = '#f44336';
-    errorDiv.style.fontSize = '12px';
-    errorDiv.style.marginTop = '4px';
-    errorDiv.style.transition = 'opacity 0.3s ease';
-    errorDiv.textContent = message;
-
-    // Insert error after the input field
-    container.appendChild(errorDiv);
-
-    // Add visual feedback to the input
-    field.classList.add('invalid');
-    field.style.borderColor = '#f44336';
-}
-
-function clearErrors() {
-    // Remove all existing error messages
-    const errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(error => error.remove());
-    
-    // Reset input styling
-    const inputs = document.querySelectorAll('.input-group input');
-    inputs.forEach(input => {
-        input.classList.remove('invalid');
-        input.style.borderColor = '';
-    });
-}
-
+// the main logic of signup page : 
 document.getElementById('signup-form').addEventListener('submit', function(event) {
     event.preventDefault();
     clearErrors();
+    setLoading(true);
 
     // Get form values
     const firstName = document.getElementById('firstName').value.trim();
@@ -65,43 +11,46 @@ document.getElementById('signup-form').addEventListener('submit', function(event
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const acceptTerms = document.getElementById('acceptTerms').checked;
-    const isAdmin = document.getElementById('isAdmin').checked; // Optional: Admin checkbox
-    const isAdminValue = isAdmin ? true : false; // Convert to boolean
+    const isAdmin = document.getElementById('isAdmin').checked;
+    
     // Validate form fields
     let isValid = true;
 
     if (firstName.length < 2 || !/^[A-Za-z]+$/.test(firstName)) {
-        showError('firstName', 'First name must be at least 2 characters and contains only letters.');
+        showError(document.getElementById('firstName'), 'First name must be at least 2 characters and contain only letters.');
         isValid = false;
     }
 
     if (lastName.length < 2 || !/^[A-Za-z]+$/.test(lastName)) {
-        showError('lastName', 'Last name must be at least 2 characters and contains only letters.');
+        showError(document.getElementById('lastName'), 'Last name must be at least 2 characters and contain only letters.');
         isValid = false;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showError('email', 'Please enter a valid email address.');
+        showError(document.getElementById('email'), 'Please enter a valid email address.');
         isValid = false;
     }
 
     if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || 
         !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
-        showError('password', 'Password must be at least 8 characters long and include uppercase, lowercase, numbers, and symbols.');
+        showError(document.getElementById('password'), 'Password must be at least 8 characters long and include uppercase, lowercase, numbers, and symbols.');
         isValid = false;
     }
 
     if (password !== confirmPassword) {
-        showError('confirmPassword', 'Passwords do not match.');
+        showError(document.getElementById('confirmPassword'), 'Passwords do not match.');
         isValid = false;
     }
 
     if (!acceptTerms) {
-        showError('acceptTerms', 'You must accept the terms to continue.');
+        showError(document.getElementById('acceptTerms'), 'You must accept the terms to continue.');
         isValid = false;
     }
 
-    if (!isValid) return;
+    if (!isValid) {
+        setLoading(false);
+        return;
+    }
 
     // Create user data
     const userData = {
@@ -110,28 +59,116 @@ document.getElementById('signup-form').addEventListener('submit', function(event
         email,
         password,
         createdAt: new Date().toISOString(),
-        isAdmin: isAdminValue // Store admin status
+        isAdmin: isAdmin
     };
 
-    // Save to localStorage
-    try {
-        const users = JSON.parse(localStorage.getItem('conquista_users')) || [];
-        if (users.some(user => user.email === email)) {
-            showError('email', 'This email is already registered');
-            return;
-        }
-        users.push(userData);
-        localStorage.setItem('conquista_users', JSON.stringify(users));
-        
-        alert('Sign up successful!');
-        window.location.href = 'login.html';
-    } catch (error) {
-        console.error('Error saving user:', error);
-        alert('An error occurred during registration. Please try again.');
-    }
+        // Save to localStorage
+        try {
+            const users = JSON.parse(localStorage.getItem('conquista_users')) || [];
+            if (users.some(user => user.email === email)) {
+                showError(document.getElementById('email'), 'This email is already registered');
+                setLoading(false);
+                return;
+            }
+            users.push(userData);
+            localStorage.setItem('conquista_users', JSON.stringify(users));
+            
+            alert('Sign up successful!');
+            window.location.href = 'login.html';
+        } catch (error) {
+            console.error('Error saving user:', error);
+            alert('An error occurred during registration. Please try again.');
+            setLoading(false);
+    };
 });
+// function to toggle the password visiability
+function togglePassword(inputId, toggleElement) {
+    const input = document.getElementById(inputId);
+    const type = input.type === 'password' ? 'text' : 'password';
+    input.type = type;
+    
+    toggleElement.style.opacity = type === 'text' ? '1' : '0.6';
+    toggleElement.textContent = '👁️';
+    toggleElement.setAttribute('aria-label', `${type === 'password' ? 'Show' : 'Hide'} password`);
+}
 
-// Add password strength checker
+// function to show error msgs 
+function showError(field, message) {
+    if (typeof field === 'string') {
+        field = document.getElementById(field);
+    }
+    
+    if (!field) return;
+    const container = field.closest('.input-group');
+    clearError(container);
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.setAttribute('role', 'alert');
+    errorDiv.textContent = message;
+    
+    if (field.id === 'password' || field.id === 'confirmPassword') {
+        const passwordContainer = container.querySelector('.password-container');
+        if (passwordContainer) {
+            // Insert error message after password container
+            passwordContainer.after(errorDiv);
+            
+            // If it's the password field, move strength indicator below error
+            if (field.id === 'password') {
+                const strengthIndicator = container.querySelector('.password-strength');
+                if (strengthIndicator) {
+                    errorDiv.after(strengthIndicator);
+                }
+            }
+        } else {
+            container.appendChild(errorDiv);
+        }
+    } else {
+        container.appendChild(errorDiv);
+    }
+    
+    field.classList.add('invalid');
+}
+
+// function to clear an error msg
+function clearError(container) {
+    if (typeof container === 'string') {
+        container = document.getElementById(container);
+    }
+    
+    if (!container) return;
+    
+    const errorMessage = container.querySelector('.error-message');
+    if (errorMessage) {
+        errorMessage.remove();
+    }
+    
+    const input = container.querySelector('input');
+    if (input && input.classList.contains('invalid')) {
+        input.classList.remove('invalid');
+    }
+}
+
+// function to clear all error msgs 
+function clearErrors() {
+    document.querySelectorAll('.error-message').forEach(error => error.remove());
+    
+    document.querySelectorAll('.invalid').forEach(input => {
+        input.classList.remove('invalid');
+    });
+}
+
+// function for loading state 
+function setLoading(isLoading) {
+    const submitButton = document.getElementById('signup-button');
+    submitButton.disabled = isLoading;
+    submitButton.innerHTML = isLoading ? 
+        '<span class="loading-spinner"></span> Creating account...' : 
+        'Create an account';
+}
+
+
+// fuunctio to check the password strength
 function checkPasswordStrength(password) {
     const strengthBar = document.getElementById('strength-bar');
     const strengthText = document.getElementById('strength-text');
