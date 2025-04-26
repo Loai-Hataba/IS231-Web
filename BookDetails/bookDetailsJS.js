@@ -1,23 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('.tab-content');
-    const loadMoreBtn = document.getElementById('load-more-btn');
-    const seeLessBtn = document.getElementById('see-less-btn');
-    const hiddenReviews = document.querySelectorAll('.review.hidden');
     const bookContainer = document.getElementById('book-container');
     const reviewsContainer = document.getElementById('reviews');
     const quotesContainer = document.getElementById('quotes');
     const detailsContainer = document.getElementById('details');
 
-
     // Retrieving the selected book data from localStorage
     const selectedBook = JSON.parse(localStorage.getItem('selectedBook'));
 
-    
     if (selectedBook) {
         const adjustedImagePath = `../BookList/${selectedBook.imagePath}`;
-        console.log(adjustedImagePath);
-        console.log("yessszzz\n");
 
         // Populate the book details dynamically
         bookContainer.innerHTML = `
@@ -56,14 +49,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="meta-value">${selectedBook.tags.join(', ')}</span>
                     </div>
                 </div>
-                <button class="btn" onclick="window.location.href='../PaymentMethod/Cart/Cart.html'">Add to shopping cart</button>
+                <button class="btn add-to-cart-btn">Add to shopping cart</button>
                 <div class="description">
                     <h2 class="section-title">Description</h2>
                     <p>${selectedBook.description}</p>
                 </div>
-            </div>        `;
+            </div>
+        `;
 
-             // Populate reviews dynamically
+        // Populate reviews dynamically
         reviewsContainer.innerHTML = selectedBook.reviews.map(review => `
             <div class="review">
                 <div class="review-header">
@@ -99,6 +93,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 `).join('')}
             </div>
         `;
+
+        // Add to cart functionality
+        const addToCartBtn = document.querySelector('.add-to-cart-btn');
+        addToCartBtn.addEventListener('click', function() {
+            addToCart(selectedBook);
+            // Redirect to cart page
+            window.location.href = '../PaymentMethod/Cart/Cart.html';
+        });
     } else {
         // If no book is selected, show an error message
         bookContainer.innerHTML = '<p>No book selected. Please go back and select a book.</p>';
@@ -113,31 +115,40 @@ document.addEventListener('DOMContentLoaded', function() {
         return '★'.repeat(fullStars) + (halfStar ? '⯨' : '') + '☆'.repeat(emptyStars);
     }
 
+    // Function to add a book to cart
+    function addToCart(book) {
+        // Get current cart or initialize empty array
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        
+        // Check if book is already in cart
+        const existingItemIndex = cart.findIndex(item => item.title === book.title);
+        
+        if (existingItemIndex !== -1) {
+            // If book exists, increase quantity
+            cart[existingItemIndex].quantity += 1;
+        } else {
+            // If not, add new item
+            cart.push({
+                title: book.title,
+                author: book.author,
+                price: parseFloat(book.price || '4.99'), // Default price if not specified
+                quantity: 1,
+                imagePath: `../BookList/${book.imagePath}`,
+                rentalPeriod: '30 days'
+            });
+        }
+        
+        // Save updated cart
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
     // Tab switching functionality
     tabs.forEach((tab, index) => {
         tab.addEventListener('click', () => {
-            toggleActiveClass(tabs, tabContents, index);
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            tab.classList.add('active');
+            tabContents[index].classList.add('active');
         });
     });
-
-    // Load more and see less functionality
-    if (loadMoreBtn && seeLessBtn) {
-        loadMoreBtn.addEventListener('click', () => toggleReviews(true));
-        seeLessBtn.addEventListener('click', () => toggleReviews(false));
-    }
-
-    // Function to toggle active class for tabs
-    function toggleActiveClass(tabs, contents, activeIndex) {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(content => content.classList.remove('active'));
-        tabs[activeIndex].classList.add('active');
-        contents[activeIndex].classList.add('active');
-    }
-
-    // Function to toggle reviews visibility
-    function toggleReviews(showMore) {
-        hiddenReviews.forEach(review => review.classList.toggle('hidden', !showMore));
-        loadMoreBtn.classList.toggle('hidden', showMore);
-        seeLessBtn.classList.toggle('hidden', !showMore);
-    }
 });

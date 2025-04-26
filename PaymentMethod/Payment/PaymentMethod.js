@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
         detail.style.display = 'none';
     });
     
+    // Load cart data for order summary
+    loadOrderSummary();
+    
     // Add event listeners to payment method radios
     const paymentMethods = document.querySelectorAll('.payment-method');
     paymentMethods.forEach(method => {
@@ -137,8 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // If form is valid, redirect to success page
+        // If form is valid, clear cart and redirect to success page
         if (isValid) {
+            // Clear cart as order is complete
+            localStorage.setItem('cart', '[]');
             window.location.href = '../Order/OrderSuccessful.html';
         } else {
             // Scroll to the first error
@@ -148,6 +153,55 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // Function to load order summary from cart
+    function loadOrderSummary() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const orderSummaryContainer = document.querySelector('.order-summary');
+
+        if (!orderSummaryContainer) return;
+
+        // Clear existing book items
+        const existingBookItems = orderSummaryContainer.querySelectorAll('.book-item');
+        existingBookItems.forEach(item => item.remove());
+
+        if (cart.length === 0) {
+            // Handle empty cart in checkout
+            const emptyMessage = document.createElement('div');
+            emptyMessage.className = 'empty-cart-message';
+            emptyMessage.textContent = 'Your cart is empty!';
+            orderSummaryContainer.appendChild(emptyMessage);
+            return;
+        }
+
+        // Add each book item
+        cart.forEach(item => {
+            const bookItem = document.createElement('div');
+            bookItem.className = 'book-item';
+            bookItem.innerHTML = `
+                <div class="book-cover">
+                    <img src="${item.imagePath}" alt="${item.title}">
+                </div>
+                <div class="book-info">
+                    <h3>${item.title}</h3>
+                    <p class="author">by ${item.author}</p>
+                    <p class="quantity">Quantity: ${item.quantity}</p>
+                </div>
+                <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
+            `;
+            orderSummaryContainer.appendChild(bookItem);
+        });
+    }
+    
+    function updateOrderSummaryTotals(subtotal, tax, total) {
+        const subtotalElement = document.querySelector('.price-row:nth-child(1) span:last-child');
+        const taxElement = document.querySelector('.price-row:nth-child(2) span:last-child');
+        const totalElement = document.querySelector('.price-total span:last-child');
+        
+        if (subtotalElement) subtotalElement.textContent = '$' + subtotal.toFixed(2);
+        if (taxElement) taxElement.textContent = '$' + tax.toFixed(2);
+        if (totalElement) totalElement.textContent = '$' + total.toFixed(2);
+    }
 
     // Input validation function
     function validateInput(input) {
