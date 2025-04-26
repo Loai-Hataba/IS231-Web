@@ -1,6 +1,7 @@
 // Define the book class with all required properties
 class Book {
-    constructor(title, description, imagePath, tags, author, publisher, publishDate, pages, language, isbn, rating, reviews = [], quotes=[], details=[]) {
+    constructor(ID, title, description, imagePath, tags, author, publisher, publishDate, pages, language, isbn, rating, reviews = [], quotes=[], details=[]) {
+      this.ID = ID;
       this.title = title;
       this.description = description;
       this.imagePath = imagePath;
@@ -21,7 +22,9 @@ class Book {
   
   // Sample book data
   const books = [
+
       new Book(
+        1,
         "Princess Freedom",
         "In a dystopian world where freedom is a distant memory, one girl dares to defy the system. 'Princess Freedom' is a powerful tale of resilience, rebellion, and the enduring spirit of hope. Journey with Elena as she uncovers secrets, fights oppression, and inspires a revolution in a land where dreams are forbidden.",
         "images/booklist_image_1.jpg",
@@ -47,6 +50,7 @@ class Book {
         ]
     ),
     new Book(
+        2,
         "ART & STYLE",
         "Dive deep into the world of modern creativity with 'ART & STYLE,' a vivid exploration of contemporary art movements and their profound influence on today's design landscape. From bold abstraction to minimalistic elegance, Marcus Chen breaks down complex ideas into beautiful, accessible narratives.",
         "images/booklist_image_2.jpg",
@@ -72,6 +76,7 @@ class Book {
         ]
     ),
     new Book(
+        3,
         "A MILLION TO ONE",
         "High stakes and daring dreams collide in 'A Million to One,' where four skilled thieves orchestrate a breathtaking heist to steal a priceless artifact from the world’s most secure vault. Every second counts, and betrayal lurks around every corner in this adrenaline-fueled thriller.",
         "images/booklist_image_3.jpg",
@@ -97,6 +102,7 @@ class Book {
         ]
     ),
     new Book(
+        4,
         "Harry Potter & the Cursed Child",
         "The magic lives on. 'Harry Potter & the Cursed Child' captures the struggles of adulthood, legacy, and the heavy burden of expectations. Join Harry, now a Ministry employee, and his son Albus as they navigate time, destiny, and the shadows of their past.",
         "images/booklist_image_4.jpg",
@@ -122,6 +128,7 @@ class Book {
         ]
     ),
     new Book(
+        5,
         "Lone Wolf Adventure",
         "When nature is both your adversary and only companion, survival is a daily battle. 'Lone Wolf Adventure' thrusts readers into the unforgiving wilderness of Alaska, where one man’s endurance, wit, and resilience are pushed to the limits.",
         "images/booklist_image_5.jpg",
@@ -147,6 +154,7 @@ class Book {
         ]
     ),
     new Book(
+      6,
       "Tess of the Road",
       "A young woman's journey of self-discovery as she breaks free from societal constraints in a fantasy world.",
       "images/booklist_image_6.jpg",
@@ -172,6 +180,7 @@ class Book {
       ]
     ),
     new Book(
+      7,
       "Aetherbound",
       "A sci-fi adventure about a girl with magical abilities who escapes life on a generation ship.",
       "images/booklist_image_7.jpg",
@@ -197,6 +206,7 @@ class Book {
       ]
     ),
     new Book(
+      8,
       "Ashford List",
       "A historical mystery set in Victorian London, where a detective uncovers a conspiracy tied to a mysterious list.",
       "images/booklist_image_8.jpg",
@@ -222,6 +232,7 @@ class Book {
       ]
     ),
     new Book(
+      9,
       "The Old You",
       "A psychological thriller about identity and memory loss that keeps readers guessing until the final page.",
       "images/booklist_image_9.jpg",
@@ -247,6 +258,7 @@ class Book {
       ]
     ),
     new Book(
+      10,
       "Hide And Seek",
       "A chilling horror story about an abandoned orphanage and the secrets hidden within its walls.",
       "images/booklist_image_10.jpg",
@@ -272,6 +284,7 @@ class Book {
       ]
     ),
     new Book(
+      11,
       "SOUL",
       "A philosophical exploration of consciousness and what makes us human in the age of artificial intelligence.",
       "images/booklist_image_11.jpg",
@@ -297,6 +310,7 @@ class Book {
       ]
     ),
     new Book(
+      12,
       "The way of the Nameless",
       "An epic fantasy adventure following a hero without a name who must restore balance to a world in chaos.",
       "images/booklist_image_12.jpg",
@@ -321,10 +335,9 @@ class Book {
         { title: "Hero's Journey", text: "Follows the classic hero’s arc with a fresh twist." }
       ]
     ),
-    
-    // --- ADDITIONAL BOOKS ---
-    
+        
     new Book(
+      13,
       "Quantum Horizons",
       "A fascinating journey through the bizarre realities of quantum physics and its implications for our universe.",
       "images/placeholder_book.jpg",
@@ -350,6 +363,7 @@ class Book {
       ]
     ),
     new Book(
+      14,
       "The Last Frontier",
       "A historical account of the final days of the American frontier and the closing of the Wild West.",
       "images/placeholder_book.jpg",
@@ -375,6 +389,7 @@ class Book {
       ]
     ),
     new Book(
+      15,
       "Whispers in the Dark",
       "A collection of chilling short stories that explore the darkest corners of the human psyche.",
       "images/placeholder_book.jpg",
@@ -401,6 +416,8 @@ class Book {
     )    
   ];
   
+
+  localStorage.setItem('books', JSON.stringify(books)); // Store the books in local storage
   
   document.addEventListener('DOMContentLoaded', function() {
     //  UI
@@ -411,7 +428,7 @@ class Book {
     
     let currentFilter = 'All';
     let searchQuery = '';
-    let displayedBooks = [...books]; 
+    let displayedBooks = [...books.slice(0, 9)]; // Initially show the first 9 books
     let showingAdditional = false;
   
     //initialize the page
@@ -425,30 +442,29 @@ class Book {
         this.classList.add('active');
         
         currentFilter = this.textContent;
-        filterAndRenderBooks();
+        filterAndRenderBooks(displayedBooks);
       });
     });
   
     searchBar.addEventListener('input', function() {
       searchQuery = this.value.toLowerCase();
-      filterAndRenderBooks();
+      filterAndRenderBooks(displayedBooks);
     });
   
     showMoreButton.addEventListener('click', function() {
       if (!showingAdditional) {
         showingAdditional = true;
-        displayedBooks = [...books, ...additionalBooks];
+        displayedBooks = [...books];
         this.textContent = 'Show Fewer Books';
       } else {
         showingAdditional = false;
-        displayedBooks = [...books];
+        displayedBooks = books.slice(0, 9);
         this.textContent = 'Show More Books';
       }
-      filterAndRenderBooks();
+      filterAndRenderBooks(displayedBooks);
     });
   
-    function filterAndRenderBooks() {
-      let filteredBooks = [...books, ...additionalBooks];
+    function filterAndRenderBooks(filteredBooks) {
       
 
       
@@ -544,71 +560,71 @@ class Book {
 
 
   // Add CSS styles for the new elements
-  document.addEventListener('DOMContentLoaded', function() {
-    const style = document.createElement('style');
-    style.textContent = `
-      .book-author {
-        font-style: italic;
-        margin-top: -10px;
-        margin-bottom: 5px;
-        color: #555;
-      }
-      
-      .book-rating {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-      
-      .star {
-        color: #ddd;
-        font-size: 18px;
-      }
-      
-      .star.full, .star.half {
-        color: #f8ce0b;
-      }
-      
-      .book-tags {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 10px;
-      }
-      
-      .book-tag {
-        background-color: #f1f1f1;
-        border-radius: 15px;
-        padding: 3px 10px;
-        font-size: 12px;
-        margin-right: 5px;
-        margin-bottom: 5px;
-      }
-      
-      .filter-button.active {
-        background-color: #007bff;
-        color: white;
-      }
-      
-      .no-results {
-        width: 100%;
-        text-align: center;
-        padding: 30px;
-        font-size: 18px;
-        color: #666;
-      }
-      
-      .book-card {
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-      
-      .book-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      }
-    `;
-    document.head.appendChild(style);
-  });
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .book-author {
+      font-style: italic;
+      margin-top: -10px;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    
+    .book-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .star {
+      color: #ddd;
+      font-size: 18px;
+    }
+    
+    .star.full, .star.half {
+      color: #f8ce0b;
+    }
+    
+    .book-tags {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    
+    .book-tag {
+      background-color: #f1f1f1;
+      border-radius: 15px;
+      padding: 3px 10px;
+      font-size: 12px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .filter-button.active {
+      background-color: #007bff;
+      color: white;
+    }
+    
+    .no-results {
+      width: 100%;
+      text-align: center;
+      padding: 30px;
+      font-size: 18px;
+      color: #666;
+    }
+    
+    .book-card {
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+  `;
+  document.head.appendChild(style);
+
 
 
 
@@ -617,7 +633,7 @@ class Book {
     function navigateToBookDetails(book) {
       localStorage.setItem('selectedBook', JSON.stringify(book));
       
-      window.location.href = `../BookDetails/bookDetails.html?isbn=${book.isbn}`;
+      window.location.href = `../BookDetails/bookDetails.html?ID=${book.ID}`;
     }
   
     //Set the first filter button (All) as active by default
