@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         cart.forEach(item => {
-            const adjustedImagePath = `../../${item.imagePath}`; // Adjust path for PaymentMethod.html
+            const adjustedImagePath = `${item.imagePath}`;
             const bookItem = document.createElement('div');
             bookItem.className = 'book-item';
             bookItem.innerHTML = `

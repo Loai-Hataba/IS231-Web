@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createCartItemElement(item) {
     const cartItem = document.createElement('div');
     cartItem.className = 'cart-item';
-    const adjustedImagePath = `../../${item.imagePath}`; // (relative) Adjust path for Cart.html
+    const adjustedImagePath = `${item.imagePath}`;
     cartItem.innerHTML = `
         <div class="book-cover">
             <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.jpg'">

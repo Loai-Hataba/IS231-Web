@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         lastOrder.forEach(item => {
-            const adjustedImagePath = `../../${item.imagePath}`; 
+            const adjustedImagePath = `${item.imagePath}`; 
             const orderItem = document.createElement('div');
             orderItem.className = 'order-item';
             orderItem.innerHTML = `
                 <div class="book-cover">
-                    <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.png'">
+                    <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.jpg'">
                 </div>
                 <div class="item-details">
                     <div class="item-title">${item.title}</div>

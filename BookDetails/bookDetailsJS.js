@@ -124,11 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
             cart[existingItemIndex].quantity += 1;
         } else {
             // Use a consistent relative path for the image
-            const relativeImagePath = `BookList/${book.imagePath}`;
+            const relativeImagePath = `../../BookList/${book.imagePath}`;
             cart.push({
                 title: book.title,
                 author: book.author,
-                price: parseFloat(book.price || '4.99'),
+                price: parseFloat ('4.99'),
                 quantity: 1,
                 imagePath: relativeImagePath, // Store relative path
                 rentalPeriod: '30 days'
