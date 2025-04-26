@@ -1,16 +1,29 @@
 document.addEventListener('DOMContentLoaded', function() {
     const checkoutBtn = document.querySelector('.checkout-btn');
     const cartItemsContainer = document.querySelector('.cart-items');
+    const cartSummaryContainer = document.querySelector('.cart-summary');
 
     loadCart();
 
     // Add event listener to the checkout button
     checkoutBtn.addEventListener('click', function() {
         const cart = getCartItems();
+        const existingErrorMsg = document.querySelector('.cart-error-msg');
+
+        // Remove any existing error message
+        if (existingErrorMsg) {
+            existingErrorMsg.remove();
+        }
+
         if (cart.length === 0) {
-            alert('Your cart is empty. Please add items to proceed to checkout.');
+            // Display error message if the cart is empty
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'cart-error-msg';
+            errorMsg.textContent = 'Your cart is empty. Please add items to proceed to checkout.';
+            cartSummaryContainer.appendChild(errorMsg);
         } else {
-            window.location.href = '../Payment/PaymentMethod.html'; // Redirect to PaymentMethod.html
+            // Redirect to PaymentMethod.html if the cart is not empty
+            window.location.href = '../Payment/PaymentMethod.html';
         }
     });
 
@@ -61,28 +74,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function createCartItemElement(item) {
-    const cartItem = document.createElement('div');
-    cartItem.className = 'cart-item';
-    const adjustedImagePath = `${item.imagePath}`;
-    cartItem.innerHTML = `
-        <div class="book-cover">
-            <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.jpg'">
-        </div>
-        <div class="book-info">
-            <h3>${item.title}</h3>
-            <p class="author">by ${item.author}</p>
-            <p class="rental-period">Rental Period: ${item.rentalPeriod}</p>
-        </div>
-        <div class="quantity-control">
-            <button class="quantity-btn minus">-</button>
-            <input type="number" value="${item.quantity}" min="1" class="quantity-input">
-            <button class="quantity-btn plus">+</button>
-        </div>
-        <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
-        <button class="remove-btn">✕</button>
-    `;
-    return cartItem;
-}
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        const adjustedImagePath = `${item.imagePath}`;
+        cartItem.innerHTML = `
+            <div class="book-cover">
+                <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.jpg'">
+            </div>
+            <div class="book-info">
+                <h3>${item.title}</h3>
+                <p class="author">by ${item.author}</p>
+                <p class="rental-period">Rental Period: ${item.rentalPeriod}</p>
+            </div>
+            <div class="quantity-control">
+                <button class="quantity-btn minus">-</button>
+                <input type="number" value="${item.quantity}" min="1" class="quantity-input">
+                <button class="quantity-btn plus">+</button>
+            </div>
+            <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
+            <button class="remove-btn">✕</button>
+        `;
+        return cartItem;
+    }
 
     function updateTotals() {
         const cart = getCartItems();
