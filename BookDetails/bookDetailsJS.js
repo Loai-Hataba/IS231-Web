@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="meta-value">${selectedBook.tags.join(', ')}</span>
                     </div>
                 </div>
+                <button class="btn" onclick="window.location.href='../PaymentMethod/Cart/Cart.html'">Add to shopping cart</button>
                 <div class="description">
                     <h2 class="section-title">Description</h2>
                     <p>${selectedBook.description}</p>
