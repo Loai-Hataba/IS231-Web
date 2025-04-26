@@ -52,33 +52,38 @@ document.getElementById('signup-form').addEventListener('submit', function(event
         return;
     }
 
-    // Create user data
-    const userData = {
-        firstName,
-        lastName,
-        email,
-        password,
-        createdAt: new Date().toISOString(),
-        isAdmin: isAdmin
-    };
-
-        // Save to localStorage
-        try {
-            const users = JSON.parse(localStorage.getItem('conquista_users')) || [];
-            if (users.some(user => user.email === email)) {
-                showError(document.getElementById('email'), 'This email is already registered');
-                setLoading(false);
-                return;
-            }
-            users.push(userData);
-            localStorage.setItem('conquista_users', JSON.stringify(users));
-            
-            alert('Sign up successful!');
-            window.location.href = 'login.html';
-        } catch (error) {
-            console.error('Error saving user:', error);
-            alert('An error occurred during registration. Please try again.');
+    // Replace the localStorage save block with this improved version
+    try {
+        // Check if email exists
+        const existingUser = localStorage.getItem(`user_${email}`);
+        if (existingUser) {
+            showError(document.getElementById('email'), 'This email is already registered');
             setLoading(false);
+            return;
+        }
+
+        // Create and store user data
+        const userData = {
+            firstName,
+            lastName,
+            email,
+            password,
+            createdAt: new Date().toISOString(),
+            isAdmin: isAdmin,
+            id: Date.now()
+        };
+
+        // Store user data only
+        localStorage.setItem(`user_${email}`, JSON.stringify(userData));
+        
+        // Show success message and redirect to login
+        alert('Account created successfully! Please log in.');
+        window.location.href = 'login.html';
+
+    } catch (error) {
+        console.error('Registration error:', error);
+        alert('An error occurred during registration. Please try again.');
+        setLoading(false);
     };
 });
 // function to toggle the password visiability
