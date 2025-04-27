@@ -106,6 +106,48 @@ document.addEventListener('DOMContentLoaded', function() {
         bookContainer.innerHTML = '<p>No book selected. Please go back and select a book.</p>';
     }
 
+
+    // Load all books from localStorage
+    const books = JSON.parse(localStorage.getItem('books')) || [];
+
+    if (selectedBook && books.length > 0) {
+    // Find similar books (sharing at least one tag, and not the selected book itself)
+    const similarBooks = books.filter(book => {
+        if (book.ID === selectedBook.ID) return false; // Skip the selected book
+        return book.tags.some(tag => selectedBook.tags.includes(tag));
+    }).slice(0, 5); // Optional: limit to 5 books
+
+    // Target the container where similar books should go
+    const bookGrid = document.querySelector('.similar-books .book-grid');
+    bookGrid.innerHTML = ''; // Clear existing static books if any
+
+    // Populate similar books
+    similarBooks.forEach(book => {
+        const adjustedImagePath = `../BookList/${book.imagePath}`;
+
+        const bookCard = document.createElement('div');
+        bookCard.className = 'book-card';
+        bookCard.innerHTML = `
+            <img src="${adjustedImagePath}" alt="${book.title}">
+            <h3 class="book-card-title">${book.title}</h3>
+            <p class="book-card-author">${book.author}</p>
+        `;
+
+        // OPTIONAL: Make clicking the card open that book's page
+        bookCard.addEventListener('click', () => {
+            localStorage.setItem('selectedBook', JSON.stringify(book));
+            window.location.href = 'bookDetails.html';
+        });
+
+        bookGrid.appendChild(bookCard);
+    });
+}
+
+
+
+
+
+
     // Function to generate star ratings
     function generateStars(rating) {
         const fullStars = Math.floor(rating);

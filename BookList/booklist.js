@@ -207,10 +207,6 @@ const books = JSON.parse(localStorage.getItem('books')) || [];
     }
   `;
   document.head.appendChild(style);
-
-
-
-
   
     // Navigate to book details page with book data
     function navigateToBookDetails(book) {
