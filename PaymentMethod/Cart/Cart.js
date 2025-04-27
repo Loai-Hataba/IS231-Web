@@ -5,24 +5,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadCart();
 
-    // Add event listener to the checkout button
     checkoutBtn.addEventListener('click', function() {
         const cart = getCartItems();
         const existingErrorMsg = document.querySelector('.cart-error-msg');
 
-        // Remove any existing error message
         if (existingErrorMsg) {
             existingErrorMsg.remove();
         }
 
         if (cart.length === 0) {
-            // Display error message if the cart is empty
             const errorMsg = document.createElement('div');
             errorMsg.className = 'cart-error-msg';
             errorMsg.textContent = 'Your cart is empty. Please add items to proceed to checkout.';
             cartSummaryContainer.appendChild(errorMsg);
         } else {
-            // Redirect to PaymentMethod.html if the cart is not empty
             window.location.href = '../Payment/PaymentMethod.html';
         }
     });

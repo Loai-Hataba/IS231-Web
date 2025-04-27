@@ -125,14 +125,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (isValid) {
-            // Save the current cart to 'lastOrder' before clearing it
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             localStorage.setItem('lastOrder', JSON.stringify(cart));
 
-            // Clear the cart
             localStorage.setItem('cart', '[]');
 
-            // Redirect to Order Successful page
             window.location.href = '../Order/OrderSuccessful.html';
         } else {
             const firstError = document.querySelector('.error-message[style="display: block;"]');
@@ -143,12 +140,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function loadOrderSummary() {
-        const cart = JSON.parse(localStorage.getItem('cart')) || []; // Retrieve cart from localStorage
-        const orderSummaryContainer = document.querySelector('.book-items'); // Ensure this selector matches your HTML
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const orderSummaryContainer = document.querySelector('.book-items');
 
         if (!orderSummaryContainer) return;
 
-        orderSummaryContainer.innerHTML = ''; // Clear previous content
+        orderSummaryContainer.innerHTML = '';
 
         if (cart.length === 0) {
             const emptyMessage = document.createElement('div');
@@ -176,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
             orderSummaryContainer.appendChild(bookItem);
         });
 
-        // Update totals
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const tax = subtotal * 0.08;
         const total = subtotal + tax;
