@@ -756,20 +756,18 @@ function showCustomBookForm() {
         const signOutBtn = document.querySelector('.signout-btn');
 
         if (signOutBtn) {
-            signOutBtn.addEventListener('click', function() {
-                // Confirm before signing out
-                if (confirm('Are you sure you want to sign out?')) {
-                    // Clear session storage
-                    sessionStorage.removeItem('currentUser');
-                    
-                    // Show notification
-                    showNotification('You have been signed out successfully.');
-                    
-                    // Redirect to login page
-                    setTimeout(function() {
-                        window.location.href = '../Sign up & Log in & About Us/Forms/login.html';
-                    }, 1000);
-                }
+            signOutBtn.addEventListener('click', function(e) {
+                // Mark the event as handled by profile.js
+                e._profileJsHandled = true;
+                
+                // Clear session storage immediately without confirmation
+                sessionStorage.removeItem('currentUser');
+                
+                // Show notification
+                showNotification('You have been signed out successfully.');
+                
+                // Redirect to login page immediately
+                window.location.href = '../Sign up & Log in & About Us/Forms/login.html';
             });
         }
     }
@@ -843,7 +841,6 @@ function showCustomBookForm() {
         // Save to local storage
         localStorage.setItem('availableBooks', JSON.stringify(sampleBooks));
     }
-}
 });
 
 function addStyles() {
