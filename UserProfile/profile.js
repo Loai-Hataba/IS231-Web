@@ -11,25 +11,29 @@ document.addEventListener('DOMContentLoaded', function() {
     function initProgressBars() {
         // Get all progress cards
         const readCard = document.querySelector('.analytics .card:nth-child(1)');
-        const boughtCard = document.querySelector('.analytics .card:nth-child(2)');
-        const rentedCard = document.querySelector('.analytics .card:nth-child(3)');
+        const rentedCard = document.querySelector('.analytics .card:nth-child(2)');
+        const rentalsViewCard = document.querySelector('.analytics .card:nth-child(3)');
 
         // Initialize counters for each category
         if (readCard) {
             initCounter(readCard, 15, 20);
         }
 
-        if (boughtCard) {
-            initCounter(boughtCard, 6, 10);
-        }
-
         if (rentedCard) {
-            initCounter(rentedCard, 9, 10);
+            // Get current user's rental data
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email) {
+                const userOrders = JSON.parse(localStorage.getItem(`user_orders_${currentUser.email}`)) || [];
+                const totalRented = userOrders.reduce((count, order) => count + order.items.length, 0);
+                const goalRented = 10;
+                initCounter(rentedCard, Math.min(totalRented, goalRented), goalRented);
+            } else {
+                initCounter(rentedCard, 9, 10);
+            }
         }
 
         // Function to initialize counters with +/- buttons
         function initCounter(cardElement, current, total) {
-
             // Update the UI to reflect current state
             updateCounter(cardElement, current, total);
 
@@ -49,15 +53,15 @@ document.addEventListener('DOMContentLoaded', function() {
             decrementBtn.addEventListener('click', function() {
                 if (current > 0) {
                     current--;
-                    updateCounter(cardElement, current, total);
                 }
+                updateCounter(cardElement, current, total);
             });
 
             incrementBtn.addEventListener('click', function() {
                 if (current < total) {
                     current++;
-                    updateCounter(cardElement, current, total);
                 }
+                updateCounter(cardElement, current, total);
             });
 
             // Append buttons to container
@@ -172,8 +176,15 @@ function saveWishlistToLocalStorage() {
         });
     });
 
-    // Save to local storage
-    localStorage.setItem('userWishlist', JSON.stringify(wishlist));
+    // Get current user
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentUser && currentUser.email) {
+        // Save wishlist associated with user email
+        localStorage.setItem(`wishlist_${currentUser.email}`, JSON.stringify(wishlist));
+    } else {
+        // Save to general storage if no user is logged in
+        localStorage.setItem('userWishlist', JSON.stringify(wishlist));
+    }
 }
 
 // Enhanced book details function to show more information
@@ -188,7 +199,6 @@ function showBookDetails(bookId, title, author = '') {
             ${author ? `<p class="book-author">by ${author}</p>` : ''}
             <div class="book-actions">
                 <button class="action-btn read-btn">Mark as Read</button>
-                <button class="action-btn buy-btn">Buy</button>
                 <button class="action-btn rent-btn">Rent</button>
             </div>
         </div>
@@ -213,8 +223,7 @@ function showBookDetails(bookId, title, author = '') {
     const actionBtns = modal.querySelectorAll('.action-btn');
     actionBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            const action = this.classList.contains('read-btn') ? 'read' :
-                          this.classList.contains('buy-btn') ? 'bought' : 'rented';
+            const action = this.classList.contains('read-btn') ? 'read' : 'rented';
 
             // Here you could update your progress bars
             updateBookAction(action);
@@ -233,11 +242,8 @@ function updateBookAction(action) {
         case 'read':
             cardElement = document.querySelector('.analytics .card:nth-child(1)');
             break;
-        case 'bought':
-            cardElement = document.querySelector('.analytics .card:nth-child(2)');
-            break;
         case 'rented':
-            cardElement = document.querySelector('.analytics .card:nth-child(3)');
+            cardElement = document.querySelector('.analytics .card:nth-child(2)');
             break;
     }
 
@@ -253,26 +259,7 @@ function updateBookAction(action) {
             // Increment the counter if not at max
             if (current < total) {
                 current++;
-
-                // Find and call the updateCounter function
-                const updateCounterFn = window.updateCounter;
-                if (typeof updateCounterFn === 'function') {
-                    updateCounterFn(cardElement, current, total);
-                } else {
-                    // Fallback if the function isn't accessible
-                    const countEl = cardElement.querySelector('p');
-                    const barEl = cardElement.querySelector('.bar');
-
-                    if (countEl && barEl) {
-                        countEl.textContent = `${current} of ${total} goal`;
-                        const percentage = (current / total) * 100;
-                        barEl.style.width = `${percentage}%`;
-
-                        if (percentage === 100) {
-                            barEl.classList.add('completed');
-                        }
-                    }
-                }
+                updateCounter(cardElement, current, total);
             }
         }
     }
@@ -295,10 +282,14 @@ function removeFromWishlist(bookElement) {
         showNotification('Book removed from wishlist');
     }, 300);
 }
+
     // 2. Wishlist Functionality
     function initWishlist() {
         // Get all books in the wishlist
         const books = document.querySelectorAll('.book-grid .book');
+
+        // Load wishlist from local storage for current user
+        loadWishlistFromStorage();
 
         // Add data attributes to each book for identification
         books.forEach((book, index) => {
@@ -319,7 +310,7 @@ function removeFromWishlist(bookElement) {
 
             // Add event listener to remove button
             removeBtn.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent triggering the parent click event
+                e.stopPropagation();
                 const bookElement = this.parentElement;
                 removeFromWishlist(bookElement);
             });
@@ -340,6 +331,38 @@ function removeFromWishlist(bookElement) {
         // Insert button after the heading
         const wishlistHeading = wishlistSection.querySelector('h2');
         wishlistHeading.parentNode.insertBefore(addBookBtn, wishlistHeading.nextSibling);
+
+        // Function to load wishlist from storage
+        function loadWishlistFromStorage() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            let wishlistData = [];
+            
+            if (currentUser && currentUser.email) {
+                wishlistData = JSON.parse(localStorage.getItem(`wishlist_${currentUser.email}`)) || [];
+            } else {
+                wishlistData = JSON.parse(localStorage.getItem('userWishlist')) || [];
+            }
+            
+            const bookGrid = document.querySelector('.book-grid');
+            if (bookGrid && wishlistData.length > 0) {
+                // Clear existing books
+                bookGrid.innerHTML = '';
+                
+                // Add books from storage
+                wishlistData.forEach(book => {
+                    const bookElement = document.createElement('div');
+                    bookElement.className = 'book';
+                    bookElement.setAttribute('data-book-id', book.id);
+                    
+                    bookElement.innerHTML = `
+                        <img src="${book.image}" alt="${book.title} by ${book.author}">
+                        <p>${book.title}</p>
+                    `;
+                    
+                    bookGrid.appendChild(bookElement);
+                });
+            }
+        }
 
         // Function to show book details
         function showBookDetails(bookId, bookTitle) {
@@ -380,7 +403,8 @@ function removeFromWishlist(bookElement) {
             // Remove element after animation completes
             setTimeout(() => {
                 bookElement.remove();
-                // Here you would typically send a request to your backend
+                // Update local storage
+                saveWishlistToLocalStorage();
                 console.log(`Removed book with ID: ${bookElement.getAttribute('data-book-id')}`);
             }, 300);
         }
@@ -440,22 +464,16 @@ function removeFromWishlist(bookElement) {
     bookItems.forEach(item => {
         item.addEventListener('click', function() {
             // Toggle selection
-            if (this.classList.contains('selected')) {
-                this.classList.remove('selected');
-            } else {
-                // Clear any previous selection
-                bookItems.forEach(book => book.classList.remove('selected'));
-                this.classList.add('selected');
-            }
+            bookItems.forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
         });
 
         // Add double-click to immediately add the book
         item.addEventListener('dblclick', function() {
-            const bookId = this.getAttribute('data-book-id');
-            const selectedBook = availableBooks.find(book => book.id === bookId);
-
-            if (selectedBook) {
-                addBookToWishlist(selectedBook.title, selectedBook.author, selectedBook.image);
+            const bookId = this.dataset.bookId;
+            const book = availableBooks.find(b => b.id === bookId);
+            if (book) {
+                addBookToWishlist(book.title, book.author, book.image);
                 modal.remove();
             }
         });
@@ -470,15 +488,14 @@ function removeFromWishlist(bookElement) {
         const selectedItem = modal.querySelector('.book-selection-item.selected');
 
         if (selectedItem) {
-            const bookId = selectedItem.getAttribute('data-book-id');
-            const selectedBook = availableBooks.find(book => book.id === bookId);
-
-            if (selectedBook) {
-                addBookToWishlist(selectedBook.title, selectedBook.author, selectedBook.image);
+            const bookId = selectedItem.dataset.bookId;
+            const book = availableBooks.find(b => b.id === bookId);
+            if (book) {
+                addBookToWishlist(book.title, book.author, book.image);
                 modal.remove();
             }
         } else {
-            showNotification('Please select a book first', 'error');
+            alert('Please select a book first');
         }
     });
     selectionActions.prepend(addSelectedBtn);
@@ -544,14 +561,23 @@ function showCustomBookForm() {
 
         addBookToWishlist(title, author, imageUrl);
         modal.remove();
-});
+    });
         }
     }
 
     // 3. User Profile Functionality
     function initUserProfile() {
         const userSection = document.querySelector('.user-profile');
-        const userName = userSection.querySelector('h1').textContent.replace('Welcome back, ', '');
+        
+        // Load user data from session storage
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || {};
+        const userName = currentUser.firstName || 'User';
+        
+        // Update welcome message if needed
+        const welcomeHeading = userSection.querySelector('h1');
+        if (welcomeHeading) {
+            welcomeHeading.textContent = `Welcome back, ${userName}`;
+        }
 
         // Create edit button
         const editBtn = document.createElement('button');
@@ -561,6 +587,12 @@ function showCustomBookForm() {
 
         // Add event listener to show edit form
         editBtn.addEventListener('click', showEditProfileForm);
+        
+        // Set up rentals button
+        const viewRentalsBtn = document.getElementById('view-rentals-btn');
+        if (viewRentalsBtn) {
+            viewRentalsBtn.addEventListener('click', showUserRentals);
+        }
 
         function showEditProfileForm() {
             const modal = document.createElement('div');
@@ -626,11 +658,96 @@ function showCustomBookForm() {
             userSection.querySelector('p').textContent = `"${quote}"`;
             userSection.querySelector('img').src = imageUrl;
 
+            // Update user in session storage
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || {};
+            currentUser.firstName = name;
+            currentUser.quote = quote;
+            currentUser.imageUrl = imageUrl;
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
             // Show confirmation message
             showNotification('Profile updated successfully!');
 
             // Here you would typically send this data to your backend
             console.log('Profile updated:', { name, quote, imageUrl });
+        }
+        
+        function showUserRentals() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            if (!currentUser || !currentUser.email) {
+                showNotification('Please log in to view your rentals', 'error');
+                return;
+            }
+            
+            const userOrders = JSON.parse(localStorage.getItem(`user_orders_${currentUser.email}`)) || [];
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal rentals-modal';
+            
+            let rentalsHTML = '';
+            let hasRentals = false;
+            
+            // Process all orders to get rental information
+            userOrders.forEach((order, index) => {
+                if (order.items && order.items.length > 0) {
+                    hasRentals = true;
+                    const orderDate = new Date(order.date).toLocaleDateString();
+                    
+                    rentalsHTML += `
+                        <div class="order">
+                            <h3>Order #${order.orderId}</h3>
+                            <p class="order-date">Ordered on: ${orderDate}</p>
+                            <div class="rented-books">
+                    `;
+                    
+                    order.items.forEach(item => {
+                        rentalsHTML += `
+                            <div class="rented-book">
+                                <img src="../${item.imagePath}" alt="${item.title}" onerror="this.src='../PaymentMethod/assets/placeholder.jpg'">
+                                <div class="book-details">
+                                    <h4>${item.title}</h4>
+                                    <p>by ${item.author}</p>
+                                    <p class="rental-period">Rental period: ${item.rentalPeriod}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    rentalsHTML += `
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (!hasRentals) {
+                rentalsHTML = '<div class="no-rentals">You haven\'t rented any books yet.</div>';
+            }
+            
+            modal.innerHTML = `
+                <div class="modal-content rentals-content">
+                    <span class="close-modal">&times;</span>
+                    <h2>My Rented Books</h2>
+                    <div class="rentals-container">
+                        ${rentalsHTML}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add close functionality
+            const closeBtn = modal.querySelector('.close-modal');
+            closeBtn.addEventListener('click', function() {
+                modal.remove();
+            });
+            
+            // Close if clicking outside the modal content
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
         }
     }
 
@@ -642,11 +759,16 @@ function showCustomBookForm() {
             signOutBtn.addEventListener('click', function() {
                 // Confirm before signing out
                 if (confirm('Are you sure you want to sign out?')) {
-                    // Here you would handle the actual sign out process
-                    console.log('User signed out');
-
-                    // Redirect to home page
-                    window.location.href = '../Landing Page/Index.html';
+                    // Clear session storage
+                    sessionStorage.removeItem('currentUser');
+                    
+                    // Show notification
+                    showNotification('You have been signed out successfully.');
+                    
+                    // Redirect to login page
+                    setTimeout(function() {
+                        window.location.href = '../Sign up & Log in & About Us/Forms/login.html';
+                    }, 1000);
                 }
             });
         }
@@ -675,6 +797,7 @@ function showCustomBookForm() {
             }, 300);
         }, 3000);
     }
+    
     function initSampleBooks() {
     // Check if books exist in local storage
     if (!localStorage.getItem('availableBooks')) {
@@ -940,7 +1063,7 @@ function addStyles() {
         .notification.error {
             background-color: #f44336;
         }
-         styleEl.innerHTML += \`
+
         /* Book Selection Modal */
         .book-selection-modal {
             max-width: 700px;
@@ -1026,6 +1149,88 @@ function addStyles() {
         
         #add-new-book-btn:hover {
             background-color: #e0e0e0;
+        }
+        
+        /* Rentals styles */
+        .view-rentals-btn {
+            background-color: #a17d4d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        .view-rentals-btn:hover {
+            background-color: #86683d;
+        }
+        
+        .rentals-modal .modal-content {
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .rentals-container {
+            margin-top: 15px;
+        }
+        
+        .order {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-date {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .rented-books {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        
+        .rented-book {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .rented-book:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .rented-book img {
+            max-width: 100px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .book-details h4 {
+            margin: 0 0 5px;
+        }
+        
+        .rental-period {
+            color: #a17d4d;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        .no-rentals {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 18px;
         }
     `;
 

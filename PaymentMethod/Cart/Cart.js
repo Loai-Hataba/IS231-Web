@@ -121,6 +121,13 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
             <button class="remove-btn">✕</button>
         `;
+        return cartItem;
+    }
+
+    function updateTotals() {
+        const cart = getCartItems();
+        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const tax = subtotal * 0.08; // 8% tax
         const total = subtotal + tax;
         
         if (elements.subtotalElement) elements.subtotalElement.textContent = '$' + subtotal.toFixed(2);
@@ -140,6 +147,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         localStorage.setItem('cart', JSON.stringify(updatedCart));
+        
+        // Update the price display for this item
+        const priceElement = cartItemElement.querySelector('.book-price');
+        const itemData = updatedCart.find(item => item.title === bookTitle);
+        if (priceElement && itemData) {
+            priceElement.textContent = '$' + (itemData.price * itemData.quantity).toFixed(2);
+        }
+        
         updateTotals();
     }
 
@@ -147,13 +162,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const cart = getCartItems();
         const updatedCart = cart.filter(item => item.title !== bookTitle);
         localStorage.setItem('cart', JSON.stringify(updatedCart));
-        
-        if (updatedCart.length === 0) {
-            elements.cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
-        }
     }
 
     function getCartItems() {
         return JSON.parse(localStorage.getItem('cart') || '[]');
+    }
+    
+    function toggleEmptyCartUI(isEmpty) {
+        if (isEmpty) {
+            elements.priceSummary.style.opacity = '0.5';
+            elements.checkoutBtn.disabled = true;
+        } else {
+            elements.priceSummary.style.opacity = '1';
+            elements.checkoutBtn.disabled = false;
+        }
+    }
+    
+    function checkEmptyCart() {
+        const cart = getCartItems();
+        if (cart.length === 0) {
+            elements.cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
+            toggleEmptyCartUI(true);
+        }
     }
 });

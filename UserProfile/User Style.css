@@ -90,6 +90,29 @@ body {
   margin-bottom: 10px;
 }
 
+.view-rented-books {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-rentals-btn {
+  background-color: #a17d4d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.view-rentals-btn:hover {
+  background-color: #86683d;
+}
+
 .wishlist h2 {
   font-size: 24px;
   margin-bottom: 20px;
@@ -120,6 +143,81 @@ body {
   transition: transform 0.3s ease-in-out;
 }
 
+/* New styles for the rented books section */
+.rented-books-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+  margin-bottom: 50px;
+  border: 1px solid #f0d5b3;
+  position: relative;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.rented-books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.rented-book {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.rented-book:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.rented-book img {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.rental-info {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.rental-period {
+  font-weight: 500;
+  color: #a17d4d;
+}
+
+.rent-date {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
 .footer {
   margin-top: 40px;
   padding: 20px 0;
@@ -143,6 +241,17 @@ body {
 .footer a.active {
   font-weight: 600;
   color: #000;
+}
+
+/* Added animation for the rented books section */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rented-books-section.active {
+  display: block;
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
 
