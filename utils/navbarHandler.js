@@ -1,31 +1,21 @@
-/**
- * navbarHandler.js - Handles updating navigation elements based on user login status
- * This script checks if a user is logged in and updates navigation buttons accordingly
- */
 
 document.addEventListener('DOMContentLoaded', function() {
     updateNavigation();
 });
 
-/**
- * Updates navigation elements based on user login status
- */
 function updateNavigation() {
-    // Check if user is logged in by getting data from sessionStorage
+   
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     
-    // If user is logged in, replace sign up buttons with profile button
+   
     if (currentUser) {
-        // Handle different navigation structures across the site
+      
         updateLandingPageNav(currentUser);
         updateStandardNav(currentUser);
     }
 }
 
-/**
- * Updates the landing page navigation
- * @param {Object} user - The current user object
- */
+
 function updateLandingPageNav(user) {
     // Find the signup button in the navigation
     const signupButton = document.querySelector('.navigation .button .sign-up');
@@ -62,10 +52,7 @@ function updateLandingPageNav(user) {
     }
 }
 
-/**
- * Updates standard navigation across other pages
- * @param {Object} user - The current user object
- */
+
 function updateStandardNav(user) {
     // For other pages that have different navigation structure
     const navLinks = document.querySelectorAll('header nav ul');
@@ -101,11 +88,7 @@ function updateStandardNav(user) {
     });
 }
 
-/**
- * Updates a DOM element with appropriate profile link
- * @param {Element} element - The element to update 
- * @param {Object} user - The current user object
- */
+
 function updateProfileLink(element, user) {
     // Determine current page level (for proper relative paths)
     const pathPrefix = window.location.pathname.includes('/Landing Page/') ? '../' : '../../';
