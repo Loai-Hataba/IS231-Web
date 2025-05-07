@@ -371,4 +371,10 @@ nav ul li a {
     .details-grid {
         grid-template-columns: 1fr;
     }
+
+    .unavailable-message {
+        color: red;
+        font-weight: bold;
+        margin-top: 10px;
+    }
 }

@@ -1,5 +1,4 @@
 
-
 const books = JSON.parse(localStorage.getItem('books')) || [];
   
   document.addEventListener('DOMContentLoaded', function() {
@@ -11,7 +10,7 @@ const books = JSON.parse(localStorage.getItem('books')) || [];
     
     let currentFilter = 'All';
     let searchQuery = '';
-    let displayedBooks = [...books.slice(0, 9)]; // Initially show the first 9 books
+    let displayedBooks = [...books.slice(0, 9)];
     let showingAdditional = false;
   
     //initialize the page

@@ -1,6 +1,7 @@
 // Define the book class with all required properties
 class Book {
-    constructor(ID, title, description, imagePath, tags, author, publisher, publishDate, pages, language, isbn, rating, reviews = [], quotes=[], details=[]) {
+    constructor(ID, title, description, imagePath, tags, author, publisher, publishDate, pages, language, isbn, rating,inStock, reviews = [], quotes=[], details=[]) {
+      console.log(`Creating book: ${title}, inStock: ${inStock}`);
       this.ID = ID;
       this.title = title;
       this.description = description;
@@ -13,11 +14,20 @@ class Book {
       this.language = language;
       this.isbn = isbn;
       this.rating = rating; // Float between 0-5
-      this.inStock = true;
+      this.inStock = inStock;
       this.reviews = reviews;
       this.quotes = quotes; 
       this.details = details;
     }
+  }
+
+  // Refresh booklist in local storage 
+  // in the landing page open the developers tools and in the console use the command "localStorage.removeItem('initialized');" then refresh the page
+  if (!localStorage.getItem('initialized')) {
+    localStorage.removeItem('books');
+    localStorage.removeItem('selectedBook');
+    localStorage.setItem('initialized', 'true');
+    console.log("LocalStorage cleared and reset.");
   }
   
   if (!localStorage.getItem('books') || localStorage.getItem('books') === '[]') {
@@ -36,6 +46,7 @@ class Book {
         "English",
         "978-3-16-148410-0",
         4.5,
+        false,
         [
             { reviewer: "Emily Chen", rating: 5, date: "April 2, 2025", text: "An inspiring story of courage and hope." },
             { reviewer: "Marcus Johnson", rating: 4, date: "March 15, 2025", text: "A well-written tale, though a bit predictable." }
@@ -62,6 +73,7 @@ class Book {
         "English",
         "978-1-54-782301-5",
         4.2,
+        true,
         [
             { reviewer: "Lila Thompson", rating: 5, date: "October 5, 2023", text: "A colorful and inspiring read for creatives." },
             { reviewer: "Aaron Patel", rating: 4, date: "September 20, 2023", text: "In-depth, though could use more examples." }
@@ -88,6 +100,7 @@ class Book {
         "English",
         "978-0-57-129087-3",
         4.7,
+        true,
         [
             { reviewer: "Ben Crawford", rating: 5, date: "February 2, 2023", text: "Heart-pounding till the very last page." },
             { reviewer: "Nina Park", rating: 4, date: "February 10, 2023", text: "Loved the characters, wished it was longer." }
@@ -114,6 +127,7 @@ class Book {
         "English",
         "978-1-33-821666-0",
         4.3,
+        false,
         [
             { reviewer: "Rachel Moore", rating: 4, date: "August 10, 2016", text: "Nostalgic yet refreshing for Potter fans." },
             { reviewer: "Tom Evans", rating: 3.5, date: "August 15, 2016", text: "Different format but still magical." }
@@ -140,6 +154,7 @@ class Book {
         "English",
         "978-0-99-876543-2",
         4.1,
+        true,
         [
             { reviewer: "Chris Nolan", rating: 4, date: "June 5, 2023", text: "Gripping and vividly descriptive." },
             { reviewer: "Olivia Brooks", rating: 4.5, date: "June 8, 2023", text: "You can almost feel the cold winds!" }
@@ -166,6 +181,7 @@ class Book {
         "English",
         "978-1-10-193136-0",
         4.4,
+        true,
         [
           { reviewer: "Samantha Lee", rating: 5, date: "March 12, 2025", text: "A heartfelt, empowering adventure." },
           { reviewer: "Daniel Cruz", rating: 4, date: "February 27, 2025", text: "Beautifully written and deeply moving." }
@@ -192,6 +208,7 @@ class Book {
         "English",
         "978-0-73-522983-1",
         4.0,
+        true,
         [
           { reviewer: "Olivia Adams", rating: 4, date: "June 10, 2025", text: "A refreshing blend of magic and sci-fi." },
           { reviewer: "Leo Smith", rating: 4, date: "May 30, 2025", text: "Engaging and imaginative space adventure." }
@@ -218,6 +235,7 @@ class Book {
         "English",
         "978-2-44-556677-8",
         4.6,
+        true,
         [
           { reviewer: "Charlotte Mills", rating: 5, date: "November 5, 2025", text: "Gripping and atmospheric!" },
           { reviewer: "Henry Dalton", rating: 4, date: "October 20, 2025", text: "A compelling mystery with rich details." }
@@ -244,6 +262,7 @@ class Book {
         "English",
         "978-1-91-221321-5",
         4.2,
+        true,
         [
           { reviewer: "Megan Cross", rating: 4, date: "June 15, 2025", text: "Twists you won't see coming." },
           { reviewer: "Jonas Field", rating: 5, date: "May 25, 2025", text: "A chilling, thought-provoking thriller." }
@@ -270,6 +289,7 @@ class Book {
         "English",
         "978-3-22-987654-1",
         3.9,
+        true,
         [
           { reviewer: "Ava Monroe", rating: 4, date: "July 2, 2025", text: "Spine-tingling and atmospheric horror." },
           { reviewer: "Ethan Carter", rating: 3, date: "June 15, 2025", text: "Creepy but a bit slow at times." }
@@ -296,6 +316,7 @@ class Book {
         "English",
         "978-5-11-223344-5",
         4.8,
+        true,
         [
           { reviewer: "Lucas Wright", rating: 5, date: "May 1, 2025", text: "Profound and deeply moving examination of humanity." },
           { reviewer: "Sophia Ray", rating: 5, date: "April 20, 2025", text: "Challenges your perception of self and consciousness." }
@@ -322,6 +343,7 @@ class Book {
         "English",
         "978-8-77-665544-3",
         4.5,
+        true,
         [
           { reviewer: "Isabella Grey", rating: 5, date: "December 5, 2025", text: "Epic in every sense. Truly unforgettable." },
           { reviewer: "Mason Hill", rating: 4, date: "November 25, 2025", text: "Rich world-building and complex hero." }
@@ -348,6 +370,7 @@ class Book {
         "English",
         "978-0-12-345678-9",
         4.7,
+        true,
         [
           { reviewer: "Natalie Foster", rating: 5, date: "February 1, 2025", text: "Made complex ideas surprisingly understandable." },
           { reviewer: "Victor Han", rating: 5, date: "January 20, 2025", text: "An exhilarating dive into quantum wonders." }
@@ -374,6 +397,7 @@ class Book {
         "English",
         "978-1-23-456789-0",
         4.3,
+        true,
         [
           { reviewer: "James Porter", rating: 4, date: "September 15, 2025", text: "Rich with fascinating historical detail." },
           { reviewer: "Caroline Swift", rating: 4, date: "August 30, 2025", text: "A vivid portrayal of the end of an era." }
@@ -400,6 +424,7 @@ class Book {
         "English",
         "978-2-34-567890-1",
         4.1,
+        true,
         [
           { reviewer: "Liam Drake", rating: 4, date: "November 2, 2025", text: "Creepy and thought-provoking tales." },
           { reviewer: "Ella Monroe", rating: 4, date: "October 31, 2025", text: "Perfect for a dark and stormy night." }

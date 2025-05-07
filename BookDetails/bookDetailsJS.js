@@ -9,7 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Retrieving the selected book data from localStorage
     const selectedBook = JSON.parse(localStorage.getItem('selectedBook'));
 
+
     if (selectedBook) {
+        console.log(`the book "${selectedBook.title}" has inStock set to : ${selectedBook.inStock}`);
+
+
         const adjustedImagePath = `../BookList/${selectedBook.imagePath}`;
 
         // Populate the book details dynamically
@@ -49,7 +53,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="meta-value">${selectedBook.tags.join(', ')}</span>
                     </div>
                 </div>
-                <button class="btn add-to-cart-btn">Add to shopping cart</button>
+                ${
+                    selectedBook.inStock
+                    ? `<button class="btn add-to-cart-btn">Add to shopping cart</button>`
+                    : `<p class="unavailable-message">This book is currently unavailable.</p>`
+                }
+                
                 <div class="description">
                     <h2 class="section-title">Description</h2>
                     <p>${selectedBook.description}</p>
@@ -94,13 +103,18 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
+
         // Add to cart functionality
         const addToCartBtn = document.querySelector('.add-to-cart-btn');
-        addToCartBtn.addEventListener('click', function() {
-            addToCart(selectedBook);
-            // Redirect to cart page
-            window.location.href = '../PaymentMethod/Cart/Cart.html';
-        });
+        if (addToCartBtn){
+            addToCartBtn.addEventListener('click', function() {
+                addToCart(selectedBook);
+                // Redirect to cart page
+                window.location.href = '../PaymentMethod/Cart/Cart.html';
+            });
+        } else {
+            console.log("hidden add cart button 👍");
+        }
     } else {
         // If no book is selected, show an error message
         bookContainer.innerHTML = '<p>No book selected. Please go back and select a book.</p>';
@@ -110,19 +124,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load all books from localStorage
     const books = JSON.parse(localStorage.getItem('books')) || [];
 
+    
     if (selectedBook && books.length > 0) {
     // Find similar books (sharing at least one tag, and not the selected book itself)
     const similarBooks = books.filter(book => {
         if (book.ID === selectedBook.ID) return false; // Skip the selected book
         return book.tags.some(tag => selectedBook.tags.includes(tag));
-    }).slice(0, 5); // Optional: limit to 5 books
+    }).slice(0, 5);
 
     // Target the container where similar books should go
     const bookGrid = document.querySelector('.similar-books .book-grid');
     bookGrid.innerHTML = ''; // Clear existing static books if any
 
+
     // Populate similar books
     similarBooks.forEach(book => {
+
         const adjustedImagePath = `../BookList/${book.imagePath}`;
 
         const bookCard = document.createElement('div');
@@ -133,13 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="book-card-author">${book.author}</p>
         `;
 
-        // OPTIONAL: Make clicking the card open that book's page
         bookCard.addEventListener('click', () => {
             localStorage.setItem('selectedBook', JSON.stringify(book));
             window.location.href = 'bookDetails.html';
         });
 
         bookGrid.appendChild(bookCard);
+
     });
 }
 
