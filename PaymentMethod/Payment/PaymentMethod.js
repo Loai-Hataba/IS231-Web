@@ -1,16 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const paymentDetails = document.querySelectorAll('.payment-details');
-    paymentDetails.forEach(detail => {
+    // Cache DOM elements for better performance
+    const elements = {
+        paymentDetails: document.querySelectorAll('.payment-details'),
+        paymentMethods: document.querySelectorAll('.payment-method'),
+        formInputs: document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]'),
+        submitBtn: document.querySelector('.checkout'),
+        orderSummaryContainer: document.querySelector('.book-items'),
+        subtotalElement: document.querySelector('.price-sub span:last-child'),
+        taxElement: document.querySelector('.price-tax span:last-child'),
+        totalElement: document.querySelector('.price-total span:last-child')
+    };
+    
+    // Initialize payment details (hide all by default)
+    elements.paymentDetails.forEach(detail => {
         detail.style.display = 'none';
     });
     
     loadOrderSummary();
 
-    const paymentMethods = document.querySelectorAll('.payment-method');
-    paymentMethods.forEach(method => {
+    // Set up payment method selection
+    elements.paymentMethods.forEach(method => {
         const radio = method.querySelector('input[type="radio"]');
         radio.addEventListener('change', function() {
-            paymentDetails.forEach(detail => {
+            elements.paymentDetails.forEach(detail => {
                 detail.style.display = 'none';
             });
             
@@ -21,41 +33,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('fawry-details').style.display = 'block';
             }
             
-            paymentMethods.forEach(m => {
+            elements.paymentMethods.forEach(m => {
                 m.classList.remove('active');
             });
             method.classList.add('active');
         });
     });
 
-    const formStyles = document.createElement('style');
-    formStyles.textContent = `
-        .error-message {
-            color: #ff3333;
-            font-size: 0.85rem;
-            margin-top: 4px;
-            display: none;
-        }
-        
-        input.error {
-            border: 1px solid #ff3333;
-            background-color: rgba(255, 51, 51, 0.03);
-        }
-        
-        .shake {
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-    `;
-    document.head.appendChild(formStyles);
-
-    const formInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
-    formInputs.forEach(input => {
+    // Set up form validation error messages
+    elements.formInputs.forEach(input => {
         const errorMsg = document.createElement('div');
         errorMsg.className = 'error-message';
         errorMsg.id = input.id + '-error';
@@ -70,12 +56,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    const submitBtn = document.querySelector('.btn-primary');
-    submitBtn.addEventListener('click', function(e) {
+    // Handle form submission
+    elements.submitBtn.addEventListener('click', function(e) {
         e.preventDefault();
         
         let isValid = true;
         
+        // Validate general fields
         const requiredGeneralFields = ['fullname', 'email', 'phone', 'address', 'city'];
         requiredGeneralFields.forEach(id => {
             const input = document.getElementById(id);
@@ -84,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        
+        // Validate payment method selection
         const paymentSelected = document.querySelector('input[name="payment"]:checked');
         if (!paymentSelected) {
             isValid = false;
@@ -108,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const paymentType = paymentSelected.closest('.payment-method').getAttribute('data-payment');
 
+            // Validate payment-specific fields
             if (paymentType === 'credit') {
                 const cardFields = ['card-number', 'expiry', 'cvv'];
                 cardFields.forEach(field => {
@@ -124,14 +112,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Process valid form submission
         if (isValid) {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             localStorage.setItem('lastOrder', JSON.stringify(cart));
-
             localStorage.setItem('cart', '[]');
-
             window.location.href = '../Order/OrderSuccessful.html';
         } else {
+            // Scroll to first error
             const firstError = document.querySelector('.error-message[style="display: block;"]');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -139,21 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Load order summary from cart
     function loadOrderSummary() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const orderSummaryContainer = document.querySelector('.book-items');
-
-        if (!orderSummaryContainer) return;
-
-        orderSummaryContainer.innerHTML = '';
-
-        if (cart.length === 0) {
-            const emptyMessage = document.createElement('div');
-            emptyMessage.className = 'empty-cart-message';
-            emptyMessage.textContent = 'Your cart is empty!';
-            orderSummaryContainer.appendChild(emptyMessage);
-            return;
-        }
+        
+        if (!elements.orderSummaryContainer) return;
+        elements.orderSummaryContainer.innerHTML = '';
 
         cart.forEach(item => {
             const adjustedImagePath = `${item.imagePath}`;
@@ -170,9 +149,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
             `;
-            orderSummaryContainer.appendChild(bookItem);
+            elements.orderSummaryContainer.appendChild(bookItem);
         });
 
+        // Calculate and update totals
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const tax = subtotal * 0.08;
         const total = subtotal + tax;
@@ -180,16 +160,14 @@ document.addEventListener('DOMContentLoaded', function() {
         updateOrderSummaryTotals(subtotal, tax, total);
     }
     
+    // Update order summary totals
     function updateOrderSummaryTotals(subtotal, tax, total) {
-        const subtotalElement = document.querySelector('.price-row:nth-child(1) span:last-child');
-        const taxElement = document.querySelector('.price-row:nth-child(2) span:last-child');
-        const totalElement = document.querySelector('.price-total span:last-child');
-        
-        if (subtotalElement) subtotalElement.textContent = '$' + subtotal.toFixed(2);
-        if (taxElement) taxElement.textContent = '$' + tax.toFixed(2);
-        if (totalElement) totalElement.textContent = '$' + total.toFixed(2);
+        if (elements.subtotalElement) elements.subtotalElement.textContent = '$' + subtotal.toFixed(2);
+        if (elements.taxElement) elements.taxElement.textContent = '$' + tax.toFixed(2);
+        if (elements.totalElement) elements.totalElement.textContent = '$' + total.toFixed(2);
     }
 
+    // Form validation
     function validateInput(input) {
         const errorElement = document.getElementById(input.id + '-error');
         const value = input.value.trim();
@@ -293,12 +271,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    // Show validation error
     function showError(input, errorElement, message) {
         input.classList.add('error');
         errorElement.textContent = message;
         errorElement.style.display = 'block';
     }
 
+    // Clear validation error
     function clearError(input) {
         input.classList.remove('error');
         const errorElement = document.getElementById(input.id + '-error');
@@ -307,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Input formatting for credit card fields
     document.getElementById('card-number').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 16) value = value.slice(0, 16);

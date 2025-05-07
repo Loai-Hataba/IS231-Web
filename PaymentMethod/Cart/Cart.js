@@ -1,29 +1,56 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const checkoutBtn = document.querySelector('.checkout-btn');
-    const cartItemsContainer = document.querySelector('.cart-items');
-    const cartSummaryContainer = document.querySelector('.cart-summary');
+    // Cache DOM elements for better performance
+    const elements = {
+        checkoutBtn: document.querySelector('.checkout-btn'),
+        cartItems: document.querySelector('.cart-items'),
+        cartSummary: document.querySelector('.cart-summary'),
+        emptyCartNotice: document.querySelector('.empty-cart-notice'),
+        priceSummary: document.querySelector('.price-summary'),
+        subtotalElement: document.querySelector('.price-row:nth-child(1) span:last-child'),
+        taxElement: document.querySelector('.price-row:nth-child(2) span:last-child'),
+        totalElement: document.querySelector('.price-total span:last-child')
+    };
 
     loadCart();
 
-    checkoutBtn.addEventListener('click', function() {
+    // Add event listener to the checkout button
+    elements.checkoutBtn.addEventListener('click', function() {
         const cart = getCartItems();
-        const existingErrorMsg = document.querySelector('.cart-error-msg');
+        const existingErrorContainer = document.querySelector('.cart-error-container');
 
-        if (existingErrorMsg) {
-            existingErrorMsg.remove();
+        // Remove any existing error message
+        if (existingErrorContainer) {
+            existingErrorContainer.remove();
         }
 
         if (cart.length === 0) {
+            // Create a container for the error message and arrow
+            const errorContainer = document.createElement('div');
+            errorContainer.className = 'cart-error-container';
+
+            // Create the error message
             const errorMsg = document.createElement('div');
             errorMsg.className = 'cart-error-msg';
             errorMsg.textContent = 'Your cart is empty. Please add items to proceed to checkout.';
-            cartSummaryContainer.appendChild(errorMsg);
+
+            // Create the arrow
+            const arrow = document.createElement('div');
+            arrow.className = 'arrow-down';
+            arrow.innerHTML = '↓'; // Adding a down arrow character
+
+            // Append the arrow and message to the container
+            errorContainer.appendChild(errorMsg);
+            errorContainer.appendChild(arrow);
+
+            // Insert the error container between the buttons
+            elements.cartSummary.insertBefore(errorContainer, elements.checkoutBtn.nextSibling);
         } else {
+            // Redirect to PaymentMethod.html if the cart is not empty
             window.location.href = '../Payment/PaymentMethod.html';
         }
     });
 
-    cartItemsContainer.addEventListener('click', function(e) {
+    elements.cartItems.addEventListener('click', function(e) {
         const target = e.target;
         
         if (target.classList.contains('minus')) {
@@ -48,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             removeFromCart(bookTitle);
             cartItem.remove();
             updateTotals();
+            checkEmptyCart(); // Check if cart is now empty after removal
         }
     });
 
@@ -55,15 +83,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const cart = getCartItems();
         
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
+            // Display empty cart message and handle UI visibility
+            elements.cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
+            toggleEmptyCartUI(true);
             return;
         }
         
-        cartItemsContainer.innerHTML = '';
+        elements.cartItems.innerHTML = '';
+        toggleEmptyCartUI(false);
         
         cart.forEach(item => {
             const cartItemElement = createCartItemElement(item);
-            cartItemsContainer.appendChild(cartItemElement);
+            elements.cartItems.appendChild(cartItemElement);
         });
         
         updateTotals();
@@ -90,27 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
             <button class="remove-btn">✕</button>
         `;
-        return cartItem;
-    }
-
-    function updateTotals() {
-        const cart = getCartItems();
-        let subtotal = 0;
-        
-        cart.forEach(item => {
-            subtotal += item.price * item.quantity;
-        });
-
-        const tax = subtotal * 0.08;
         const total = subtotal + tax;
-
-        const subtotalElement = document.querySelector('.price-row:nth-child(1) span:last-child');
-        const taxElement = document.querySelector('.price-row:nth-child(2) span:last-child');
-        const totalElement = document.querySelector('.price-total span:last-child');
         
-        if (subtotalElement) subtotalElement.textContent = '$' + subtotal.toFixed(2);
-        if (taxElement) taxElement.textContent = '$' + tax.toFixed(2);
-        if (totalElement) totalElement.textContent = '$' + total.toFixed(2);
+        if (elements.subtotalElement) elements.subtotalElement.textContent = '$' + subtotal.toFixed(2);
+        if (elements.taxElement) elements.taxElement.textContent = '$' + tax.toFixed(2);
+        if (elements.totalElement) elements.totalElement.textContent = '$' + total.toFixed(2);
     }
 
     function updateCartItemQuantity(cartItemElement, newQuantity) {
@@ -134,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('cart', JSON.stringify(updatedCart));
         
         if (updatedCart.length === 0) {
-            cartItemsContainer.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
+            elements.cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
         }
     }
 

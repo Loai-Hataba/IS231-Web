@@ -244,11 +244,11 @@ select {
     background-color: #333;
 }
 
-.btn-primary {
+.checkout {
     background-color: #4CAF50;
 }
 
-.btn-primary:hover {
+.checkout:hover {
     background-color: #3d9040;
 }
 
@@ -270,6 +270,29 @@ select {
 
 .footer a:hover {
     color: #000;
+}
+
+/* Form validation styles */
+.error-message {
+    color: #ff3333;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: none;
+}
+
+input.error {
+    border: 1px solid #ff3333;
+    background-color: rgba(255, 51, 51, 0.03);
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
 @media (max-width: 768px) {
