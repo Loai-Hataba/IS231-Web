@@ -24,6 +24,21 @@ header {
     box-shadow: var(--box-shadow);
 }
 
+header nav ul li.navigation.button .sign-up a {
+    background-color: #a17d4d;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+header nav ul li.navigation.button .sign-up a:hover {
+    background-color: #86683d;
+    transform: translateY(-2px);
+}
+
 .back-button {
     color : black;
     text-decoration: none;
@@ -229,4 +244,3 @@ header {
     color: #555;
     font-size: 14px;
   }
-  

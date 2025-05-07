@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Cache DOM elements for better performance
+    // cache DOM elements 
     const elements = {
         paymentDetails: document.querySelectorAll('.payment-details'),
         paymentMethods: document.querySelectorAll('.payment-method'),
@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
         totalElement: document.querySelector('.price-total span:last-child')
     };
     
-    // Initialize payment details (hide all by default)
+    // initialize payment details (hide all by default)
     elements.paymentDetails.forEach(detail => {
         detail.style.display = 'none';
     });
     
     loadOrderSummary();
 
-    // Set up payment method selection
+    // set up payment method selection
     elements.paymentMethods.forEach(method => {
         const radio = method.querySelector('input[type="radio"]');
         radio.addEventListener('change', function() {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Set up form validation error messages
+    // set up form validation error messages
     elements.formInputs.forEach(input => {
         const errorMsg = document.createElement('div');
         errorMsg.className = 'error-message';
@@ -56,13 +56,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle form submission
+    // handle form submission
     elements.submitBtn.addEventListener('click', function(e) {
         e.preventDefault();
         
         let isValid = true;
         
-        // Validate general fields
+        // validate general fields
         const requiredGeneralFields = ['fullname', 'email', 'phone', 'address', 'city'];
         requiredGeneralFields.forEach(id => {
             const input = document.getElementById(id);
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Validate payment method selection
+        // validate payment method selection
         const paymentSelected = document.querySelector('input[name="payment"]:checked');
         if (!paymentSelected) {
             isValid = false;
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const paymentType = paymentSelected.closest('.payment-method').getAttribute('data-payment');
 
-            // Validate payment-specific fields
+            // validate payment-specific fields
             if (paymentType === 'credit') {
                 const cardFields = ['card-number', 'expiry', 'cvv'];
                 cardFields.forEach(field => {
@@ -112,14 +112,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Process valid form submission
+        // process valid form submission
         if (isValid) {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             localStorage.setItem('lastOrder', JSON.stringify(cart));
             localStorage.setItem('cart', '[]');
             window.location.href = '../Order/OrderSuccessful.html';
         } else {
-            // Scroll to first error
+            // scroll to first error
             const firstError = document.querySelector('.error-message[style="display: block;"]');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Load order summary from cart
+    // load order summary from cart
     function loadOrderSummary() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.orderSummaryContainer.appendChild(bookItem);
         });
 
-        // Calculate and update totals
+        // calculate and update totals
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const tax = subtotal * 0.08;
         const total = subtotal + tax;
@@ -160,14 +160,14 @@ document.addEventListener('DOMContentLoaded', function() {
         updateOrderSummaryTotals(subtotal, tax, total);
     }
     
-    // Update order summary totals
+    // update order summary totals
     function updateOrderSummaryTotals(subtotal, tax, total) {
         if (elements.subtotalElement) elements.subtotalElement.textContent = '$' + subtotal.toFixed(2);
         if (elements.taxElement) elements.taxElement.textContent = '$' + tax.toFixed(2);
         if (elements.totalElement) elements.totalElement.textContent = '$' + total.toFixed(2);
     }
 
-    // Form validation
+    // form validation
     function validateInput(input) {
         const errorElement = document.getElementById(input.id + '-error');
         const value = input.value.trim();
@@ -271,14 +271,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Show validation error
+    // show validation error
     function showError(input, errorElement, message) {
         input.classList.add('error');
         errorElement.textContent = message;
         errorElement.style.display = 'block';
     }
 
-    // Clear validation error
+    // clear validation error
     function clearError(input) {
         input.classList.remove('error');
         const errorElement = document.getElementById(input.id + '-error');
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Input formatting for credit card fields
+    // input formatting for credit card fields
     document.getElementById('card-number').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 16) value = value.slice(0, 16);

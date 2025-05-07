@@ -17,13 +17,13 @@ function updateNavigation() {
 
 
 function updateLandingPageNav(user) {
-    // Find the signup button in the navigation
+    // find the signup button in the navigation
     const signupButton = document.querySelector('.navigation .button .sign-up');
     if (signupButton) {
         updateProfileLink(signupButton, user);
     }
 
-    // Also update any "Start Reading" buttons if they exist
+    // also update any "Start Reading" buttons if they exist
     const startReadingButtons = document.querySelectorAll('.start-reading a, button.primary');
     startReadingButtons.forEach(button => {
         if (button.tagName === 'A') {
@@ -41,7 +41,7 @@ function updateLandingPageNav(user) {
         }
     });
 
-    // Update CTA button section if it exists
+    // update CTA button section if it exists
     const ctaButtons = document.querySelector('.cta-buttons');
     if (ctaButtons) {
         ctaButtons.innerHTML = `
@@ -54,23 +54,23 @@ function updateLandingPageNav(user) {
 
 
 function updateStandardNav(user) {
-    // For other pages that have different navigation structure
+    // for other pages that have different navigation structure
     const navLinks = document.querySelectorAll('header nav ul');
     
     navLinks.forEach(nav => {
-        // Check if there's already a profile link
+        // check if there's already a profile link
         const existingProfileLink = Array.from(nav.querySelectorAll('li a')).find(
             link => link.textContent.includes('Sign Up') || 
                    link.textContent.includes('Log In') ||
                    link.textContent.includes('Profile')
         );
         
-        // If there's a sign up or login link, replace it
+        // if there's a sign up or login link, replace it
         if (existingProfileLink) {
             const listItem = existingProfileLink.closest('li');
             updateProfileLink(listItem, user);
         } else {
-            // If no existing link is found, add a new profile link
+            // if no existing link is found, add a new profile link
             const profileLi = document.createElement('li');
             profileLi.className = 'profile-link';
             
@@ -90,7 +90,7 @@ function updateStandardNav(user) {
 
 
 function updateProfileLink(element, user) {
-    // Determine current page level (for proper relative paths)
+    // determine current page level (for proper relative paths)
     const pathPrefix = window.location.pathname.includes('/Landing Page/') ? '../' : '../../';
     
     if (element.tagName === 'A') {
@@ -100,7 +100,7 @@ function updateProfileLink(element, user) {
             : `${pathPrefix}UserProfile/UserProfile.html`;
         element.className = 'profile-button';
     } else {
-        // For div or li elements that contain an a tag
+        // for div or li elements that contain an a tag
         const link = element.querySelector('a') || document.createElement('a');
         link.textContent = user.isAdmin ? 'Admin Panel' : 'My Profile';
         link.href = user.isAdmin 
@@ -114,7 +114,7 @@ function updateProfileLink(element, user) {
         }
     }
     
-    // Add user initial or icon to the button
+    // add user initial or icon to the button
     if (user.firstName) {
         const userInitial = document.createElement('span');
         userInitial.className = 'user-initial';

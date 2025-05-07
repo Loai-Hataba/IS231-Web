@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Cache DOM elements for better performance
+    // cache DOM elements 
     const elements = {
         orderItemsContainer: document.querySelector('.order-items'),
         subtotalElement: document.querySelector('.order-sub span:last-child'),
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Save the order to user's profile
+        // save the order to user's profile
         saveOrderToUserProfile(lastOrder);
 
         lastOrder.forEach(item => {
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
             elements.orderItemsContainer.appendChild(orderItem);
         });
 
-        // Calculate totals
+        // calculate totals
         const subtotal = lastOrder.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const tax = subtotal * 0.08;
         const total = subtotal + tax;
@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (elements.totalElement) elements.totalElement.textContent = `$${total.toFixed(2)}`;
     }
 
-    // New function to save order to user's profile
+    // new function to save order to user's profile
     function saveOrderToUserProfile(order) {
-        // Get current user from session storage
+        // get current user from session storage
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         
         if (!currentUser || !currentUser.email) {
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         
-        // Add order date and unique ID
+        // add order date and unique ID
         const orderWithDetails = {
             items: order,
             date: new Date().toISOString(),
@@ -77,13 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
             total: order.reduce((sum, item) => sum + item.price * item.quantity, 0)
         };
         
-        // Get existing user orders or create empty array
+        // get existing user orders or create empty array
         const userOrders = JSON.parse(localStorage.getItem(`user_orders_${currentUser.email}`)) || [];
         
-        // Add new order to the array
+        // add new order to the array
         userOrders.push(orderWithDetails);
         
-        // Save back to localStorage
+        // save back to localStorage
         localStorage.setItem(`user_orders_${currentUser.email}`, JSON.stringify(userOrders));
         
         console.log(`Order saved for user ${currentUser.email}`);

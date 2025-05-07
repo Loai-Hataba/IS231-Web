@@ -1,4 +1,4 @@
-/* footerNavigationsStyle.css */
+
 
 body {
   margin: 0;
@@ -12,7 +12,7 @@ body {
   padding: 20px;
 }
 
-/* Links */
+
 a {
   text-decoration: none;
   color: #111;
@@ -23,7 +23,7 @@ a:hover {
   color: #111;
 }
 
-/* Header Section */
+
 .header {
   display: flex;
   align-items: center;
@@ -63,7 +63,7 @@ a:hover {
   color: #111;
 }
 
-/* Main Content Container (Shared) */
+
 .content-container {
   background: #fff;
   border-radius: 12px;
@@ -73,7 +73,7 @@ a:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Headers & Subtext */
+
 .page-header h1,
 .content-container h1 {
   
@@ -91,7 +91,6 @@ a:hover {
   line-height: 1.5;
 }
 
-/* Section Styling */
 .content-section {
   margin-bottom: 30px;
 }
@@ -120,7 +119,7 @@ a:hover {
   margin-bottom: 8px;
 }
 
-/* Table of Contents (TOC) */
+
 .toc {
   background-color: #fafafa;
   padding: 20px;
@@ -140,7 +139,7 @@ a:hover {
   font-weight: 500;
 }
 
-/* Divider */
+
 .divider {
   display: flex;
   align-items: center;
@@ -164,7 +163,7 @@ a:hover {
   margin-left: 16px;
 }
 
-/* Footer Links */
+
 .footer {
   display: flex;
   justify-content: center;
@@ -184,14 +183,13 @@ a:hover {
   color: #111;
 }
 
-/* Responsive Nav */
+
 @media (max-width: 768px) {
   .nav-links {
     display: none;
   }
 }
 
-/* Contact Form Styles */
 #contact-form {
     width: 100%;
     max-width: 600px;
@@ -238,7 +236,7 @@ a:hover {
     background-color: #333;
 }
 
-/* Sign up link in nav */
+
 .nav-links a.sign-up-btn {
     background: #111;
     color: white;

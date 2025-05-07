@@ -6,21 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
     initUserProfile();
     initSignOut();
     initSampleBooks();
+    addStyles();
 
-    // 1. Progress Bars Functionality
+    // progress Bars Functionality
     function initProgressBars() {
-        // Get all progress cards
+        // get all progress cards
         const readCard = document.querySelector('.analytics .card:nth-child(1)');
         const rentedCard = document.querySelector('.analytics .card:nth-child(2)');
         const rentalsViewCard = document.querySelector('.analytics .card:nth-child(3)');
 
-        // Initialize counters for each category
+        // initialize counters for each category
         if (readCard) {
             initCounter(readCard, 15, 20);
         }
 
         if (rentedCard) {
-            // Get current user's rental data
+            // get current user's rental data
             const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
             if (currentUser && currentUser.email) {
                 const userOrders = JSON.parse(localStorage.getItem(`user_orders_${currentUser.email}`)) || [];
@@ -32,12 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Function to initialize counters with +/- buttons
+        // function to initialize counters with +/- buttons
         function initCounter(cardElement, current, total) {
-            // Update the UI to reflect current state
+            // update the UI to reflect current state
             updateCounter(cardElement, current, total);
 
-            // Create increment/decrement buttons
+            // create increment/decrement buttons
             const buttonContainer = document.createElement('div');
             buttonContainer.className = 'counter-controls';
 
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             incrementBtn.textContent = '+';
             incrementBtn.className = 'counter-btn increment';
 
-            // Add event listeners
+            // add event listeners
             decrementBtn.addEventListener('click', function() {
                 if (current > 0) {
                     current--;
@@ -64,15 +65,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateCounter(cardElement, current, total);
             });
 
-            // Append buttons to container
+            // append buttons to container
             buttonContainer.appendChild(decrementBtn);
             buttonContainer.appendChild(incrementBtn);
 
-            // Append container to card
+            // append container to card
             cardElement.appendChild(buttonContainer);
         }
 
-        // Function to update counter display and progress bar
+        // function to update counter display and progress bar
         function updateCounter(cardElement, current, total) {
             const countEl = cardElement.querySelector('p');
             const barEl = cardElement.querySelector('.bar');
@@ -80,11 +81,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (countEl && barEl) {
                 countEl.textContent = `${current} of ${total} goal`;
 
-                // Update progress bar width
+                // update progress bar width
                 const percentage = (current / total) * 100;
                 barEl.style.width = `${percentage}%`;
 
-                // Visual feedback based on completion
+                // visual feedback based on completion
                 if (percentage === 100) {
                     barEl.classList.add('completed');
                 } else {
@@ -93,195 +94,196 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-function addBookToWishlist(title, author, imageUrl) {
-    console.log('Adding book to wishlist:', title, author, imageUrl);
 
-    // 1. Find the book grid container
-    const bookGrid = document.querySelector('.book-grid');
-    if (!bookGrid) {
-        console.error('Book grid element not found!');
-        showNotification('Error adding book to wishlist', 'error');
-        return;
-    }
+    function addBookToWishlist(title, author, imageUrl) {
+        console.log('Adding book to wishlist:', title, author, imageUrl);
 
-    // 2. Create the new book element
-    const newBook = document.createElement('div');
-    newBook.className = 'book';
-
-    // Generate unique ID for the book
-    const newId = Date.now().toString();
-    newBook.setAttribute('data-book-id', newId);
-
-    // 3. Set the book content
-    newBook.innerHTML = `
-        <img src="${imageUrl}" alt="${title} by ${author}">
-        <p>${title}</p>
-    `;
-
-    // 4. Add the remove button
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'remove-btn';
-    removeBtn.innerHTML = '&times;';
-    removeBtn.title = 'Remove from wishlist';
-
-    removeBtn.addEventListener('click', function(e) {
-        e.stopPropagation(); // Prevent triggering the parent click event
-        removeFromWishlist(newBook);
-    });
-
-    newBook.appendChild(removeBtn);
-
-    // 5. Add click event for showing book details
-    newBook.addEventListener('click', function() {
-        showBookDetails(newId, title, author);
-    });
-
-    // 6. Add to the wishlist grid with fade-in animation
-    newBook.classList.add('fade-in');
-    bookGrid.appendChild(newBook);
-
-    // 7. Save to local storage (optional but recommended)
-    saveWishlistToLocalStorage();
-
-    // 8. Show success notification
-    showNotification(`Added "${title}" to your wishlist`);
-
-    console.log(`Added new book: ${title} by ${author} with ID: ${newId}`);
-    return newId; // Return the ID in case it's needed elsewhere
-}
-
-// Helper function to save wishlist to local storage
-function saveWishlistToLocalStorage() {
-    // Get all books currently in the wishlist
-    const books = document.querySelectorAll('.book-grid .book');
-    const wishlist = [];
-
-    books.forEach(book => {
-        const bookId = book.getAttribute('data-book-id');
-        const title = book.querySelector('p').textContent;
-        const imgSrc = book.querySelector('img').src;
-        const imgAlt = book.querySelector('img').alt;
-
-        // Extract author from alt text if available
-        let author = '';
-        if (imgAlt && imgAlt.includes('by')) {
-            author = imgAlt.split('by')[1].trim();
+        // find the book grid container
+        const bookGrid = document.querySelector('.book-grid');
+        if (!bookGrid) {
+            console.error('Book grid element not found!');
+            showNotification('Error adding book to wishlist', 'error');
+            return;
         }
 
-        wishlist.push({
-            id: bookId,
-            title: title,
-            author: author,
-            image: imgSrc
+        // 2. Create the new book element
+        const newBook = document.createElement('div');
+        newBook.className = 'book';
+
+        // Generate unique ID for the book
+        const newId = Date.now().toString();
+        newBook.setAttribute('data-book-id', newId);
+
+        // 3. Set the book content
+        newBook.innerHTML = `
+            <img src="${imageUrl}" alt="${title} by ${author}">
+            <p>${title}</p>
+        `;
+
+        // 4. Add the remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.title = 'Remove from wishlist';
+
+        removeBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent triggering the parent click event
+            removeFromWishlist(newBook);
         });
-    });
 
-    // Get current user
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (currentUser && currentUser.email) {
-        // Save wishlist associated with user email
-        localStorage.setItem(`wishlist_${currentUser.email}`, JSON.stringify(wishlist));
-    } else {
-        // Save to general storage if no user is logged in
-        localStorage.setItem('userWishlist', JSON.stringify(wishlist));
+        newBook.appendChild(removeBtn);
+
+        // 5. Add click event for showing book details
+        newBook.addEventListener('click', function() {
+            showBookDetails(newId, title, author);
+        });
+
+        // 6. Add to the wishlist grid with fade-in animation
+        newBook.classList.add('fade-in');
+        bookGrid.appendChild(newBook);
+
+        // 7. Save to local storage (optional but recommended)
+        saveWishlistToLocalStorage();
+
+        // 8. Show success notification
+        showNotification(`Added "${title}" to your wishlist`);
+
+        console.log(`Added new book: ${title} by ${author} with ID: ${newId}`);
+        return newId; // Return the ID in case it's needed elsewhere
     }
-}
 
-// Enhanced book details function to show more information
-function showBookDetails(bookId, title, author = '') {
-    const modal = document.createElement('div');
-    modal.className = 'modal';
+    // Helper function to save wishlist to local storage
+    function saveWishlistToLocalStorage() {
+        // Get all books currently in the wishlist
+        const books = document.querySelectorAll('.book-grid .book');
+        const wishlist = [];
 
-    modal.innerHTML = `
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3>${title}</h3>
-            ${author ? `<p class="book-author">by ${author}</p>` : ''}
-            <div class="book-actions">
-                <button class="action-btn read-btn">Mark as Read</button>
-                <button class="action-btn rent-btn">Rent</button>
+        books.forEach(book => {
+            const bookId = book.getAttribute('data-book-id');
+            const title = book.querySelector('p').textContent;
+            const imgSrc = book.querySelector('img').src;
+            const imgAlt = book.querySelector('img').alt;
+
+            // Extract author from alt text if available
+            let author = '';
+            if (imgAlt && imgAlt.includes('by')) {
+                author = imgAlt.split('by')[1].trim();
+            }
+
+            wishlist.push({
+                id: bookId,
+                title: title,
+                author: author,
+                image: imgSrc
+            });
+        });
+
+        // Get current user
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (currentUser && currentUser.email) {
+            // Save wishlist associated with user email
+            localStorage.setItem(`wishlist_${currentUser.email}`, JSON.stringify(wishlist));
+        } else {
+            // Save to general storage if no user is logged in
+            localStorage.setItem('userWishlist', JSON.stringify(wishlist));
+        }
+    }
+
+    // Enhanced book details function to show more information
+    function showBookDetails(bookId, title, author = '') {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>${title}</h3>
+                ${author ? `<p class="book-author">by ${author}</p>` : ''}
+                <div class="book-actions">
+                    <button class="action-btn read-btn">Mark as Read</button>
+                    <button class="action-btn rent-btn">Rent</button>
+                </div>
             </div>
-        </div>
-    `;
+        `;
 
-    // Add close functionality
-    document.body.appendChild(modal);
+        // Add close functionality
+        document.body.appendChild(modal);
 
-    const closeBtn = modal.querySelector('.close-modal');
-    closeBtn.addEventListener('click', function() {
-        modal.remove();
-    });
-
-    // Close if clicking outside the modal content
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-
-    // Add action button functionality
-    const actionBtns = modal.querySelectorAll('.action-btn');
-    actionBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const action = this.classList.contains('read-btn') ? 'read' : 'rented';
-
-            // Here you could update your progress bars
-            updateBookAction(action);
-
-            showNotification(`Book marked as ${action}`);
+        const closeBtn = modal.querySelector('.close-modal');
+        closeBtn.addEventListener('click', function() {
             modal.remove();
         });
-    });
-}
 
-// Helper function to update progress bars when a book action is taken
-function updateBookAction(action) {
-    let cardElement, current, total;
+        // Close if clicking outside the modal content
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
 
-    switch(action) {
-        case 'read':
-            cardElement = document.querySelector('.analytics .card:nth-child(1)');
-            break;
-        case 'rented':
-            cardElement = document.querySelector('.analytics .card:nth-child(2)');
-            break;
+        // Add action button functionality
+        const actionBtns = modal.querySelectorAll('.action-btn');
+        actionBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.classList.contains('read-btn') ? 'read' : 'rented';
+
+                // Here you could update your progress bars
+                updateBookAction(action);
+
+                showNotification(`Book marked as ${action}`);
+                modal.remove();
+            });
+        });
     }
 
-    if (cardElement) {
-        // Get current values from the UI
-        const countText = cardElement.querySelector('p').textContent;
-        const matches = countText.match(/(\d+)\s+of\s+(\d+)/);
+    // Helper function to update progress bars when a book action is taken
+    function updateBookAction(action) {
+        let cardElement, current, total;
 
-        if (matches && matches.length === 3) {
-            current = parseInt(matches[1], 10);
-            total = parseInt(matches[2], 10);
+        switch(action) {
+            case 'read':
+                cardElement = document.querySelector('.analytics .card:nth-child(1)');
+                break;
+            case 'rented':
+                cardElement = document.querySelector('.analytics .card:nth-child(2)');
+                break;
+        }
 
-            // Increment the counter if not at max
-            if (current < total) {
-                current++;
-                updateCounter(cardElement, current, total);
+        if (cardElement) {
+            // Get current values from the UI
+            const countText = cardElement.querySelector('p').textContent;
+            const matches = countText.match(/(\d+)\s+of\s+(\d+)/);
+
+            if (matches && matches.length === 3) {
+                current = parseInt(matches[1], 10);
+                total = parseInt(matches[2], 10);
+
+                // Increment the counter if not at max
+                if (current < total) {
+                    current++;
+                    updateCounter(cardElement, current, total);
+                }
             }
         }
     }
-}
 
-// Enhanced remove function to update local storage
-function removeFromWishlist(bookElement) {
-    // Add fade-out animation
-    bookElement.classList.add('fade-out');
+    // Enhanced remove function to update local storage
+    function removeFromWishlist(bookElement) {
+        // Add fade-out animation
+        bookElement.classList.add('fade-out');
 
-    // Remove element after animation completes
-    setTimeout(() => {
-        const bookId = bookElement.getAttribute('data-book-id');
-        bookElement.remove();
+        // Remove element after animation completes
+        setTimeout(() => {
+            const bookId = bookElement.getAttribute('data-book-id');
+            bookElement.remove();
 
-        // Update local storage after removal
-        saveWishlistToLocalStorage();
+            // Update local storage after removal
+            saveWishlistToLocalStorage();
 
-        console.log(`Removed book with ID: ${bookId}`);
-        showNotification('Book removed from wishlist');
-    }, 300);
-}
+            console.log(`Removed book with ID: ${bookId}`);
+            showNotification('Book removed from wishlist');
+        }, 300);
+    }
 
     // 2. Wishlist Functionality
     function initWishlist() {
@@ -411,157 +413,157 @@ function removeFromWishlist(bookElement) {
 
         // Function to show add book form
         function showAddBookForm() {
-    // Get available books from local storage
-    const availableBooks = JSON.parse(localStorage.getItem('availableBooks') || '[]');
+            // Get available books from local storage
+            const availableBooks = JSON.parse(localStorage.getItem('availableBooks') || '[]');
 
-    const modal = document.createElement('div');
-    modal.className = 'modal';
+            const modal = document.createElement('div');
+            modal.className = 'modal';
 
-    // Create HTML for book selection interface
-    let booksHTML = '';
-    availableBooks.forEach(book => {
-        booksHTML += `
-            <div class="book-selection-item" data-book-id="${book.id}">
-                <img src="${book.image}" alt="${book.title}">
-                <div class="book-info">
-                    <h4>${book.title}</h4>
-                    <p class="author">by ${book.author}</p>
-                    <p class="description">${book.description}</p>
+            // Create HTML for book selection interface
+            let booksHTML = '';
+            availableBooks.forEach(book => {
+                booksHTML += `
+                    <div class="book-selection-item" data-book-id="${book.id}">
+                        <img src="${book.image}" alt="${book.title}">
+                        <div class="book-info">
+                            <h4>${book.title}</h4>
+                            <p class="author">by ${book.author}</p>
+                            <p class="description">${book.description}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            modal.innerHTML = `
+                <div class="modal-content book-selection-modal">
+                    <span class="close-modal">&times;</span>
+                    <h3>Select a Book to Add</h3>
+                    <div class="book-selection-container">
+                        ${booksHTML}
+                    </div>
+                    <div class="book-selection-actions">
+                        <button id="add-new-book-btn">Add Custom Book Instead</button>
+                    </div>
                 </div>
-            </div>
-        `;
-    });
-
-    modal.innerHTML = `
-        <div class="modal-content book-selection-modal">
-            <span class="close-modal">&times;</span>
-            <h3>Select a Book to Add</h3>
-            <div class="book-selection-container">
-                ${booksHTML}
-            </div>
-            <div class="book-selection-actions">
-                <button id="add-new-book-btn">Add Custom Book Instead</button>
-            </div>
-        </div>
-    `;
+            `;
             document.body.appendChild(modal);
 
-        // Add close functionality
-    const closeBtn = modal.querySelector('.close-modal');
-    closeBtn.addEventListener('click', function() {
-        modal.remove();
-    });
-
-    // Close if clicking outside the modal content
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-
-    // Add click event to all book selection items
-    const bookItems = modal.querySelectorAll('.book-selection-item');
-    bookItems.forEach(item => {
-        item.addEventListener('click', function() {
-            // Toggle selection
-            bookItems.forEach(i => i.classList.remove('selected'));
-            this.classList.add('selected');
-        });
-
-        // Add double-click to immediately add the book
-        item.addEventListener('dblclick', function() {
-            const bookId = this.dataset.bookId;
-            const book = availableBooks.find(b => b.id === bookId);
-            if (book) {
-                addBookToWishlist(book.title, book.author, book.image);
+            // Add close functionality
+            const closeBtn = modal.querySelector('.close-modal');
+            closeBtn.addEventListener('click', function() {
                 modal.remove();
-            }
-        });
-    });
+            });
 
-    // Add button to add the selected book
-    const selectionActions = modal.querySelector('.book-selection-actions');
-    const addSelectedBtn = document.createElement('button');
-    addSelectedBtn.textContent = 'Add Selected Book';
-    addSelectedBtn.className = 'primary-btn';
-    addSelectedBtn.addEventListener('click', function() {
-        const selectedItem = modal.querySelector('.book-selection-item.selected');
+            // Close if clicking outside the modal content
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
 
-        if (selectedItem) {
-            const bookId = selectedItem.dataset.bookId;
-            const book = availableBooks.find(b => b.id === bookId);
-            if (book) {
-                addBookToWishlist(book.title, book.author, book.image);
+            // Add click event to all book selection items
+            const bookItems = modal.querySelectorAll('.book-selection-item');
+            bookItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Toggle selection
+                    bookItems.forEach(i => i.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+
+                // Add double-click to immediately add the book
+                item.addEventListener('dblclick', function() {
+                    const bookId = this.dataset.bookId;
+                    const book = availableBooks.find(b => b.id === bookId);
+                    if (book) {
+                        addBookToWishlist(book.title, book.author, book.image);
+                        modal.remove();
+                    }
+                });
+            });
+
+            // Add button to add the selected book
+            const selectionActions = modal.querySelector('.book-selection-actions');
+            const addSelectedBtn = document.createElement('button');
+            addSelectedBtn.textContent = 'Add Selected Book';
+            addSelectedBtn.className = 'primary-btn';
+            addSelectedBtn.addEventListener('click', function() {
+                const selectedItem = modal.querySelector('.book-selection-item.selected');
+
+                if (selectedItem) {
+                    const bookId = selectedItem.dataset.bookId;
+                    const book = availableBooks.find(b => b.id === bookId);
+                    if (book) {
+                        addBookToWishlist(book.title, book.author, book.image);
+                        modal.remove();
+                    }
+                } else {
+                    alert('Please select a book first');
+                }
+            });
+            selectionActions.prepend(addSelectedBtn);
+
+            // Add custom book option
+            const addNewBookBtn = modal.querySelector('#add-new-book-btn');
+            addNewBookBtn.addEventListener('click', function() {
                 modal.remove();
-            }
-        } else {
-            alert('Please select a book first');
+                showCustomBookForm();
+            });
         }
-    });
-    selectionActions.prepend(addSelectedBtn);
 
-    // Add custom book option
-    const addNewBookBtn = modal.querySelector('#add-new-book-btn');
-    addNewBookBtn.addEventListener('click', function() {
-        modal.remove();
-        showCustomBookForm();
-    });
-}
+        // Add this function for the custom book form
+        function showCustomBookForm() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
 
-// Add this function for the custom book form
-function showCustomBookForm() {
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-
-    modal.innerHTML = `
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3>Add Custom Book to Wishlist</h3>
-            <form id="add-book-form">
-                <div class="form-group">
-                    <label for="book-title">Title:</label>
-                    <input type="text" id="book-title" required>
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Add Custom Book to Wishlist</h3>
+                    <form id="add-book-form">
+                        <div class="form-group">
+                            <label for="book-title">Title:</label>
+                            <input type="text" id="book-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="book-author">Author:</label>
+                            <input type="text" id="book-author" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="book-image">Image URL:</label>
+                            <input type="text" id="book-image" value="https://via.placeholder.com/150x200">
+                        </div>
+                        <button type="submit">Add to Wishlist</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="book-author">Author:</label>
-                    <input type="text" id="book-author" required>
-                </div>
-                <div class="form-group">
-                    <label for="book-image">Image URL:</label>
-                    <input type="text" id="book-image" value="https://via.placeholder.com/150x200">
-                </div>
-                <button type="submit">Add to Wishlist</button>
-            </form>
-        </div>
-    `;
+            `;
 
-    document.body.appendChild(modal);
+            document.body.appendChild(modal);
 
-    // Add close functionality
-    const closeBtn = modal.querySelector('.close-modal');
-    closeBtn.addEventListener('click', function() {
-        modal.remove();
-    });
+            // Add close functionality
+            const closeBtn = modal.querySelector('.close-modal');
+            closeBtn.addEventListener('click', function() {
+                modal.remove();
+            });
 
-    // Close if clicking outside the modal content
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
+            // Close if clicking outside the modal content
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
 
-    // Handle form submission
-    const form = modal.querySelector('#add-book-form');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
+            // Handle form submission
+            const form = modal.querySelector('#add-book-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-        const title = document.getElementById('book-title').value;
-        const author = document.getElementById('book-author').value;
-        const imageUrl = document.getElementById('book-image').value;
+                const title = document.getElementById('book-title').value;
+                const author = document.getElementById('book-author').value;
+                const imageUrl = document.getElementById('book-image').value;
 
-        addBookToWishlist(title, author, imageUrl);
-        modal.remove();
-    });
+                addBookToWishlist(title, author, imageUrl);
+                modal.remove();
+            });
         }
     }
 
@@ -797,52 +799,54 @@ function showCustomBookForm() {
     }
     
     function initSampleBooks() {
-    // Check if books exist in local storage
-    if (!localStorage.getItem('availableBooks')) {
-        // Create sample book data
-        const sampleBooks = [
-            {
-                id: '1',
-                title: 'Outsider',
-                author: 'Albert Camus',
-                image: 'assets/Outsider.png',
-                description: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
-            },
-            {
-                id: '2',
-                title: 'Odyssey',
-                author: 'Homer',
-                image: 'assets/odyssey.png',
-                description: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
-            },
-            {
-                id: '3',
-                title: 'The Great Gatsby',
-                author: 'F.Scott Fitzgerald',
-                image: 'https://skyhorse-us.imgix.net/covers/9781949846386.jpg?auto=format&w=298',
-                description: 'The Great Gatsby: Jay Gatsby pursues his lost love, Daisy, in 1920s New York, exposing the hollow American Dream and materialism.'
-            },
-            {
-                id: '4',
-                title: 'Pride and Prejudice',
-                author: 'Jane Austen',
-                image: 'https://readaloudrevival.com/wp-content/uploads/2016/05/Pride-and-Prejudice.png.webp',
-                description: 'A romantic novel of manners set in early 19th century England.'
-            },
-            {
-                id: '5',
-                title: 'The Gambler',
-                author: 'Fyodor Dostoevsky',
-                image: 'assets/The%20Gambler.jpg',
-                description: 'Fantasy novel about the adventures of hobbit Bilbo Baggins.'
-            }
-        ];
+        // Check if books exist in local storage
+        if (!localStorage.getItem('availableBooks')) {
+            // Create sample book data
+            const sampleBooks = [
+                {
+                    id: '1',
+                    title: 'Outsider',
+                    author: 'Albert Camus',
+                    image: 'assets/Outsider.png',
+                    description: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
+                },
+                {
+                    id: '2',
+                    title: 'Odyssey',
+                    author: 'Homer',
+                    image: 'assets/odyssey.png',
+                    description: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
+                },
+                {
+                    id: '3',
+                    title: 'The Great Gatsby',
+                    author: 'F.Scott Fitzgerald',
+                    image: 'https://skyhorse-us.imgix.net/covers/9781949846386.jpg?auto=format&w=298',
+                    description: 'The Great Gatsby: Jay Gatsby pursues his lost love, Daisy, in 1920s New York, exposing the hollow American Dream and materialism.'
+                },
+                {
+                    id: '4',
+                    title: 'Pride and Prejudice',
+                    author: 'Jane Austen',
+                    image: 'https://readaloudrevival.com/wp-content/uploads/2016/05/Pride-and-Prejudice.png.webp',
+                    description: 'A romantic novel of manners set in early 19th century England.'
+                },
+                {
+                    id: '5',
+                    title: 'The Gambler',
+                    author: 'Fyodor Dostoevsky',
+                    image: 'assets/The%20Gambler.jpg',
+                    description: 'Fantasy novel about the adventures of hobbit Bilbo Baggins.'
+                }
+            ];
 
-        // Save to local storage
-        localStorage.setItem('availableBooks', JSON.stringify(sampleBooks));
+            // Save to local storage
+            localStorage.setItem('availableBooks', JSON.stringify(sampleBooks));
+        }
     }
 });
 
+// Define addStyles function outside the event listener
 function addStyles() {
     const styleEl = document.createElement('style');
     styleEl.innerHTML = `
@@ -1233,6 +1237,3 @@ function addStyles() {
 
     document.head.appendChild(styleEl);
 }
-
-// Add styles when the page loads
-document.addEventListener('DOMContentLoaded', addStyles);

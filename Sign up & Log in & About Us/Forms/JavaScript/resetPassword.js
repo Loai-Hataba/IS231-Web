@@ -1,6 +1,6 @@
 // the main logic to reset the password 
 document.addEventListener("DOMContentLoaded", () => {
-    // Parse URL parameters
+    // parseing the  URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const email = urlParams.get("email");
     const token = urlParams.get("token");
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Handle form submission with enhanced validation
+    // handleing form submission with enhanced validation
     resetForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         clearErrors();
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const confirmPasswordInput = document.getElementById("confirm-password");
         const password = passwordInput.value;
         
-        // Enhanced password validation
+        // enhanced password validation
         const { isValid, validExps } = validatePassword(password);
         if (!isValid) {
             let errorMessage = 'Password must:';
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            // Update password with error handling
+            // update password with error handling
             const users = JSON.parse(localStorage.getItem("conquista_users")) || [];
             const userIndex = users.findIndex(user => user.email === email);
 
@@ -59,12 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
             users[userIndex].password = password;
             localStorage.setItem("conquista_users", JSON.stringify(users));
 
-            // Cleanup reset request
+            // cleanup reset request
             const resetRequests = JSON.parse(localStorage.getItem("password_reset_requests")) || {};
             delete resetRequests[email];
             localStorage.setItem("password_reset_requests", JSON.stringify(resetRequests));
 
-            // Show success and redirect
+            // show success and redirect
             resetForm.style.display = "none";
             resetSuccessMessage.classList.remove("hidden");
             setTimeout(() => {

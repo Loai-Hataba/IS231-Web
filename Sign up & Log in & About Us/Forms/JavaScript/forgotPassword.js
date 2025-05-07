@@ -1,6 +1,6 @@
-//The main logic of the forgot password page
+
 document.addEventListener("DOMContentLoaded", () => {
-    // Get form elements
+    // getting form elements
     const resetForm = document.getElementById("reset-form");
     const emailInput = document.getElementById("email");
     const resetMessage = document.getElementById("reset-message");
@@ -8,20 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const subtextTop = document.getElementById("subtext-top");
     const subtextBottom = document.getElementById("subtext-bottom");
   
-    // Handle form submission
+    // handleing the form submission
     resetForm?.addEventListener("submit", async (event) => {
       event.preventDefault();
       clearErrors();
   
       
-      // Validate email
+      // validating the  email
       const email = emailInput.value.trim();
       if (!validateEmail(email)) {
         showError("email", "Please enter a valid email address");
         return;
       }
   
-      // Check if email exists in localStorage
+      // check if email exists in localStorage
       try {
         const users = JSON.parse(localStorage.getItem("conquista_users")) || [];
         const userExists = users.some((user) => user.email === email);
@@ -31,11 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
   
-        // Generate password reset token
+        // generate password reset token
         const resetToken = generateResetToken();
         const expiresAt = new Date().getTime() + 60 * 60 * 1000; // 1 hour expiration
   
-        // Store token in localStorage
+        // store token in localStorage
         const resetRequests =
           JSON.parse(localStorage.getItem("password_reset_requests")) || {};
         resetRequests[email] = {
@@ -47,18 +47,18 @@ document.addEventListener("DOMContentLoaded", () => {
           JSON.stringify(resetRequests)
         );
   
-        // Hide email input and submit button
+        // hide email input and submit button
         const inputGroup = emailInput.closest(".input-group");
         if (inputGroup) {
           inputGroup.style.display = "none";
         }
         submitButton.style.display = "none";
   
-        // Hide subtext elements
+        // hide subtext elements
         if (subtextTop) subtextTop.style.display = "none";
         if (subtextBottom) subtextBottom.style.display = "none";
   
-        // Show success message
+        // show success message
         resetMessage.classList.remove("hidden");
   
         console.log(
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   
 
-// Function to show error messages
+// function to show error messages
 function showError(fieldId, message) {
   const field = document.getElementById(fieldId);
   if (!field) return;
@@ -83,20 +83,20 @@ function showError(fieldId, message) {
   const container = field.parentElement;
   const existingError = container.querySelector(".error-message");
 
-  // Remove existing error 
+  // remove existing error 
   if (existingError) {
     existingError.remove();
   }
 
-  // Create and add new error message
+  // create and add new error message
   const errorDiv = document.createElement("div");
   errorDiv.className = "error-message";
   errorDiv.textContent = message;
 
-  // Insert error after the input field
+  // insert error after the input field
   container.appendChild(errorDiv);
 
-  // Add visual feedback to the input
+  // add visual feedback to the input
   field.classList.add("invalid");
 }
 

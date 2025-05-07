@@ -3,7 +3,7 @@
     display: flex !important;
     align-items: center;
     gap: 8px;
-    /* Match theme colors */
+
     background-color: #a17d4d !important;
     color: white !important;
     padding: 8px 16px !important;
@@ -16,7 +16,7 @@
 }
 
 .profile-button:hover {
-    /* Match hover state of other buttons */
+  
     background-color: #86683d !important;
     transform: translateY(-2px);
 }
@@ -28,7 +28,7 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    /* Lighter background for contrast */
+    
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
     font-weight: bold;
@@ -46,7 +46,7 @@ li .profile-button {
     align-items: center;
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 768px) {
     .profile-button {
         padding: 6px 12px !important;

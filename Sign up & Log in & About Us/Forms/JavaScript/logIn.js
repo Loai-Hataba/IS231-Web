@@ -1,4 +1,4 @@
-// The main logic of login page
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const emailInput = document.getElementById('email');
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Create session only when the login is successful
+            // create session only when the login is successful
             const sessionData = {
                 id: user.id,
                 email: user.email,
@@ -51,10 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginTime: new Date().toISOString()
             };
 
-            // Set session
+            // set session
             sessionStorage.setItem('currentUser', JSON.stringify(sessionData));
 
-            // Handle remember me
+            // handle remember me
             if (rememberMeCheckbox?.checked) {
                 localStorage.setItem('rememberedUser', email);
             } else {
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if(user.isAdmin ) {
-                // Redirect to landing page
+                // redirect to landing page
             window.location.href = '../../AdminPanel/AdminPanel.html';
             }
             else {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Load remembered user if exists
+    // load remembered user if exists
     const rememberedUser = localStorage.getItem('rememberedUser');
     if (rememberedUser && emailInput) {
         emailInput.value = rememberedUser;
@@ -108,7 +108,7 @@ function togglePassword(inputId, toggleElement) {
 function showError(field, message) {
     if (!field) return;
 
-    // Handle both string ID and element references
+    // handle both string ID and element references
     const inputElement = typeof field === 'string' ? document.getElementById(field) : field;
     if (!inputElement) return;
     

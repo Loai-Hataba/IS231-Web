@@ -1,10 +1,10 @@
-// the main logic of signup page : 
+
 document.getElementById('signup-form').addEventListener('submit', function(event) {
     event.preventDefault();
     clearErrors();
     setLoading(true);
 
-    // Get form values
+    // getting form values
     const firstName = document.getElementById('firstName').value.trim();
     const lastName = document.getElementById('lastName').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -13,7 +13,7 @@ document.getElementById('signup-form').addEventListener('submit', function(event
     const acceptTerms = document.getElementById('acceptTerms').checked;
     const isAdmin = document.getElementById('isAdmin').checked;
     
-    // Validate form fields
+    // validate form fields
     let isValid = true;
 
     if (firstName.length < 2 || !/^[A-Za-z]+$/.test(firstName)) {
@@ -52,7 +52,7 @@ document.getElementById('signup-form').addEventListener('submit', function(event
         return;
     }
 
-    // Replace the localStorage save block with this improved version
+    // replace the localStorage save block with this improved version
     try {
         // Check if email exists
         const existingUser = localStorage.getItem(`user_${email}`);
@@ -62,7 +62,7 @@ document.getElementById('signup-form').addEventListener('submit', function(event
             return;
         }
 
-        // Create and store user data
+        // create and store user data
         const userData = {
             firstName,
             lastName,
@@ -73,10 +73,10 @@ document.getElementById('signup-form').addEventListener('submit', function(event
             id: Date.now()
         };
 
-        // Store user data only
+        // store user data only
         localStorage.setItem(`user_${email}`, JSON.stringify(userData));
         
-        // Show success message and redirect to login
+        // show success message and redirect to login
         alert('Account created successfully! Please log in.');
         window.location.href = 'login.html';
 
@@ -115,10 +115,10 @@ function showError(field, message) {
     if (field.id === 'password' || field.id === 'confirmPassword') {
         const passwordContainer = container.querySelector('.password-container');
         if (passwordContainer) {
-            // Insert error message after password container
+            // insert error message after password container
             passwordContainer.after(errorDiv);
             
-            // If it's the password field, move strength indicator below error
+            // if it's the password field, move strength indicator below error
             if (field.id === 'password') {
                 const strengthIndicator = container.querySelector('.password-strength');
                 if (strengthIndicator) {
@@ -178,7 +178,7 @@ function checkPasswordStrength(password) {
     const strengthBar = document.getElementById('strength-bar');
     const strengthText = document.getElementById('strength-text');
     
-    // Remove all classes
+    // remove all classes
     strengthBar.className = '';
     strengthText.className = '';
     
@@ -188,7 +188,7 @@ function checkPasswordStrength(password) {
         return;
     }
 
-    // Calculate strength
+    // calculate strength
     let strength = 0;
     const checks = {
         length: password.length >= 8,
@@ -200,7 +200,7 @@ function checkPasswordStrength(password) {
 
     strength = Object.values(checks).filter(Boolean).length;
 
-    // Update UI based on strength
+    // update UI based on strength
     let strengthClass, strengthLabel;
     switch(strength) {
         case 0:
@@ -228,7 +228,7 @@ function checkPasswordStrength(password) {
     strengthText.textContent = strengthLabel;
 }
 
-// Add event listener to password input
+// add event listener to password input
 document.getElementById('password').addEventListener('input', (e) => {
     checkPasswordStrength(e.target.value);
 });

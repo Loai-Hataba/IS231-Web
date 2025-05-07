@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Cache DOM elements for better performance
+    // cache DOM elements 
     const elements = {
         checkoutBtn: document.querySelector('.checkout-btn'),
         cartItems: document.querySelector('.cart-items'),
@@ -13,39 +13,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadCart();
 
-    // Add event listener to the checkout button
+    // add event listener to the checkout button
     elements.checkoutBtn.addEventListener('click', function() {
         const cart = getCartItems();
         const existingErrorContainer = document.querySelector('.cart-error-container');
 
-        // Remove any existing error message
+        // remove any existing error message
         if (existingErrorContainer) {
             existingErrorContainer.remove();
         }
 
         if (cart.length === 0) {
-            // Create a container for the error message and arrow
+            // create a container for the error message and arrow
             const errorContainer = document.createElement('div');
             errorContainer.className = 'cart-error-container';
 
-            // Create the error message
+            // create the error message
             const errorMsg = document.createElement('div');
             errorMsg.className = 'cart-error-msg';
             errorMsg.textContent = 'Your cart is empty. Please add items to proceed to checkout.';
 
-            // Create the arrow
+            // create the arrow
             const arrow = document.createElement('div');
             arrow.className = 'arrow-down';
-            arrow.innerHTML = '↓'; // Adding a down arrow character
+            arrow.innerHTML = '↓'; 
 
-            // Append the arrow and message to the container
+            // append the arrow and message to the container
             errorContainer.appendChild(errorMsg);
             errorContainer.appendChild(arrow);
 
-            // Insert the error container between the buttons
+            // insert the error container between the buttons
             elements.cartSummary.insertBefore(errorContainer, elements.checkoutBtn.nextSibling);
         } else {
-            // Redirect to PaymentMethod.html if the cart is not empty
+            // redirect to PaymentMethod.html if the cart is not empty
             window.location.href = '../Payment/PaymentMethod.html';
         }
     });
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             removeFromCart(bookTitle);
             cartItem.remove();
             updateTotals();
-            checkEmptyCart(); // Check if cart is now empty after removal
+            checkEmptyCart(); // check if cart is now empty after removal
         }
     });
 
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const cart = getCartItems();
         
         if (cart.length === 0) {
-            // Display empty cart message and handle UI visibility
+            // display empty cart message and handle UI visibility
             elements.cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
             toggleEmptyCartUI(true);
             return;
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         localStorage.setItem('cart', JSON.stringify(updatedCart));
         
-        // Update the price display for this item
+        // update the price display for this item
         const priceElement = cartItemElement.querySelector('.book-price');
         const itemData = updatedCart.find(item => item.title === bookTitle);
         if (priceElement && itemData) {
