@@ -4,8 +4,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # Main pages
-    path('', views.home, name='landing'),
-    path('aboutUs/', views.about, name='aboutUs'),
+    path('', views.home, name='home'),
+    path('books/', views.about, name='aboutUs'),
     path('profile/', views.user_profile, name='user_profile'),
     path('books/', views.book_list, name='book_list'),
 
@@ -16,7 +16,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
 
     # Authentication
-    path('signup/', views.signup, name='signup'),
+    path('', views.signup, name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='books/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
 ]

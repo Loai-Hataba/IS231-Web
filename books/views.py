@@ -5,9 +5,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 
+from django.http import HttpResponse
+from django.template import loader
+def index(request):
+    template = loader.get_template('books/index.html')
+    return HttpResponse(template.render())
+
 def home(request):
-    books = Book.objects.all()[:6]
-    return render(request, 'books/index.html', {'books': books})
+    return render(request, 'books/signup.html')
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -34,6 +39,7 @@ def book_list(request):
     return render(request, 'books/booklist.html', {'books': books})
 
 def about(request):
+    print(request, 'testing')
     return render(request, 'books/aboutUs.html')
 
 def help_page(request):
