@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '../../AdminPanel/AdminPanel.html';
             }
             else {
-                window.location.href = '../../Landing Page/Index.html';
+                window.location.href = '../../../templates/books/Index.html';
             }
 
         } catch (error) {
