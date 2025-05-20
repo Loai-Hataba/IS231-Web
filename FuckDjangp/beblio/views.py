@@ -45,3 +45,39 @@ def books(request: HttpRequest) -> HttpResponse:
             review_obj.save()
             book.review.add(review_obj)
         return HttpResponse(status=201)
+    
+    
+    
+    
+    
+    ## Abdallah : 
+    
+def index (request ) :
+    return render(request, 'beblio/index.html')
+
+def book_list(request):
+    return HttpResponse ("This is the book list page")
+
+def book_detail(request):
+    return HttpResponse(f"This is the detail page for book ")
+
+def admin_panel(request):
+    return HttpResponse("This is the admin panel page")
+
+def user_profile(request):
+    return HttpResponse("This is the user profile page")
+
+def signup(request):
+    return HttpResponse("This is the signup page")
+
+def login(request):
+    return HttpResponse("This is the login page")
+
+def aboutUs(request):
+    return HttpResponse("This is the about us page")
+
+def contactUs(request):
+    return HttpResponse("This is the contact us page")
+
+ 
+ ## the third var context  for loading book details
