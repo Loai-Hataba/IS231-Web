@@ -24,15 +24,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput.value;
 
         try {
-            // Your authentication logic here
-            
-            // After successful login, get the book list URL and redirect
-            const bookListUrl = document.getElementById('login-form').dataset.booklistUrl;
-            window.location.href = bookListUrl;
+            const response = await fetch('/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
 
+            const data = await response.json();
+
+            if (response.ok) {
+                // If remember me is checked, store the email
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem('rememberedUser', email);
+                }
+                
+                // Redirect to book list page
+                window.location.href = document.getElementById('login-form').dataset.booklistUrl;
+            } else {
+                // Show error message in the appropriate field
+                if (data.field && data.error) {
+                    showError(document.getElementById(data.field), data.error);
+                } else {
+                    alert(data.error || 'Login failed. Please try again.');
+                }
+            }
         } catch (error) {
             console.error('Login error:', error);
             alert('An error occurred. Please try again.');
+        } finally {
             setLoading(false);
         }
     });
