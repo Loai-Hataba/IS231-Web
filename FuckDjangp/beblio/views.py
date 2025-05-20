@@ -8,10 +8,35 @@ import json
 @csrf_exempt
 def books(request: HttpRequest) -> HttpResponse:
     if request.method == 'GET':
-        books_data = Book.objects.all()
-        books_json = serialize('json', books_data)
-        response = HttpResponse(books_json, content_type='application/json')
-        return response
+        # Check if we're filtering by tags
+        tag_names = request.GET.get('tags', '').split(',')
+        if tag_names and tag_names[0]:  # If we have tags to filter by
+            books_data = Book.objects.filter(tags__name__in=tag_names).distinct()
+        else:
+            books_data = Book.objects.all()
+        
+        # Convert to list of dictionaries for JSON serialization
+        books_list = []
+        for book in books_data:
+            book_dict = {
+                'id': book.id,
+                'title': book.title,
+                'author': book.author,
+                'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
+                'isbn': book.isbn,
+                'pages': book.pages,
+                'cover_image': book.cover_image,
+                'language': book.language,
+                'description': book.description,
+                'rating': float(book.rating) if book.rating else 0,
+                'publisher': book.publisher,
+                'in_stock': book.in_stock,
+                'quote': book.quote,
+                'tags': list(book.tags.values_list('name', flat=True))
+            }
+            books_list.append(book_dict)
+        
+        return JsonResponse(books_list, safe=False)
     elif request.method == 'POST':
         # Handle POST request to add a new book
         books_json = json.loads(request.body)
@@ -27,8 +52,7 @@ def books(request: HttpRequest) -> HttpResponse:
             rating=books_json.get('rating'),
             publisher=books_json.get('publisher'),
             in_stock=books_json.get('in_stock', True),
-            quote=books_json.get('quote'),
-            details=books_json.get('details')
+            quote=books_json.get('quote')
         )
         book.save()
         tags_list = books_json.get('tags', [])
@@ -56,8 +80,52 @@ def index (request ) :
 def book_list(request):
     return render(request, 'beblio/booklist.html')
 
-def book_detail(request):
-    return render(request, 'beblio/bookDetails.html')
+def book_detail(request, book_id):
+    try:
+        print(f"Attempting to load book with ID: {book_id}")
+        # Get the specific book by ID
+        book = Book.objects.select_related().prefetch_related('tags', 'review').get(id=book_id)
+        
+        # Convert book data into a format matching our JavaScript structure
+        book_data = {
+            'title': book.title,
+            'author': book.author,
+            'rating': float(book.rating) if book.rating else 0,
+            'publisher': book.publisher,
+            'publishDate': book.published_date.strftime('%Y-%m-%d') if book.published_date else '',
+            'pages': book.pages,
+            'language': book.language,
+            'isbn': book.isbn,
+            'tags': list(book.tags.values_list('name', flat=True)),
+            'description': book.description,
+            'inStock': book.in_stock,
+            'imagePath': book.cover_image if book.cover_image else '',
+            'reviews': [{
+                'reviewer': review.user,
+                'rating': float(review.rating) if review.rating else 0,
+                'text': review.comment,
+                'date': '2023-01-01'  # You might want to add a date field to your review model
+            } for review in book.review.all()],
+            'quotes': [book.quote] if book.quote else [],
+            'details': []  # Empty list since we don't have details in the database
+        }
+        
+        context = {
+            'book': book_data,
+            'book_json': json.dumps(book_data)
+        }
+        print(f"finished loading book with ID: {book_id}")
+        
+        return render(request, 'beblio/bookDetails.html', context)
+        
+    except Book.DoesNotExist:
+        return render(request, 'beblio/bookDetails.html', {
+            'error': f'Book with ID {book_id} not found'
+        })
+    except Exception as e:
+        return render(request, 'beblio/bookDetails.html', {
+            'error': f'Error loading book details: {str(e)}'
+        })
 
 def admin_panel(request):
     return render(request, 'beblio/AdminPanel.html')

@@ -6,20 +6,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const quotesContainer = document.getElementById('quotes');
     const detailsContainer = document.getElementById('details');
 
-    // Retrieving the selected book data from localStorage
-    const selectedBook = JSON.parse(localStorage.getItem('selectedBook'));
-
-
+    // Use the book data provided by Django template
+    // This will be initialized in the template with book_json
+    const selectedBook = window.selectedBook;
+    console.log('Selected book from server:', selectedBook);
+    
     if (selectedBook) {
-        console.log(`the book "${selectedBook.title}" has inStock set to : ${selectedBook.inStock}`);
-
-
-        const adjustedImagePath = `../BookList/${selectedBook.imagePath}`;
-
-        // Populate the book details dynamically
+        console.log(`Loading book "${selectedBook.title}" with inStock set to: ${selectedBook.inStock}`);
+        
+        // Use the image path from the book data or fallback to default
+        const imageUrl = '/static/images/bookList/' + selectedBook.imagePath;
+        console.log("Loading image from:", imageUrl);
+        
         bookContainer.innerHTML = `
             <div class="book-cover">
-                <img src="${adjustedImagePath}" alt="${selectedBook.title}">
+                <img src="${imageUrl}" alt="${selectedBook.title}">
             </div>
             <div class="book-info">
                 <h1 class="book-title">${selectedBook.title}</h1>
@@ -106,64 +107,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add to cart functionality
         const addToCartBtn = document.querySelector('.add-to-cart-btn');
-        if (addToCartBtn){
+        if (addToCartBtn) {
             addToCartBtn.addEventListener('click', function() {
                 addToCart(selectedBook);
-                // Redirect to cart page
-                window.location.href = '../PaymentMethod/Cart/Cart.html';
+                window.location.href = '{% url "cart" %}';
             });
-        } else {
-            console.log("hidden add cart button 👍");
+        }
+
+        // Similar books section
+        const bookGrid = document.querySelector('.similar-books .book-grid');
+        if (bookGrid) {
+            bookGrid.innerHTML = ''; // Clear existing books
+
+            // Use the tags from the current book to find similar books
+            if (selectedBook.tags && selectedBook.tags.length > 0) {
+                fetch(`/books/?tags=${selectedBook.tags.join(',')}`)
+                    .then(response => response.json())
+                    .then(books => {
+                        // Filter out the current book and limit to 5 similar books
+                        const similarBooks = books
+                            .filter(book => book.id !== selectedBook.id)
+                            .slice(0, 5);
+
+                        similarBooks.forEach(book => {
+                            const bookCard = document.createElement('div');
+                            bookCard.className = 'book-card';
+                            bookCard.innerHTML = `
+                                <img src="${book.cover_image || '/static/images/bookList/booklist_image_1.jpg'}" alt="${book.title}">
+                                <h3 class="book-card-title">${book.title}</h3>
+                                <p class="book-card-author">${book.author}</p>
+                            `;
+
+                            bookCard.addEventListener('click', () => {
+                                window.location.href = `/bookDetail/${book.id}/`;
+                            });
+
+                            bookGrid.appendChild(bookCard);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading similar books:', error);
+                        bookGrid.innerHTML = '<p>Unable to load similar books at this time.</p>';
+                    });
+            }
         }
     } else {
         // If no book is selected, show an error message
         bookContainer.innerHTML = '<p>No book selected. Please go back and select a book.</p>';
     }
-
-
-    // Load all books from localStorage
-    const books = JSON.parse(localStorage.getItem('books')) || [];
-
-    
-    if (selectedBook && books.length > 0) {
-    // Find similar books (sharing at least one tag, and not the selected book itself)
-    const similarBooks = books.filter(book => {
-        if (book.ID === selectedBook.ID) return false; // Skip the selected book
-        return book.tags.some(tag => selectedBook.tags.includes(tag));
-    }).slice(0, 5);
-
-    // Target the container where similar books should go
-    const bookGrid = document.querySelector('.similar-books .book-grid');
-    bookGrid.innerHTML = ''; // Clear existing static books if any
-
-
-    // Populate similar books
-    similarBooks.forEach(book => {
-
-        const adjustedImagePath = `../BookList/${book.imagePath}`;
-
-        const bookCard = document.createElement('div');
-        bookCard.className = 'book-card';
-        bookCard.innerHTML = `
-            <img src="${adjustedImagePath}" alt="${book.title}">
-            <h3 class="book-card-title">${book.title}</h3>
-            <p class="book-card-author">${book.author}</p>
-        `;
-
-        bookCard.addEventListener('click', () => {
-            localStorage.setItem('selectedBook', JSON.stringify(book));
-            window.location.href = 'bookDetails.html';
-        });
-
-        bookGrid.appendChild(bookCard);
-
-    });
-}
-
-
-
-
-
 
     // Function to generate star ratings
     function generateStars(rating) {
@@ -174,22 +165,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return '★'.repeat(fullStars) + (halfStar ? '⯨' : '') + '☆'.repeat(emptyStars);
     }
 
-    // Function to add a book to cart
+    // Updated addToCart function
     function addToCart(book) {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existingItemIndex = cart.findIndex(item => item.title === book.title);
+        const existingItemIndex = cart.findIndex(item => item.id === book.id);
 
         if (existingItemIndex !== -1) {
             cart[existingItemIndex].quantity += 1;
         } else {
-            // Use a consistent relative path for the image
-            const relativeImagePath = `../../BookList/${book.imagePath}`;
             cart.push({
+                id: book.id,
                 title: book.title,
                 author: book.author,
-                price: parseFloat ('4.99'),
+                price: book.price || 4.99,
                 quantity: 1,
-                imagePath: relativeImagePath, // Store relative path
+                imagePath: book.cover_image,
                 rentalPeriod: '30 days'
             });
         }

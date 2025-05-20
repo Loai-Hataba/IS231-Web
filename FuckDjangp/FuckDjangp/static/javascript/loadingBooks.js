@@ -91,7 +91,7 @@ class Book {
         3,
         "A MILLION TO ONE",
         "High stakes and daring dreams collide in 'A Million to One,' where four skilled thieves orchestrate a breathtaking heist to steal a priceless artifact from the world's most secure vault. Every second counts, and betrayal lurks around every corner in this adrenaline-fueled thriller.",
-        "images/booklist_image_3.jpg",
+        "booklist_image_3.jpg",
         ["Fiction", "Thriller", "Heist"],
         "Sophia Washington",
         "Enigma Books",

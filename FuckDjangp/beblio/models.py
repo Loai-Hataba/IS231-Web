@@ -18,7 +18,6 @@ class Book(models.Model):
     in_stock = models.BooleanField(default=True)
     review = models.ManyToManyField('review', blank=True)
     quote = models.TextField(blank=True, null=True)
-    details = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title

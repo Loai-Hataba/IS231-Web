@@ -20,12 +20,27 @@
             </ul>
         </nav>
         <a href="{% url 'login' %}" class="btn">Login</a>
-    </header>
-    
-    <div class="container">
-        <!-- for dynamic books -->
-        <div id="book-container" class="book-details"></div> 
+    </header>     
 
+    <div class="container">
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% else %}            {% if book_json %}
+            <!-- Initialize book data -->
+            <script type="text/javascript">
+                console.log('Initializing book data from server');
+                const serverBookData = JSON.parse('{{ book_json|escapejs }}');
+                window.selectedBook = serverBookData;
+                localStorage.setItem('selectedBook', JSON.stringify(serverBookData));
+            </script>
+            {% endif %}
+            
+            <!-- Dynamic book container -->
+            <div id="book-container" class="book-details"></div>
+        {% endif %}
+        
         <div class="tabs">
             <button class="tab active">Reader Reviews</button>
             <button class="tab">Quotes</button>
@@ -57,6 +72,9 @@
           <a href="{% url 'termsOfUse' %}">Terms</a>
           <a href="{% url 'contactUs' %}">Contact Us</a>
         </div>
-      </footer>
+    </footer>
+    
+    <!-- Add the JavaScript file -->
+    <script src="{% static 'javascript/bookDetailsJS.js' %}"></script>
 </body>
 </html>
