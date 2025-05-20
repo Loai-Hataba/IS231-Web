@@ -32,7 +32,8 @@ def books(request: HttpRequest) -> HttpResponse:
                 'publisher': book.publisher,
                 'in_stock': book.in_stock,
                 'quote': book.quote,
-                'tags': list(book.tags.values_list('name', flat=True))
+                'tags': list(book.tags.values_list('name', flat=True)),
+                'genre' : book.genre 
             }
             books_list.append(book_dict)
         
@@ -52,7 +53,8 @@ def books(request: HttpRequest) -> HttpResponse:
             rating=books_json.get('rating'),
             publisher=books_json.get('publisher'),
             in_stock=books_json.get('in_stock', True),
-            quote=books_json.get('quote')
+            quote=books_json.get('quote'),
+            genre=books_json.get('genre')
         )
         book.save()
         tags_list = books_json.get('tags', [])
@@ -107,7 +109,6 @@ def book_detail(request, book_id):
                 'date': '2023-01-01'  # You might want to add a date field to your review model
             } for review in book.review.all()],
             'quotes': [book.quote] if book.quote else [],
-            'details': []  # Empty list since we don't have details in the database
         }
         
         context = {
