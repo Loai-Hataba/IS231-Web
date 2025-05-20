@@ -78,3 +78,32 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.book.title}"
+
+class Admin(models.Model):
+    admin_id = models.AutoField(primary_key=True)
+    firstname = models.CharField(max_length=50)
+    lastname = models.CharField(max_length=50)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)  # Using 128 for hashed password
+
+    def save(self, *args, **kwargs):
+        # Hash password before saving
+        if self._state.adding or not self.password.startswith('pbkdf2_sha256$'):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
+
+    def check_password(self, raw_password):
+        if not self.password or not raw_password:
+            return False
+        try:
+            return check_password(raw_password, self.password)
+        except ValueError:
+            return False
+
+    def __str__(self):
+        return f"{self.firstname} {self.lastname}"
+
+    class Meta:
+        db_table = 'admins'
+        verbose_name = 'Admin'
+        verbose_name_plural = 'Admins'

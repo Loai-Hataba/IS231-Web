@@ -1,11 +1,10 @@
-
-
 # Abdallah : 
 from django.urls import path
 from . import views
 
 urlpatterns = [
     path('' , views.index , name='index'),
+    path('index.html', views.index, name='index_html'),  # Add this line
     path('bookList/', views.book_list, name='book_list'),
     path('bookDetail/<int:book_id>/', views.book_detail, name='book_detail'),
     path('adminPanel/', views.admin_panel, name='admin_panel'),

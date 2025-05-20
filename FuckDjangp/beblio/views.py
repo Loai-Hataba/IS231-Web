@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest, JsonResponse
-from .models import Book, tags, review, User
+from .models import Book, tags, review, User, Admin
 from django.core.serializers import serialize
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -102,24 +102,48 @@ def login(request):
             email = data.get('email')
             password = data.get('password')
 
+            # First check if it's an admin
             try:
-                user = User.objects.get(email=email)
-                if user.check_password(password):  # This uses Django's password verification
-                    request.session['user_id'] = user.user_id
-                    return JsonResponse({'message': 'Login successful'}, status=200)
+                admin = Admin.objects.get(email=email)
+                if admin.check_password(password):
+                    # If admin credentials are correct, redirect to admin panel
+                    return JsonResponse({
+                        'message': 'Login successful',
+                        'is_admin': True,
+                        'redirect': '/adminPanel/'
+                    }, status=200)
                 else:
                     return JsonResponse({
                         'error': 'Invalid password',
                         'field': 'password'
                     }, status=400)
-            except User.DoesNotExist:
-                return JsonResponse({
-                    'error': 'Email not found',
-                    'field': 'email'
-                }, status=400)
+            except Admin.DoesNotExist:
+                # If not admin, check regular users
+                try:
+                    user = User.objects.get(email=email)
+                    if user.check_password(password):
+                        return JsonResponse({
+                            'message': 'Login successful',
+                            'is_admin': False,
+                            'redirect': '/bookList/'
+                        }, status=200)
+                    else:
+                        return JsonResponse({
+                            'error': 'Invalid password',
+                            'field': 'password'
+                        }, status=400)
+                except User.DoesNotExist:
+                    return JsonResponse({
+                        'error': 'Account not found',
+                        'field': 'email'
+                    }, status=400)
 
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
+            print(f"Login error: {str(e)}")
+            return JsonResponse({
+                'error': str(e),
+                'field': 'email'
+            }, status=400)
 
     return render(request, 'beblio/login.html')
 

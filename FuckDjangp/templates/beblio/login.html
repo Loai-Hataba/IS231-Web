@@ -25,7 +25,9 @@
     <h2>Log in</h2>
     <div id="subtext-top">Welcome back! Log in to continue your literary journey.</div>
 
-    <form id="login-form" method="post" data-booklist-url="{% url 'book_list' %}">
+    <form id="login-form" method="post" 
+    data-booklist-url="{% url 'book_list' %}"
+    data-admin-url="{% url 'admin_panel' %}">
       {% csrf_token %}
       <div class="input-group">
         <label for="email">Email address</label>
