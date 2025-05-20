@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`Loading book "${selectedBook.title}" with inStock set to: ${selectedBook.inStock}`);
         
         // Use the image path from the book data or fallback to default
-        const imageUrl = selectedBook.imagePath || '/static/images/bookList/booklist_image_1.jpg';
+        const imageUrl = '/static/images/bookList/' + selectedBook.imagePath;
         console.log("Loading image from:", imageUrl);
         
         bookContainer.innerHTML = `
