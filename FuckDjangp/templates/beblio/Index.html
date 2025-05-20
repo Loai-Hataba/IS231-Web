@@ -11,17 +11,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+<!-- Navigation Section -->
 <div class="navigation">
   <div class="items">
-    <div class="browse"> <a href="../BookList/booklist.html">Browse</a> </div>
-    <div class="about-us"><a href="../Sign up & Log in & About Us/aboutUs.html">About us</a></div>
+    <div class="browse"> <a href="{% url 'book_list' %}">Browse</a> </div>
+    <div class="about-us"><a href="{% url 'aboutUs' %}">About us</a></div>
     <div class="button">
-      <div class="sign-up"><a href="../Sign up & Log in & About Us/Forms/signup.html">Sign Up</a></div>
+      <div class="sign-up"><a href="{% url 'signup' %}">Sign Up</a></div>
     </div>
   </div>
   <div class="conquista-beblio">Conquista Beblio</div>
 </div>
 
+<!-- Header Section -->
 <div class="header">
   <div class="copy">
     <div class="page-title">
@@ -35,17 +37,20 @@
       </div>
     </div>
     <div class="button">
-        <div class="start-reading"><a href="../Sign%20up%20&%20Log%20in%20&%20About%20Us/Forms/signup.html">Start Reading</a></div>
+        <div class="start-reading"><a href="{% url 'signup' %}">Start Reading</a></div>
     </div>
   </div>
   <img class="julius-caesar-coustou-louvre-1" src="{% static 'images/landing/emperor-statue2.png' %}" alt="Julius Caesar" />
 </div>
+
+<!-- Book Display Section -->
 <div class="book-container">
   <img src="{% static 'images/landing/Karmazov.png' %}" alt="The Brothers Karamazov" class="book book-left">
   <img src="{% static 'images/landing/metakafka.png' %}" alt="The Metamorphosis" class="book book-center">
   <img src="{% static 'images/landing/Outsider.png' %}" alt="The Outsider" class="book book-right">
 </div>
-<!--History Section-->
+
+<!-- History Section -->
 <div class="container">
     <h1>Read From Across History</h1>
 
@@ -86,7 +91,9 @@
         <div class="timeline-label" style="left: 88%;">20th Century</div>
     </div>
 </div>
- <div class="StartNowcontainer">
+
+<!-- Start Now Section -->
+<div class="StartNowcontainer">
     <div class="left">
       <h1>Start Reading in Just 3 Steps!</h1>
       <div class="step">
@@ -102,8 +109,8 @@
         <p>Immerse yourself in knowledge anytime, anywhere.</p>
       </div>
       <div class="buttons">
-        <button class="primary">Start Reading</button>
-        <button class="secondary">Log In</button>
+        <a href="{% url 'signup' %}"><button class="primary">Start Reading</button></a>
+        <a href="{% url 'login' %}"><button class="secondary">Log In</button></a>
       </div>
     </div>
 
@@ -111,6 +118,7 @@
       <img src="{% static 'images/landing/Self_help_Books.png' %}" alt="self help books" />
   </div>
  </div>
+
 <!-- Testimonials Section -->
 <section class="testimonials">
   <h2>Loved by Book Enthusiasts Everywhere!</h2>
@@ -150,21 +158,22 @@
 
 <!-- Call to Action Section -->
 <section class="cta">
-  <h2>Start reading and conquer new fields of knowledge</h2>
-  <div class="cta-buttons">
-    <a href="../Sign up & Log in & About Us/Forms/signup.html"><button class="secondary">Read NOW!!</button></a>
-    <a href="../Sign up & Log in & About Us/Forms/login.html"><button class="secondary">Log In</button></a>
-  </div>
+    <h2>Start reading and conquer new fields of knowledge</h2>
+    <div class="cta-buttons">
+        <a href="{% url 'signup' %}"><button class="secondary">Read NOW!!</button></a>
+        <a href="{% url 'login' %}"><button class="secondary">Log In</button></a>
+    </div>
 </section>
 
 <!-- Footer -->
 <footer class="footer">
-  <div>
-    <a href="../Sign up & Log in & About Us/Footers/help.html">Help</a>
-    <a href="../Sign up & Log in & About Us/Footers/privacy.html">Privacy</a>
-    <a href="../Sign up & Log in & About Us/Footers/terms.html">Terms</a>
-    <a href="../Sign up & Log in & About Us/Footers/contactUs.html">Contact Us</a>
-  </div>
+    <div>
+        <a href="{% url 'contactUs' %}">Contact Us</a>
+        <a href="{% url 'aboutUs' %}">About Us</a>
+        <a href="{% url 'privacyPolicy' %}">Privacy Policy</a>
+        <a href="{% url 'termsOfUse' %}">Terms of Use</a>
+        <a href="{% url 'help' %}">Help</a>
+    </div>
 </footer>
 <script src="{% static 'js/utils/navbarHandler.js' %}"></script>
 <script src="{% static 'js/landing/loadingBooks.js' %}"></script>

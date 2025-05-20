@@ -20,4 +20,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('aboutUs/', views.aboutUs, name='aboutUs'),
     path('contactUs/', views.contactUs, name='contactUs'),
+    path('privacyPolicy/', views.privacyPolicy, name='privacyPolicy'),
+    path('termsOfUse/', views.termsOfUse, name='termsOfUse'),
+    path('help/', views.help, name='help'),
 ]

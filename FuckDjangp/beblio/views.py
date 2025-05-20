@@ -56,10 +56,10 @@ def index (request ) :
     return render(request, 'beblio/index.html')
 
 def book_list(request):
-    return HttpResponse ("This is the book list page")
+    return render(request, 'beblio/booklist.html')
 
 def book_detail(request):
-    return HttpResponse(f"This is the detail page for book ")
+    return render(request, 'beblio/bookDetails.html')
 
 def admin_panel(request):
     return HttpResponse("This is the admin panel page")
@@ -74,10 +74,19 @@ def login(request):
     return HttpResponse("This is the login page")
 
 def aboutUs(request):
-    return HttpResponse("This is the about us page")
+    return render(request, 'beblio/aboutUs.html')
 
 def contactUs(request):
-    return HttpResponse("This is the contact us page")
+    return render(request, 'beblio/contactUs.html')
+
+def privacyPolicy(request):
+    return render(request, 'beblio/privacy.html')
+
+def termsOfUse(request):
+    return render(request, 'beblio/terms.html')
+
+def  help(request):
+    return render(request, 'beblio/help.html')
 
  
  ## the third var context  for loading book details

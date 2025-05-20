@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>User Dashboard | Conquista Beblio</title>
+    <link rel="stylesheet" href="User%20Style.css" />
+    <script src="profile.js"></script>
+    <script src="userProfile.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">📚 Conquista Beblio</div>
+    <nav>
+      <ul>
+        <li><a href="../Landing Page/Index.html">Home</a></li>
+        <li><a href="/Sign%20up%20&%20Log%20in%20&%20About%20Us/aboutUs.html">About us</a></li>
+      </ul>
+    </nav>
+    <button class="signout-btn">Sign Out</button>
+  </header>
+
+  <main class="dashboard">
+    <section class="user-profile">
+      <img src="https://i.pravatar.cc/150?img=3" alt="User Image" class="profile-img" />
+      <div>
+        <h1>Welcome back, Emad</h1>
+        <p>"Another conquest awaits. Let's read like emperors."</p>
+      </div>
+    </section>
+
+    <section class="analytics">
+      <div class="card">
+        <h2>📚 Books Read</h2>
+        <div class="bar-container">
+          <div class="bar" style="width: 75%; background-color: #1a1a1a;"></div>
+        </div>
+        <p>15 of 20 goal</p>
+      </div>
+      <div class="card">
+        <h2>📖 Books Rented</h2>
+        <div class="bar-container">
+          <div class="bar" style="width: 90%; background-color: #a17d4d;"></div>
+        </div>
+        <p>9 of 10 goal</p>
+      </div>
+      <div class="card view-rented-books">
+        <h2>🔍 My Rentals</h2>
+        <p>View all your rented books</p>
+        <button id="view-rentals-btn" class="view-rentals-btn">View Rentals</button>
+      </div>
+    </section>
+    
+    <section class="wishlist">
+      <h2>🖤 Wishlist</h2>
+      <div class="book-grid">
+        <div class="book">
+          <img src="assets/The%20Gambler.jpg" alt="The Gambler By Fyodor Dostoevsky">
+          <p>The Gambler</p>
+        </div>
+        <div class="book">
+          <img src="assets/The%20Plague.jpg" alt="The Plague By Albert Camus">
+          <p>The Plague</p>
+        </div>
+        <div class="book">
+          <img src="assets/The%20Prince.jpg" alt="The Prince By Nicolo Machiavelli">
+          <p>The Prince</p>
+        </div>
+
+        <div class="book">
+          <img src="assets/1984.jpg" alt="1984 By George Orwell">
+          <p>1984</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- New section for rented books, hidden by default -->
+    <section class="rented-books-section" style="display: none;">
+      <div class="section-header">
+        <h2>📚 My Rented Books</h2>
+        <button id="close-rentals-btn" class="close-btn">✕</button>
+      </div>
+      <div class="rented-books-grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <a href="../Sign up & Log in & About Us/Footers/help.html">Help</a>
+      <a href="../Sign up & Log in & About Us/Footers/privacy.html">Privacy</a>
+      <a href="../Sign up & Log in & About Us/Footers/terms.html">Terms</a>
+      <a href="../Sign up & Log in & About Us/Footers/contactUs.html">Contact Us</a>
+    </div>
+  </footer>
+</body>
+</html>
