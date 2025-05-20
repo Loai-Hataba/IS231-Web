@@ -1,21 +1,6 @@
-
-
 document.addEventListener('DOMContentLoaded', function() {
-    checkAdminAccess();
-    
     initializeAdminPanel();
 });
-
-function checkAdminAccess() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    const isAdmin = currentUser?.isAdmin;
-    
-    if (!isAdmin) {
-        alert('Access denied. This page is only accessible to administrators.');
-        window.location.href = '../index.html'; // Redirect to homepage or login
-        return;
-    }
-}
 
 function initializeAdminPanel() {
     loadBooks();

@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = emailInput.value.trim();
         const password = passwordInput.value;
 
+        if (!email || !password) {
+            showError(emailInput, 'Both email and password are required');
+            setLoading(false);
+            return;
+        }
+
         try {
             const response = await fetch('/login/', {
                 method: 'POST',
@@ -39,15 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // If remember me is checked, store the email
-                if (rememberMeCheckbox.checked) {
+                // Store user info if remember me is checked
+                if (rememberMeCheckbox?.checked) {
                     localStorage.setItem('rememberedUser', email);
                 }
-                
-                // Redirect to book list page
-                window.location.href = document.getElementById('login-form').dataset.booklistUrl;
+
+                // Use redirect URL from response or fallback to data attributes
+                const redirectUrl = data.redirect || (data.is_admin ? 
+                    document.getElementById('login-form').dataset.adminUrl : 
+                    document.getElementById('login-form').dataset.booklistUrl);
+
+                // Redirect to appropriate page
+                window.location.href = redirectUrl;
             } else {
-                // Show error message in the appropriate field
+                // Handle error responses
                 if (data.field && data.error) {
                     showError(document.getElementById(data.field), data.error);
                 } else {
@@ -56,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('An error occurred. Please try again.');
+            showError(emailInput, 'An error occurred. Please try again.');
         } finally {
             setLoading(false);
         }
