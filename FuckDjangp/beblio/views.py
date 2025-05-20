@@ -178,8 +178,9 @@ def login(request):
                     return JsonResponse({
                         'message': 'Login successful',
                         'is_admin': True,
-                        'redirect': '/adminPanel/'
-                    }, status=200)
+                        'redirect': '/adminPanel/',
+                        'user_name': f"{admin.firstname} {admin.lastname}"
+                    })
                 else:
                     return JsonResponse({
                         'error': 'Invalid password',
@@ -193,8 +194,9 @@ def login(request):
                         return JsonResponse({
                             'message': 'Login successful',
                             'is_admin': False,
-                            'redirect': '/bookList/'
-                        }, status=200)
+                            'redirect': '/bookList/',
+                            'user_name': f"{user.firstname} {user.lastname}"
+                        })
                     else:
                         return JsonResponse({
                             'error': 'Invalid password',

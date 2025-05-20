@@ -48,15 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Store user info if remember me is checked
                 if (rememberMeCheckbox?.checked) {
                     localStorage.setItem('rememberedUser', email);
+                    localStorage.setItem('isAdmin', data.is_admin);
+                    localStorage.setItem('userName', data.user_name);
                 }
 
-                // Use redirect URL from response or fallback to data attributes
-                const redirectUrl = data.redirect || (data.is_admin ? 
-                    document.getElementById('login-form').dataset.adminUrl : 
-                    document.getElementById('login-form').dataset.booklistUrl);
-
                 // Redirect to appropriate page
-                window.location.href = redirectUrl;
+                window.location.href = data.redirect;
             } else {
                 // Handle error responses
                 if (data.field && data.error) {
