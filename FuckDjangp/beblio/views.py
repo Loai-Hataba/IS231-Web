@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
-from .models import Book, tags, review
+from django.http import HttpResponse, HttpRequest, JsonResponse
+from .models import Book, tags, review, User
 from django.core.serializers import serialize
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -65,10 +65,62 @@ def admin_panel(request):
 def user_profile(request):
     return render(request, 'beblio/UserProfile.html')
 
+@csrf_exempt
 def signup(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # Check if email already exists
+            if User.objects.filter(email=data['email']).exists():
+                return JsonResponse({
+                    'error': 'Email already registered',
+                    'field': 'email'
+                }, status=400)
+
+            # Create new user using our custom User model
+            user = User.objects.create(
+                firstname=data.get('firstname'),
+                lastname=data.get('lastname'),
+                email=data.get('email'),
+                password=data.get('password'),
+                is_admin=data.get('is_admin', False)
+            )
+            
+            return JsonResponse({'message': 'User created successfully'}, status=201)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
     return render(request, 'beblio/signup.html')
 
+@csrf_exempt
 def login(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            email = data.get('email')
+            password = data.get('password')
+
+            try:
+                user = User.objects.get(email=email)
+                if user.check_password(password):  # This uses Django's password verification
+                    request.session['user_id'] = user.user_id
+                    return JsonResponse({'message': 'Login successful'}, status=200)
+                else:
+                    return JsonResponse({
+                        'error': 'Invalid password',
+                        'field': 'password'
+                    }, status=400)
+            except User.DoesNotExist:
+                return JsonResponse({
+                    'error': 'Email not found',
+                    'field': 'email'
+                }, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
     return render(request, 'beblio/login.html')
 
 def forgotPassword(request):

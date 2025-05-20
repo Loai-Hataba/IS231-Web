@@ -7,6 +7,7 @@
   <title>Login - Conquista Beblio</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  <script src="{% static 'javascript/login.js' %}"></script>
 </head>
 <body>
   <div id="header">
@@ -24,7 +25,8 @@
     <h2>Log in</h2>
     <div id="subtext-top">Welcome back! Log in to continue your literary journey.</div>
 
-    <form id="login-form">
+    <form id="login-form" method="post" data-booklist-url="{% url 'book_list' %}">
+      {% csrf_token %}
       <div class="input-group">
         <label for="email">Email address</label>
         <input type="email" id="email" placeholder="user@example.com" required maxlength="50" />

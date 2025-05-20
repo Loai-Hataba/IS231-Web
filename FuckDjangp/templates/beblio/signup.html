@@ -12,8 +12,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+    <script  defer src="{% static 'javascript/signup.js' %}"></script>
   </head>
-  
+
   <body>
     <header id="header">
       <div id="logo">📚 Conquista Beblio</div>
@@ -34,8 +35,9 @@
         Discover a great library of literary companions. Join thousands of readers
         who have found meaning and enrichment through our curated selection.
       </p>
-      
-      <form id="signup-form">
+
+      <form id="signup-form" method="POST" data-login-url="{% url 'login' %}">
+        {% csrf_token %}
         <!-- The first name input <div> -->
           <div class="input-group">
             <label for="firstName">First name</label>
