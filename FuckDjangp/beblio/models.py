@@ -53,15 +53,7 @@ class User(models.Model):
         super().save(*args, **kwargs)
 
     def check_password(self, raw_password):
-        """
-        Verify if the given raw password matches the hashed password in database.
-        
-        Args:
-            raw_password (str): The password to check
-            
-        Returns:
-            bool: True if password matches, False otherwise
-        """
+    
         if not self.password or not raw_password:
             return False
             
@@ -79,3 +71,10 @@ class User(models.Model):
         verbose_name_plural = 'Users'
 
 
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.user} - {self.book.title}"

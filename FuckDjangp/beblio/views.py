@@ -154,3 +154,4 @@ def orderSuccess(request):
     return render(request, 'beblio/OrderSuccessful.html')
 
 ## the third var context  for loading book details
+
