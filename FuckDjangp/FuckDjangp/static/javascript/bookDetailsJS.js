@@ -6,18 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const quotesContainer = document.getElementById('quotes');
     const detailsContainer = document.getElementById('details');
 
-    // Use the book data provided by Django template
-    // This will be initialized in the template with book_json
+    // Loading book from database
     const selectedBook = window.selectedBook;
     console.log('Selected book from server:', selectedBook);
     
     if (selectedBook) {
         console.log(`Loading book "${selectedBook.title}" with inStock set to: ${selectedBook.inStock}`);
         
-        // Use the image path from the book data or fallback to default
-        const imageUrl = '/static/images/bookList/' + selectedBook.imagePath;
-        console.log("Loading image from:", imageUrl);
         
+        const imageUrl = '/static/images/bookList/' + selectedBook.imagePath;
         bookContainer.innerHTML = `
             <div class="book-cover">
                 <img src="${imageUrl}" alt="${selectedBook.title}">
