@@ -22,4 +22,5 @@ urlpatterns = [
     path('paymentMethod/', views.paymentMethod, name='paymentMethod'),
     path('cart/', views.cart, name='cart'),
     path('orderSuccessful/', views.orderSuccess, name='orderSuccessful'),
+    path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
 ]

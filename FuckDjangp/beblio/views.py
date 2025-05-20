@@ -247,5 +247,58 @@ def cart(request):
 def orderSuccess(request):
     return render(request, 'beblio/OrderSuccessful.html')
 
-## the third var context  for loading book details
+@csrf_exempt
+def book_operations(request, book_id=None):
+    if request.method == 'DELETE':
+        try:
+            book = Book.objects.get(id=book_id)
+            book.delete()
+            return JsonResponse({'message': 'Book deleted successfully'})
+        except Book.DoesNotExist:
+            return JsonResponse({'error': 'Book not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    elif request.method == 'PUT':
+        try:
+            book = Book.objects.get(id=book_id)
+            data = json.loads(request.body)
+            
+            # Update book fields
+            for field, value in data.items():
+                if field == 'tags':
+                    book.tags.clear()
+                    for tag_name in value:
+                        tag, _ = tags.objects.get_or_create(name=tag_name)
+                        book.tags.add(tag)
+                elif hasattr(book, field):
+                    setattr(book, field, value)
+            
+            book.save()
+            return JsonResponse({'message': 'Book updated successfully'})
+        except Book.DoesNotExist:
+            return JsonResponse({'error': 'Book not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+def delete_book(request, book_id):
+    if request.method == 'DELETE':
+        try:
+            book = Book.objects.get(id=book_id)
+            book.delete()
+            return JsonResponse({
+                'message': 'Book deleted successfully'
+            })
+        except Book.DoesNotExist:
+            return JsonResponse({
+                'error': 'Book not found'
+            }, status=404)
+        except Exception as e:
+            return JsonResponse({
+                'error': str(e)
+            }, status=500)
+    return JsonResponse({
+        'error': 'Method not allowed'
+    }, status=405)
 
