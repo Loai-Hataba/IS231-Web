@@ -23,4 +23,10 @@ urlpatterns = [
     path('privacyPolicy/', views.privacyPolicy, name='privacyPolicy'),
     path('termsOfUse/', views.termsOfUse, name='termsOfUse'),
     path('help/', views.help, name='help'),
+    path('forgotPassword/', views.forgotPassword, name='forgotPassword'),
+    path('resetPassword/', views.resetPassword, name='resetPassword'),
+    # path('books/', views.books, name='books'),
+    path('paymentMethod/', views.paymentMethod, name='paymentMethod'),
+    path('cart/', views.cart, name='cart'),
+    path('orderSuccessful/', views.orderSuccess, name='orderSuccessful'),
 ]

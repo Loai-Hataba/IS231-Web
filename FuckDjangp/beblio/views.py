@@ -45,13 +45,11 @@ def books(request: HttpRequest) -> HttpResponse:
             review_obj.save()
             book.review.add(review_obj)
         return HttpResponse(status=201)
-    
-    
-    
-    
-    
-    ## Abdallah : 
-    
+
+
+
+## Abdallah :
+
 def index (request ) :
     return render(request, 'beblio/index.html')
 
@@ -62,16 +60,22 @@ def book_detail(request):
     return render(request, 'beblio/bookDetails.html')
 
 def admin_panel(request):
-    return HttpResponse("This is the admin panel page")
+    return render(request, 'beblio/AdminPanel.html')
 
 def user_profile(request):
-    return HttpResponse("This is the user profile page")
+    return render(request, 'beblio/UserProfile.html')
 
 def signup(request):
-    return HttpResponse("This is the signup page")
+    return render(request, 'beblio/signup.html')
 
 def login(request):
-    return HttpResponse("This is the login page")
+    return render(request, 'beblio/login.html')
+
+def forgotPassword(request):
+    return render(request, 'beblio/forgot_password.html')
+
+def resetPassword(request):
+    return render(request, 'beblio/reset_password.html')
 
 def aboutUs(request):
     return render(request, 'beblio/aboutUs.html')
@@ -88,5 +92,13 @@ def termsOfUse(request):
 def  help(request):
     return render(request, 'beblio/help.html')
 
- 
- ## the third var context  for loading book details
+def paymentMethod(request):
+    return render(request, 'beblio/PaymentMethod.html')
+
+def cart(request):
+    return render(request, 'beblio/Cart.html')
+
+def orderSuccess(request):
+    return render(request, 'beblio/OrderSuccessful.html')
+
+## the third var context  for loading book details

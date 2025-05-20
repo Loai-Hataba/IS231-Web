@@ -1,33 +1,31 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Details - Connoisseur Books</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{% static 'css/bookDetails.css' %}">
 </head>
 <body>
     <header>
         <div class="logo">
-            <a href="../Landing Page/Index.html">Conquista Beblio</a>
+            <a href="{% url 'index' %}">Conquista Beblio</a>
         </div>          
         <nav>
             <ul>
-                <li><a href="../Landing Page/Index.html">Home</a></li>
-                <li><a href="../BookList/booklist.html">Shop</a></li>
-                <li><a href="../Sign up & Log in & About Us/aboutUs.html">About Us</a></li>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'book_list' %}">Shop</a></li>
+                <li><a href="{% url 'aboutUs' %}">About Us</a></li>
             </ul>
         </nav>
-        <a href="../Sign up & Log in & About Us/Forms/login.html" class="btn">Login</a>
+        <a href="{% url 'login' %}" class="btn">Login</a>
     </header>
     
     <div class="container">
         <!-- for dynamic books -->
         <div id="book-container" class="book-details"></div> 
 
-
-        
-        
         <div class="tabs">
             <button class="tab active">Reader Reviews</button>
             <button class="tab">Quotes</button>
@@ -54,10 +52,10 @@
     
     <footer class="footer">
         <div>
-          <a href="../Sign up & Log in & About Us/Footers/help.html">Help</a>
-          <a href="../Sign up & Log in & About Us/Footers/privacy.html">Privacy</a>
-          <a href="../Sign up & Log in & About Us/Footers/terms.html">Terms</a>
-          <a href="../Sign up & Log in & About Us/Footers/contactUs.html">Contact Us</a>
+          <a href="{% url 'help' %}">Help</a>
+          <a href="{% url 'privacyPolicy' %}">Privacy</a>
+          <a href="{% url 'termsOfUse' %}">Terms</a>
+          <a href="{% url 'contactUs' %}">Contact Us</a>
         </div>
       </footer>
 </body>

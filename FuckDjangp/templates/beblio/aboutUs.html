@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,17 +9,17 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="Forms/css/aboutUsStyle.css" />
+    <link rel="stylesheet" href="{% static 'css/aboutUsStyle.css' %}" />
   </head>
   <body>
     <div class="header">
       <div class="logo">
-        <a href="../Landing Page/Index.html">Conquista Beblio</a>
+        <a href="{% url 'index' %}">Conquista Beblio</a>
       </div>
       
       <div class="nav-links">
-        <a href="../Landing Page/Index.html">Home</a>
-        <a href= "../Sign up & Log in & About Us/Forms/signup.html"
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'signup' %}"
         style="background: #111; color: white; padding: 2px 14px; border-radius: 16px;">Sign up</a>
       </div>
     </div>
@@ -142,9 +143,10 @@
 
       <div class="footer">
         <a href="Footers/help.html">Help</a>
-        <a href="Footers/privacy.html">Privacy</a>
-        <a href="Footers/terms.html">Terms</a>
-        <a href="Footers/contactUs.html">Terms</a>
+        <a href="{% url 'privacyPolicy' %}">Privacy</a>
+        <a href="{% url 'termsOfUse' %}">Terms</a>
+        <a href="{% url 'help' %}">Help</a>
+        <a href="{% url 'contactUs' %}">Contact Us</a>
       </div>
     </div>
   </body>

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Help - Conquista Beblio</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="footerNavigationStyles.css" />
+  <link rel="stylesheet" href="{% static 'css/footerNavigationStyles.css' %}" />
 </head>
 <body>
   <div class="header">
@@ -13,9 +14,9 @@
       📚 Conquista Beblio
     </div>
     <div class="nav-links">
-      <a href="../../Landing Page/Index.html">Home</a>
-      <a href="../aboutUs.html">About us</a>
-      <a href="../Forms/signup.html" style="background: #111; color: white; padding: 2px 14px; border-radius: 16px;">Sign up</a>
+      <a href="{% url 'index' %}">Home</a>
+      <a href="{% url 'aboutUs' %}">About us</a>
+      <a href="{% url 'signup' %}" style="background: #111; color: white; padding: 2px 14px; border-radius: 16px;">Sign up</a>
     </div>
   </div>
   
@@ -34,10 +35,10 @@
     </div>
 
     <div class="footer">
-      <a href="help.html" style="font-weight: 600;">Help</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="contactUs.html">Contact Us</a>
+      <a href="{% url 'help' %}" style="font-weight: 600;">Help</a>
+        <a href="{% url 'privacyPolicy' %}">Privacy</a>
+        <a href="{% url 'termsOfUse' %}">Terms</a>
+        <a href="{% url 'contactUs' %}">Contact Us</a>
     </div>
   </div>
 </body>

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Conquista Beblio</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" />
 </head>
 <body>
   <div id="header">
@@ -13,9 +14,9 @@
       📚 Conquista Beblio
     </div>
     <div id="nav-links">
-      <a href="../../Landing Page/Index.html">Home</a>
-      <a href="../aboutUs.html">About us</a>
-      <a href="signup.html" style="background: #111; color: white; padding: 2px 14px; border-radius: 16px;">Sign up</a>
+      <a href="{% url 'index' %}">Home</a>
+      <a href="{% url 'aboutUs' %}">About us</a>
+      <a href="{% url 'signup' %}" style="background: #111; color: white; padding: 2px 14px; border-radius: 16px;">Sign up</a>
     </div>
   </div>
 
@@ -44,16 +45,16 @@
 
       <button type="submit" id="login-button">Log In</button>
       <div id="subtext-bottom">
-        <a href="forgot_password.html">Forgot your password?</a>
-        <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+        <a href="{% url 'forgotPassword' %}">Forgot your password?</a>
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
       </div>
     </form>
     <div id="divider">or</div>
     <div id="footer">
-      <a href="../Footers/help.html">Help</a>
-      <a href="../Footers/privacy.html">Privacy</a>
-      <a href="../Footers/terms.html">Terms</a>
-      <a href="../Footers/contactUs.html">Contact Us</a>
+      <a href="{% url 'help' %}">Help</a>
+      <a href="{% url 'privacyPolicy' %}">Privacy</a>
+      <a href="{% url 'termsOfUse' %}">Terms</a>
+      <a href="{% url 'contactUs' %}">Contact Us</a>
     </div>
   </div>
 </body>

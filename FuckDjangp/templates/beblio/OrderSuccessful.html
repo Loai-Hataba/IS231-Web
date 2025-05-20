@@ -1,19 +1,20 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Successful - 📚 Conquista Beblio</title>
-    <link rel="stylesheet" href="OrderSuccessful.css">
-    <script defer src="OrderSuccessful.js"></script>
+    <link rel="stylesheet" href="{% static 'css/OrderSuccessful.css' %}">
+    <script defer src="{% static 'js/OrderSuccessful.js' %}"></script>
 </head>
 <body>
     <header>
         <div class="logo">📚 Conquista Beblio</div>
         <nav>
             <ul>
-                <li><a href="../../Landing Page/Index.html">Home</a></li>
-                <li><a href="../../Sign up & Log in & About Us/aboutUs.html">About Us</a></li>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'aboutUs' %}">About Us</a></li>
             </ul>
         </nav>
     </header>
@@ -61,10 +62,10 @@
 
     <footer class="footer">
         <div>
-          <a href="../../Sign up & Log in & About Us/Footers/help.html">Help</a>
-          <a href="../../Sign up & Log in & About Us/Footers/privacy.html">Privacy</a>
-          <a href="../../Sign up & Log in & About Us/Footers/terms.html">Terms</a>
-          <a href="../../Sign up & Log in & About Us/Footers/contactUs.html">Contact Us</a>
+        <a href="{% url 'help' %}">Help</a>
+          <a href="{% url 'privacyPolicy' %}">Privacy</a>
+          <a href="{% url 'termsOfUse' %}">Terms</a>
+          <a href="{% url 'contactUs' %}">Contact Us</a>
         </div>
     </footer>
 </body>

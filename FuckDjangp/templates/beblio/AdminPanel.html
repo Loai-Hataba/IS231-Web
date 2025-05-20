@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="style/AdminPanel.css">
+    <link rel="stylesheet" href="{% static 'css/AdminPanel.css' %}">
 </head>
 <body>
     <div class="nav">
@@ -49,10 +50,10 @@
     </div>
     <footer class="footer">
     <div>
-      <a href="../Sign up & Log in & About Us/Footers/help.html">Help</a>
-      <a href="../Sign up & Log in & About Us/Footers/privacy.html">Privacy</a>
-      <a href="../Sign up & Log in & About Us/Footers/terms.html">Terms</a>
-      <a href="../Sign up & Log in & About Us/Footers/contactUs.html">Contact Us</a>
+      <a href="{% url 'help' %}">Help</a>
+      <a href="{% url 'privacyPolicy' %}">Privacy</a>
+      <a href="{% url 'termsOfUse' %}">Terms</a>
+      <a href="{% url 'contactUs' %}">Contact Us</a>
     </div>
     </footer>
 </body>
