@@ -45,14 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Store user info if remember me is checked
-                if (rememberMeCheckbox?.checked) {
-                    localStorage.setItem('rememberedUser', email);
-                    localStorage.setItem('isAdmin', data.is_admin);
-                    localStorage.setItem('userName', data.user_name);
+                // Store user info in localStorage
+                localStorage.setItem('currentUser', JSON.stringify({
+                    email: email,
+                    name: data.user_name,
+                    isAdmin: data.is_admin
+                }));
+
+                // Store in sessionStorage if not "remember me"
+                if (!rememberMeCheckbox?.checked) {
+                    sessionStorage.setItem('currentUser', JSON.stringify({
+                        email: email,
+                        name: data.user_name,
+                        isAdmin: data.is_admin
+                    }));
+                    localStorage.removeItem('currentUser');
                 }
 
-                // Redirect to appropriate page
                 window.location.href = data.redirect;
             } else {
                 // Handle error responses
