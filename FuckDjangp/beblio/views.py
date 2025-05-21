@@ -358,11 +358,51 @@ def logout(request):
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 def book_form(request, book_id=None):
-    try:
-        book = None
-        if book_id:
-            book = Book.objects.get(id=book_id)
-        return render(request, 'beblio/BookForm.html', {'book': book})
-    except Book.DoesNotExist:
-        return redirect('admin_panel')
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            if book_id:
+                # Update existing book
+                book = Book.objects.get(id=book_id)
+                for field, value in data.items():
+                    if field == 'tags':
+                        book.tags.clear()
+                        for tag_name in value:
+                            tag, _ = tags.objects.get_or_create(name=tag_name)
+                            book.tags.add(tag)
+                    elif hasattr(book, field):
+                        setattr(book, field, value)
+                book.save()
+                return JsonResponse({'message': 'Book updated successfully'})
+            else:
+                # Create new book
+                book = Book.objects.create(
+                    title=data.get('title'),
+                    author=data.get('author'),
+                    isbn=data.get('isbn'),
+                    pages=data.get('pages'),
+                    language=data.get('language'),
+                    cover_image=data.get('cover_image'),
+                    publisher=data.get('publisher'),
+                    published_date=data.get('published_date'),
+                    description=data.get('description'),
+                    rating=data.get('rating'),
+                    in_stock=data.get('in_stock', True),
+                    quote=data.get('quote')
+                )
+                # Handle tags
+                for tag_name in data.get('tags', []):
+                    tag, _ = tags.objects.get_or_create(name=tag_name)
+                    book.tags.add(tag)
+                return JsonResponse({'message': 'Book added successfully'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    else:
+        try:
+            book = None
+            if book_id:
+                book = Book.objects.get(id=book_id)
+            return render(request, 'beblio/BookForm.html', {'book': book})
+        except Book.DoesNotExist:
+            return redirect('admin_panel')
 

@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        clearErrors();
         
         try {
             const formData = {
@@ -22,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 quote: document.getElementById('quote').value
             };
 
-            const url = bookId ? `/books/${bookId}/` : '/books/';
-            const method = bookId ? 'PUT' : 'POST';
+            const url = bookId ? `/book/edit/${bookId}/` : '/book/add/';
+            const method = 'POST';
 
             const response = await fetch(url, {
                 method: method,
