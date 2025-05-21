@@ -49,9 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('user', email);
 
                 // Show confirm dialog and wait for user response before redirecting
-                if (confirm('User logged in: ' + localStorage.getItem('user'))) {
                     window.location.href = data.redirect;
-                }
             } else {
                 // Handle error responses
                 if (data.field && data.error) {

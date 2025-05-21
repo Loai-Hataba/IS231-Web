@@ -1,18 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is logged in and is admin
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
-    
-    if (!currentUser.isAdmin) {
-        window.location.href = '/login/';
-        return;
-    }
-
-    // Update admin name in panel
-    const adminNameElement = document.getElementById('admin-name');
-    if (adminNameElement && currentUser.name) {
-        adminNameElement.textContent = currentUser.name;
-    }
-
     loadBooks();
     setupEventListeners();
 });
@@ -101,7 +87,7 @@ async function handleAddAdmin(e) {
     }
 }
 
-// Update logout function
+// Function to handle logout
 async function handleLogout() {
     if (confirm('Are you sure you want to logout?')) {
         try {
@@ -114,16 +100,20 @@ async function handleLogout() {
             });
 
             if (response.ok) {
-                // Clear stored user data
-                localStorage.removeItem('currentUser');
-                sessionStorage.removeItem('currentUser');
+                // Clear any stored session data
+                localStorage.removeItem('adminData');
+                sessionStorage.clear();
+                
+                // Redirect to index page
+                window.location.href = '/';
+            } else {
+                // If logout fails, still redirect to index page
+                console.error('Logout failed, redirecting anyway');
                 window.location.href = '/';
             }
         } catch (error) {
-            console.error('Logout error:', error);
-            // Still clear storage and redirect on error
-            localStorage.removeItem('currentUser');
-            sessionStorage.removeItem('currentUser');
+            console.error('Error during logout:', error);
+            // If there's an error, still redirect to index page
             window.location.href = '/';
         }
     }
