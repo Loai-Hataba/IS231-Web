@@ -32,7 +32,9 @@ def books(request: HttpRequest) -> HttpResponse:
                         'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
                         'in_stock': book.in_stock,
                         'quote': book.quote,
-                        'tags': list(book.tags.values_list('name', flat=True))
+                        'tags': list(book.tags.values_list('name', flat=True)),
+                        'genre': book.genre,
+                        'price': float(book.price)
                         # Removed genre from the response
                     }
                     books_list.append(book_dict)
@@ -64,7 +66,8 @@ def books(request: HttpRequest) -> HttpResponse:
             publisher=books_json.get('publisher'),
             in_stock=books_json.get('in_stock', True),
             quote=books_json.get('quote'),
-            genre=books_json.get('genre')
+            genre=books_json.get('genre'),
+            price=books_json.get('price')
         )
         book.save()
         tags_list = books_json.get('tags', [])
@@ -103,7 +106,9 @@ def get_books(request: HttpRequest) -> HttpResponse:
             'publisher': book.publisher,
             'in_stock': book.in_stock,
             'quote': book.quote,
-            'tags': list(book.tags.values_list('name', flat=True))
+            'tags': list(book.tags.values_list('name', flat=True)),
+            'genre' : book.genre,
+            'price' : book.price
         }
         books_list.append(book_dict)
         
@@ -139,6 +144,8 @@ def book_detail(request, book_id):
             'description': book.description,
             'inStock': book.in_stock,
             'imagePath': book.cover_image if book.cover_image else '',
+            'genre': book.genre if book.genre else '',
+            'price': float(book.price) if book.price else 4.99,
             'reviews': [{
                 'reviewer': review.user,
                 'rating': float(review.rating) if review.rating else 0,

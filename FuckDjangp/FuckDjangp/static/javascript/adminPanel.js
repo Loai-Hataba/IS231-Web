@@ -4,20 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupEventListeners() {
+    // Add null checks for each element
     const searchBar = document.querySelector('.search-bar');
-    searchBar.addEventListener('input', handleSearch);
+    if (searchBar) {
+        searchBar.addEventListener('input', handleSearch);
+    }
     
     const addBookBtn = document.getElementById('add-book-btn');
-    addBookBtn.addEventListener('click', () => showEditModal());
+    if (addBookBtn) {
+        addBookBtn.addEventListener('click', () => showEditModal());
+    }
     
-    // Add event listeners for new buttons
     const addAdminBtn = document.getElementById('add-admin-btn');
-    addAdminBtn.addEventListener('click', showAddAdminModal);
+    if (addAdminBtn) {
+        addAdminBtn.addEventListener('click', showAddAdminModal);
+    }
     
     const logoutBtn = document.getElementById('logout-btn');
-    logoutBtn.addEventListener('click', handleLogout);
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
     
-    // Add event listener for admin form submission
     const addAdminForm = document.getElementById('add-admin-form');
     if (addAdminForm) {
         addAdminForm.addEventListener('submit', handleAddAdmin);

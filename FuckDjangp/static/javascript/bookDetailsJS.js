@@ -7,13 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Loading book from database
     const selectedBook = window.selectedBook;
-    console.log('Selected book from server:', selectedBook);
+    console.log('Selected book from server:', selectedBook, "price: ", selectedBook.price);
     
     if (selectedBook) {
         console.log(`Loading book "${selectedBook.title}" with published date: ${selectedBook.publishDate}`);
         // Use the image path from the book data or fallback to default
         let imageUrl = selectedBook.imagePath;
         imageUrl = '/static/images/bookList/' + imageUrl;
+        console.log()
         
         bookContainer.innerHTML = `
             <div class="book-cover">
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Published</span>
-                        <span class="meta-value">${selectedBook.publishDate || ''}</span>
+                        <span class="meta-value">${selectedBook.publishDate}</span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Pages</span>
@@ -48,14 +49,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Genre</span>
-                        <span class="meta-value">${selectedBook.tags.join(', ')}</span>
+                        <span class="meta-value">${selectedBook.genre}</span>
                     </div>
                 </div>
                 ${
                     selectedBook.inStock
-                    ? `<button class="btn add-to-cart-btn">Add to shopping cart</button>`
-                    : `<p class="unavailable-message">This book is currently unavailable.</p>`
-                }
+                    ? `
+        <div class="price-container">
+            <span class="book-price">$${selectedBook.price || '4.99'}</span>
+        </div>
+        <button class="btn add-to-cart-btn">Add to shopping cart</button>
+    `
+    : `<p class="unavailable-message">This book is currently unavailable.</p>`
+}
                 
                 <div class="description">
                     <h2 class="section-title">Description</h2>
@@ -235,3 +241,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+

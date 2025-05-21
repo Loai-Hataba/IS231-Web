@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('published_date', models.DateField(blank=True, null=True)),
                 ('in_stock', models.BooleanField(default=True)),
                 ('quote', models.TextField(blank=True, null=True)),
-                ('details', models.TextField(blank=True, null=True)),
+                ('genre', models.TextField(blank=True, null=True)),
                 ('review', models.ManyToManyField(blank=True, to='beblio.review')),
                 ('tags', models.ManyToManyField(blank=True, to='beblio.tags')),
             ],
