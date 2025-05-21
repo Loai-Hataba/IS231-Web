@@ -81,10 +81,34 @@ async function handleAddAdmin(e) {
 }
 
 // Function to handle logout
-function handleLogout() {
-    // Confirm before logout
+async function handleLogout() {
     if (confirm('Are you sure you want to logout?')) {
-        window.location.href = '/logout/';
+        try {
+            const response = await fetch('/logout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            });
+
+            if (response.ok) {
+                // Clear any stored session data
+                localStorage.removeItem('adminData');
+                sessionStorage.clear();
+                
+                // Redirect to index page
+                window.location.href = '/';
+            } else {
+                // If logout fails, still redirect to index page
+                console.error('Logout failed, redirecting anyway');
+                window.location.href = '/';
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+            // If there's an error, still redirect to index page
+            window.location.href = '/';
+        }
     }
 }
 

@@ -345,3 +345,15 @@ def add_admin_page(request):
     # For GET requests, render the add admin form
     return render(request, 'beblio/AddAdmin.html')
 
+@csrf_exempt
+def logout(request):
+    if request.method == 'POST':
+        try:
+            # Clear session if you're using session-based auth
+            request.session.flush()
+            return JsonResponse({'message': 'Logged out successfully'})
+        except Exception as e:
+            print(f"Error during logout: {str(e)}")
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
