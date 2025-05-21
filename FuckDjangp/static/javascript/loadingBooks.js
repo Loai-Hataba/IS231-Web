@@ -1,6 +1,6 @@
 // Define the book class with all required properties
 class Book {
-    constructor(ID, title, description, imagePath, tags, author, publisher, publishDate, pages, language, isbn, rating,inStock, reviews = [], quotes=[], details=[]) {
+    constructor(ID, title, description, imagePath, tags, author, publisher, publishDate, pages, language, isbn, rating,inStock, reviews = [], quotes=[], genre, price) {
       console.log(`Creating book: ${title}, inStock: ${inStock}`);
       this.ID = ID;
       this.title = title;
@@ -17,7 +17,9 @@ class Book {
       this.inStock = inStock;
       this.reviews = reviews;
       this.quotes = quotes; 
-      this.details = details;
+      this.genre = genre;
+      this.price = price
+      // this.details = details;
     }
   }
 

@@ -46,14 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 // Store user info if remember me is checked
-                if (rememberMeCheckbox?.checked) {
-                    localStorage.setItem('rememberedUser', email);
-                    localStorage.setItem('isAdmin', data.is_admin);
-                    localStorage.setItem('userName', data.user_name);
-                }
+                localStorage.setItem('user', email);
 
-                // Redirect to appropriate page
-                window.location.href = data.redirect;
+                // Show confirm dialog and wait for user response before redirecting
+                    window.location.href = data.redirect;
             } else {
                 // Handle error responses
                 if (data.field && data.error) {
@@ -70,12 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // load remembered user if exists
-    const rememberedUser = localStorage.getItem('rememberedUser');
-    if (rememberedUser && emailInput) {
-        emailInput.value = rememberedUser;
-        if (passwordInput) passwordInput.focus();
-    }
+    // // load remembered user if exists
+    // const rememberedUser = localStorage.getItem('rememberedUser');
+    // if (rememberedUser && emailInput) {
+    //     emailInput.value = rememberedUser;
+    //     if (passwordInput) passwordInput.focus();
+    // }
 });
 
 // function to validate email
