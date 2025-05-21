@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .filter(book => book.id !== selectedBook.id)
                             .slice(0, 5);
 
+                            
                         similarBooks.forEach(book => {
                             const bookCard = document.createElement('div');
                             bookCard.className = 'book-card';

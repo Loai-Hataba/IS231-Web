@@ -273,9 +273,11 @@ def books(request: HttpRequest) -> HttpResponse:
 def get_books(request: HttpRequest) -> HttpResponse:
     books_data = Book.objects.all() 
     
-    # Convert to list of dictionaries for JSON serialization
+    
     books_list = []
     for book in books_data:
+
+
         book_dict = {
             'id': book.id,
             'title': book.title,
@@ -295,8 +297,9 @@ def get_books(request: HttpRequest) -> HttpResponse:
             'price' : book.price
         }
         books_list.append(book_dict)
+
         
-    return JsonResponse(books_list, safe=False)
+    return JsonResponse({"books" : books_list})
 
 
 ## Abdallah :
