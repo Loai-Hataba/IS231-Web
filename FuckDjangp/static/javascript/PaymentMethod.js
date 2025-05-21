@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // cache DOM elements 
+    // Cache DOM elements 
     const elements = {
         paymentDetails: document.querySelectorAll('.payment-details'),
         paymentMethods: document.querySelectorAll('.payment-method'),
@@ -11,14 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
         totalElement: document.querySelector('.price-total span:last-child')
     };
     
-    // initialize payment details (hide all by default)
+    // Initialize payment details (hide all by default)
     elements.paymentDetails.forEach(detail => {
         detail.style.display = 'none';
     });
     
-    loadOrderSummary();
-
-    // set up payment method selection
+    // Set up payment method selection
     elements.paymentMethods.forEach(method => {
         const radio = method.querySelector('input[type="radio"]');
         radio.addEventListener('change', function() {
@@ -40,13 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // set up form validation error messages
+    // Set up form validation error messages
     elements.formInputs.forEach(input => {
-        const errorMsg = document.createElement('div');
-        errorMsg.className = 'error-message';
-        errorMsg.id = input.id + '-error';
-        input.parentNode.appendChild(errorMsg);
-
         input.addEventListener('blur', function() {
             validateInput(input);
         });
@@ -56,13 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // handle form submission
+    // Handle form submission
     elements.submitBtn.addEventListener('click', function(e) {
         e.preventDefault();
         
         let isValid = true;
         
-        // validate general fields
+        // Validate general fields
         const requiredGeneralFields = ['fullname', 'email', 'phone', 'address', 'city'];
         requiredGeneralFields.forEach(id => {
             const input = document.getElementById(id);
@@ -71,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // validate payment method selection
+        // Validate payment method selection
         const paymentSelected = document.querySelector('input[name="payment"]:checked');
         if (!paymentSelected) {
             isValid = false;
@@ -95,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const paymentType = paymentSelected.closest('.payment-method').getAttribute('data-payment');
 
-            // validate payment-specific fields
+            // Validate payment-specific fields
             if (paymentType === 'credit') {
                 const cardFields = ['card-number', 'expiry', 'cvv'];
                 cardFields.forEach(field => {
@@ -112,63 +105,71 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // process valid form submission
+        // Process valid form submission
         if (isValid) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            localStorage.setItem('lastOrder', JSON.stringify(cart));
-            localStorage.setItem('cart', '[]');
-            window.location.href = '../Order/OrderSuccessful.html';
+            // Collect payment and shipping info
+            const formData = {
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                payment_method: document.querySelector('input[name="payment"]:checked').id
+            };
+            
+            // Add payment-specific info
+            const paymentType = document.querySelector('input[name="payment"]:checked')
+                .closest('.payment-method').getAttribute('data-payment');
+                
+            if (paymentType === 'credit') {
+                formData.card_number = document.getElementById('card-number').value;
+                formData.expiry = document.getElementById('expiry').value;
+                formData.cvv = document.getElementById('cvv').value;
+            } else if (paymentType === 'fawry') {
+                formData.fawry_number = document.getElementById('fawry-number').value;
+            }
+            
+            // Complete the order via AJAX
+            fetch('/complete-order/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showNotification('Order completed successfully!');
+                    
+                    // Redirect to order success page
+                    setTimeout(() => {
+                        window.location.href = data.redirect || '/orderSuccessful/';
+                    }, 1000);
+                } else {
+                    // Show error
+                    showNotification(data.error || 'Failed to complete order', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error completing order:', error);
+                showNotification('Error placing order. Please try again.', 'error');
+            });
         } else {
-            // scroll to first error
+            // Scroll to first error
             const firstError = document.querySelector('.error-message[style="display: block;"]');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
     });
-
-    // load order summary from cart
-    function loadOrderSummary() {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        
-        if (!elements.orderSummaryContainer) return;
-        elements.orderSummaryContainer.innerHTML = '';
-
-        cart.forEach(item => {
-            const adjustedImagePath = `${item.imagePath}`;
-            const bookItem = document.createElement('div');
-            bookItem.className = 'book-item';
-            bookItem.innerHTML = `
-                <div class="book-cover">
-                    <img src="${adjustedImagePath}" alt="${item.title}" onerror="this.src='../assets/placeholder.jpg'">
-                </div>
-                <div class="book-info">
-                    <h3>${item.title}</h3>
-                    <p class="author">by ${item.author}</p>
-                    <p class="quantity">Quantity: ${item.quantity}</p>
-                </div>
-                <div class="book-price">$${(item.price * item.quantity).toFixed(2)}</div>
-            `;
-            elements.orderSummaryContainer.appendChild(bookItem);
-        });
-
-        // calculate and update totals
-        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const tax = subtotal * 0.08;
-        const total = subtotal + tax;
-
-        updateOrderSummaryTotals(subtotal, tax, total);
-    }
     
-    // update order summary totals
-    function updateOrderSummaryTotals(subtotal, tax, total) {
-        if (elements.subtotalElement) elements.subtotalElement.textContent = '$' + subtotal.toFixed(2);
-        if (elements.taxElement) elements.taxElement.textContent = '$' + tax.toFixed(2);
-        if (elements.totalElement) elements.totalElement.textContent = '$' + total.toFixed(2);
-    }
-
-    // form validation
+    // Form validation
     function validateInput(input) {
+        if (!input) return false;
+        
         const errorElement = document.getElementById(input.id + '-error');
         const value = input.value.trim();
         
@@ -271,15 +272,17 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // show validation error
+    // Show validation error
     function showError(input, errorElement, message) {
+        if (!input || !errorElement) return;
         input.classList.add('error');
         errorElement.textContent = message;
         errorElement.style.display = 'block';
     }
 
-    // clear validation error
+    // Clear validation error
     function clearError(input) {
+        if (!input) return;
         input.classList.remove('error');
         const errorElement = document.getElementById(input.id + '-error');
         if (errorElement) {
@@ -287,42 +290,90 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // input formatting for credit card fields
-    document.getElementById('card-number').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 16) value = value.slice(0, 16);
-        
-        let formattedValue = '';
-        for (let i = 0; i < value.length; i++) {
-            if (i > 0 && i % 4 === 0) {
-                formattedValue += ' ';
+    // Input formatting for credit card fields
+    if (document.getElementById('card-number')) {
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            
+            let formattedValue = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
             }
-            formattedValue += value[i];
-        }
-        
-        e.target.value = formattedValue;
-    });
+            
+            e.target.value = formattedValue;
+        });
+    }
 
-    document.getElementById('expiry').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 4) value = value.slice(0, 4);
-        
-        if (value.length > 2) {
-            e.target.value = value.slice(0, 2) + '/' + value.slice(2);
-        } else {
+    if (document.getElementById('expiry')) {
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
+            
+            if (value.length > 2) {
+                e.target.value = value.slice(0, 2) + '/' + value.slice(2);
+            } else {
+                e.target.value = value;
+            }
+        });
+    }
+
+    if (document.getElementById('cvv')) {
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
             e.target.value = value;
+        });
+    }
+
+    if (document.getElementById('phone')) {
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 15) value = value.slice(0, 15);
+            e.target.value = value;
+        });
+    }
+    
+    // Helper function to show notifications
+    function showNotification(message, type = 'success') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        // Add to body
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        // Remove after delay
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
         }
-    });
-
-    document.getElementById('cvv').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 4) value = value.slice(0, 4);
-        e.target.value = value;
-    });
-
-    document.getElementById('phone').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 15) value = value.slice(0, 15);
-        e.target.value = value;
-    });
+        return cookieValue;
+    }
 });

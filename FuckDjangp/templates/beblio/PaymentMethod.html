@@ -119,8 +119,8 @@
                         <span>$0.00</span>
                     </div>
                 </div>
-                
-                <button class="btn" onclick="window.location.href='../Cart/Cart.html'">Return to Cart</button>
+                {% url 'cart' as cart_url %}
+                <button class="btn" onclick="window.location.href='{{ book_list_url }}'">Return to Cart</button>
             </div>
         </div>
     </div>
