@@ -55,12 +55,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${
                     selectedBook.inStock
                     ? `
-        <div class="price-container">
-            <span class="book-price">$${selectedBook.price || '4.99'}</span>
-        </div>
-        <button class="btn add-to-cart-btn">Add to shopping cart</button>
-    `
-    : `<p class="unavailable-message">This book is currently unavailable.</p>`
+                <div class="price-container">
+                    <span class="book-price">$${selectedBook.price || '4.99'}</span>
+                </div>
+                <button class="btn add-to-cart-btn">Add to shopping cart</button>
+            `
+            : `<p class="unavailable-message">This book is currently unavailable.</p>`
 }
                 
                 <div class="description">
