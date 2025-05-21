@@ -45,24 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Store user info in localStorage
-                localStorage.setItem('currentUser', JSON.stringify({
-                    email: email,
-                    name: data.user_name,
-                    isAdmin: data.is_admin
-                }));
+                // Store user info if remember me is checked
+                localStorage.setItem('user', email);
 
-                // Store in sessionStorage if not "remember me"
-                if (!rememberMeCheckbox?.checked) {
-                    sessionStorage.setItem('currentUser', JSON.stringify({
-                        email: email,
-                        name: data.user_name,
-                        isAdmin: data.is_admin
-                    }));
-                    localStorage.removeItem('currentUser');
-                }
-
-                window.location.href = data.redirect;
+                // Show confirm dialog and wait for user response before redirecting
+                    window.location.href = data.redirect;
             } else {
                 // Handle error responses
                 if (data.field && data.error) {
@@ -79,12 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // load remembered user if exists
-    const rememberedUser = localStorage.getItem('rememberedUser');
-    if (rememberedUser && emailInput) {
-        emailInput.value = rememberedUser;
-        if (passwordInput) passwordInput.focus();
-    }
+    // // load remembered user if exists
+    // const rememberedUser = localStorage.getItem('rememberedUser');
+    // if (rememberedUser && emailInput) {
+    //     emailInput.value = rememberedUser;
+    //     if (passwordInput) passwordInput.focus();
+    // }
 });
 
 // function to validate email

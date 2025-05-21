@@ -28,4 +28,8 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('book/add/', views.book_form, name='add_book'),
     path('book/edit/<int:book_id>/', views.book_form, name='edit_book'),
+    path('cart/add/', views.add_to_cart, name='add_to_cart'),
+    path('cart/update/', views.update_cart, name='update_cart'),
+    path('cart/remove/', views.remove_from_cart, name='remove_from_cart'),
+    path('complete-order/', views.complete_order, name='complete_order'),
 ]
