@@ -1,7 +1,4 @@
-
-const books = JSON.parse(localStorage.getItem('books')) || [];
-  
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     //  UI
     const searchBar = document.querySelector('.search-bar');
     const filterButtons = document.querySelectorAll('.filter-button');
@@ -10,10 +7,24 @@ const books = JSON.parse(localStorage.getItem('books')) || [];
     
     let currentFilter = 'All';
     let searchQuery = '';
-    let displayedBooks = [...books.slice(0, 9)];
+    let displayedBooks = [];
     let showingAdditional = false;
-  
+    let books = []; // Initialize books as an empty array
+    
     //initialize the page
+    async function load_Books() {
+        try {
+            const response = await fetch('getBooks/');  
+            return await response.json(); // Return the parsed JSON data
+        } catch (error) {
+            console.error('Error fetching books:', error);
+            return [];
+        }
+    }
+    
+    books = await load_Books(); // Assign the fetched data to the books variable
+    console.log(books);
+    displayedBooks = books.slice(0, 9);
     renderBooks(displayedBooks);
   
     filterButtons.forEach(button => {
@@ -217,6 +228,6 @@ const books = JSON.parse(localStorage.getItem('books')) || [];
     //Set the first filter button (All) as active by default
     filterButtons[0].classList.add('active');
   });
-  
+
 
 

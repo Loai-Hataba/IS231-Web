@@ -4,16 +4,11 @@ from .models import Book, tags, review, User, Admin
 from django.core.serializers import serialize
 from django.views.decorators.csrf import csrf_exempt
 import json
-# Create your views here.
+
 @csrf_exempt
 def books(request: HttpRequest) -> HttpResponse:
     if request.method == 'GET':
-        # Check if we're filtering by tags
-        tag_names = request.GET.get('tags', '').split(',')
-        if tag_names and tag_names[0]:  # If we have tags to filter by
-            books_data = Book.objects.filter(tags__name__in=tag_names).distinct()
-        else:
-            books_data = Book.objects.all()
+        books_data = Book.objects.all()  # Add this line to query all books
         
         # Convert to list of dictionaries for JSON serialization
         books_list = []
@@ -70,6 +65,32 @@ def books(request: HttpRequest) -> HttpResponse:
             book.review.add(review_obj)
         return HttpResponse(status=201)
 
+@csrf_exempt
+def get_books(request: HttpRequest) -> HttpResponse:
+    books_data = Book.objects.all() 
+    
+    # Convert to list of dictionaries for JSON serialization
+    books_list = []
+    for book in books_data:
+        book_dict = {
+            'id': book.id,
+            'title': book.title,
+            'author': book.author,
+            'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
+            'isbn': book.isbn,
+            'pages': book.pages,
+            'cover_image': book.cover_image,
+            'language': book.language,
+            'description': book.description,
+            'rating': float(book.rating) if book.rating else 0,
+            'publisher': book.publisher,
+            'in_stock': book.in_stock,
+            'quote': book.quote,
+            'tags': list(book.tags.values_list('name', flat=True))
+        }
+        books_list.append(book_dict)
+        
+    return JsonResponse(books_list, safe=False)
 
 
 ## Abdallah :
