@@ -198,14 +198,14 @@ nav ul li a {
     background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: 8px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .review-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1rem;
 }
 
@@ -218,6 +218,27 @@ nav ul li a {
     height: 40px;
     border-radius: 50%;
     margin-right: 1rem;
+}
+
+.reviewer h4 {
+    margin-bottom: 0.5rem;
+    color: var(--dark-text);
+}
+
+.review-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.stars {
+    color: #ffd700;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.review p {
+    color: #444;
+    line-height: 1.6;
 }
 
 .similar-books {
@@ -377,4 +398,14 @@ nav ul li a {
         font-weight: bold;
         margin-top: 10px;
     }
+}
+
+.price-container {
+    margin-bottom: 10px;
+}
+
+.book-price {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2c3e50;
 }
