@@ -28,10 +28,6 @@
 #     path('logout/', views.logout, name='logout'),
 #     path('book/add/', views.book_form, name='add_book'),
 #     path('book/edit/<int:book_id>/', views.book_form, name='edit_book'),
-#     path('cart/add/', views.add_to_cart, name='add_to_cart'),
-#     path('cart/update/', views.update_cart, name='update_cart'),
-#     path('cart/remove/', views.remove_from_cart, name='remove_from_cart'),
-#     path('complete-order/', views.complete_order, name='complete_order'),
 # ]
 
 
@@ -61,8 +57,12 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('orderSuccessful/', views.orderSuccess, name='orderSuccessful'),
     path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
-    path('add-admin/', views.add_admin_page, name='add_admin_page'),  # Update this URL
+    path('add-admin/', views.add_admin_page, name='add_admin_page'),
     path('logout/', views.logout, name='logout'),
     path('book/add/', views.book_form, name='add_book'),
     path('book/edit/<int:book_id>/', views.book_form, name='edit_book'),
+    path('cart/add/', views.add_to_cart, name='add_to_cart'),
+    path('cart/update/', views.update_cart, name='update_cart'),
+    path('cart/remove/', views.remove_from_cart, name='remove_from_cart'),
+    path('complete-order/', views.complete_order, name='complete_order'),
 ]
