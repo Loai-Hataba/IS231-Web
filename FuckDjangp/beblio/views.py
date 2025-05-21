@@ -8,36 +8,41 @@ import json
 @csrf_exempt
 def books(request: HttpRequest) -> HttpResponse:
     if request.method == 'GET':
-        # Check if we're filtering by tags
-        tag_names = request.GET.get('tags', '').split(',')
-        if tag_names and tag_names[0]:  # If we have tags to filter by
-            books_data = Book.objects.filter(tags__name__in=tag_names).distinct()
-        else:
+        try:
             books_data = Book.objects.all()
-        
-        # Convert to list of dictionaries for JSON serialization
-        books_list = []
-        for book in books_data:
-            book_dict = {
-                'id': book.id,
-                'title': book.title,
-                'author': book.author,
-                'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
-                'isbn': book.isbn,
-                'pages': book.pages,
-                'cover_image': book.cover_image,
-                'language': book.language,
-                'description': book.description,
-                'rating': float(book.rating) if book.rating else 0,
-                'publisher': book.publisher,
-                'in_stock': book.in_stock,
-                'quote': book.quote,
-                'tags': list(book.tags.values_list('name', flat=True)),
-                'genre' : book.genre 
-            }
-            books_list.append(book_dict)
-        
-        return JsonResponse(books_list, safe=False)
+            books_list = []
+            for book in books_data:
+                try:
+                    book_dict = {
+                        'id': book.id,
+                        'title': book.title,
+                        'author': book.author,
+                        'isbn': book.isbn,
+                        'pages': book.pages,
+                        'cover_image': book.cover_image,
+                        'language': book.language,
+                        'description': book.description,
+                        'rating': float(book.rating) if book.rating else 0,
+                        'publisher': book.publisher,
+                        'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
+                        'in_stock': book.in_stock,
+                        'quote': book.quote,
+                        'tags': list(book.tags.values_list('name', flat=True))
+                        # Removed genre from the response
+                    }
+                    books_list.append(book_dict)
+                except Exception as e:
+                    print(f"Error processing book {book.id}: {str(e)}")
+                    continue
+            
+            return JsonResponse(books_list, safe=False)
+            
+        except Exception as e:
+            print(f"Error loading books: {str(e)}")  # Add debugging
+            return JsonResponse({
+                'error': 'Failed to load books',
+                'details': str(e)
+            }, status=500)
     elif request.method == 'POST':
         # Handle POST request to add a new book
         books_json = json.loads(request.body)

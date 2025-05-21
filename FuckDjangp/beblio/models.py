@@ -17,8 +17,7 @@ class Book(models.Model):
     in_stock = models.BooleanField(default=True)
     review = models.ManyToManyField('review', blank=True)
     quote = models.TextField(blank=True, null=True)
-    # FIXME:
-    # genre = models.TextField()
+    genre = models.TextField(blank=True, null=True)  # Uncomment and make it optional
 
     def __str__(self):
         return self.title
