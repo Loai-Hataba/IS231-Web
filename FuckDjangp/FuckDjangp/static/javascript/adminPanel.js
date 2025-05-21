@@ -136,19 +136,16 @@ function displayBooks(books) {
 
 function createBookRow(book) {
     const row = document.createElement('tr');
-    row.setAttribute('data-book-id', book.id);
-    
     row.innerHTML = `
         <td>${book.id}</td>
         <td>${book.title}</td>
         <td>${book.author}</td>
         <td>${book.isbn}</td>
         <td>
-            <button class="blue-button edit-btn" onclick="showEditModal(${book.id})">Edit</button>
-            <button class="red-button delete-btn" onclick="deleteBook(${book.id})">Delete</button>
+            <button class="blue-button" onclick="window.location.href='/book/edit/${book.id}/'">Edit</button>
+            <button class="red-button" onclick="deleteBook(${book.id})">Delete</button>
         </td>
     `;
-    
     return row;
 }
 

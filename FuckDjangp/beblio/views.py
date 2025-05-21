@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from .models import Book, tags, review, User, Admin
 from django.core.serializers import serialize
@@ -356,4 +356,13 @@ def logout(request):
             print(f"Error during logout: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+def book_form(request, book_id=None):
+    try:
+        book = None
+        if book_id:
+            book = Book.objects.get(id=book_id)
+        return render(request, 'beblio/BookForm.html', {'book': book})
+    except Book.DoesNotExist:
+        return redirect('admin_panel')
 

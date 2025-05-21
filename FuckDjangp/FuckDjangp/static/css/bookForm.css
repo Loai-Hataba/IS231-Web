@@ -1,0 +1,122 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+}
+
+.form-container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h2 {
+    margin: 0 0 24px;
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2980b9;
+}
+
+.error {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.blue-button,
+.red-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: filter 0.3s;
+    flex: 1;
+}
+
+.blue-button {
+    background-color: #2980b9;
+    color: white;
+}
+
+.red-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.blue-button:hover,
+.red-button:hover {
+    filter: brightness(0.9);
+}
+
+.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Required field indicator */
+label[for]:after {
+    content: "*";
+    color: #e74c3c;
+    margin-left: 4px;
+}
+
+label[for="cover_image"]:after,
+label[for="publisher"]:after,
+label[for="published_date"]:after,
+label[for="description"]:after,
+label[for="rating"]:after,
+label[for="tags"]:after,
+label[for="quote"]:after {
+    content: "";
+}

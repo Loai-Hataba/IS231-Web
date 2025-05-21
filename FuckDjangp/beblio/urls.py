@@ -25,4 +25,6 @@ urlpatterns = [
     path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
     path('add-admin/', views.add_admin_page, name='add_admin_page'),  # Update this URL
     path('logout/', views.logout, name='logout'),
+    path('book/add/', views.book_form, name='add_book'),
+    path('book/edit/<int:book_id>/', views.book_form, name='edit_book'),
 ]
