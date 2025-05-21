@@ -1,9 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpRequest, JsonResponse
-from .models import Book, tags, review, User, Admin
+from .models import Book, tags, review, User, Admin, Cart
 from django.core.serializers import serialize
 from django.views.decorators.csrf import csrf_exempt
 import json
+from datetime import datetime
+from decimal import Decimal
+
+# Add this constant at the top
+TAX_RATE = Decimal('0.08')  # 8% tax rate
 
 @csrf_exempt
 def books(request: HttpRequest) -> HttpResponse:
@@ -121,6 +126,7 @@ def book_detail(request, book_id):
         
         # Convert book data into a format matching our JavaScript structure
         book_data = {
+            'id': book.id,
             'title': book.title,
             'author': book.author,
             'rating': float(book.rating) if book.rating else 0,
@@ -206,7 +212,9 @@ def login(request):
             try:
                 admin = Admin.objects.get(email=email)
                 if admin.check_password(password):
-                    # If admin credentials are correct, redirect to admin panel
+                    # If admin credentials are correct, set session and redirect to admin panel
+                    request.session['user_id'] = admin.admin_id
+                    request.session['is_admin'] = True
                     return JsonResponse({
                         'message': 'Login successful',
                         'is_admin': True,
@@ -223,6 +231,8 @@ def login(request):
                 try:
                     user = User.objects.get(email=email)
                     if user.check_password(password):
+                        request.session['user_id'] = user.user_id
+                        request.session['is_admin'] = False
                         return JsonResponse({
                             'message': 'Login successful',
                             'is_admin': False,
@@ -273,11 +283,281 @@ def  help(request):
 def paymentMethod(request):
     return render(request, 'beblio/PaymentMethod.html')
 
+@csrf_exempt
 def cart(request):
-    return render(request, 'beblio/Cart.html')
+    """View for displaying the shopping cart page."""
+    # Get the user from session
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        # If user is not logged in, show empty cart template
+        return render(request, 'beblio/Cart.html')
+    
+    try:
+        # Get the user and their cart items
+        user = User.objects.get(user_id=user_id)
+        cart_items = Cart.objects.filter(user=user).select_related('book')
+        
+        # Calculate cart totals
+        subtotal = sum(item.book.price * item.quantity for item in cart_items)
+        tax = subtotal * TAX_RATE
+        total = subtotal + tax
+        
+        # Pass data to template
+        context = {
+            'cart_items': cart_items,
+            'subtotal': subtotal,
+            'tax': tax,
+            'total': total,
+        }
+        
+        return render(request, 'beblio/Cart.html', context)
+        
+    except User.DoesNotExist:
+        return render(request, 'beblio/Cart.html')
+    except Exception as e:
+        print(f"Error loading cart: {str(e)}")
+        return render(request, 'beblio/Cart.html', {'error': str(e)})
+
+@csrf_exempt
+def add_to_cart(request):
+    """Add a book to the user's cart via AJAX."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    # Get the user from session
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        return JsonResponse({'error': 'Please login to add items to cart'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        book_id = data.get('book_id')
+        quantity = data.get('quantity', 1)
+        
+        # Validate book existence
+        book = get_object_or_404(Book, id=book_id)
+        
+        # Get user
+        user = User.objects.get(user_id=user_id)
+        
+        # Check if book already in cart
+        cart_item, created = Cart.objects.get_or_create(
+            user=user,
+            book=book,
+            defaults={'quantity': quantity}
+        )
+        
+        # If book was already in cart, increase quantity
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+        
+        # Calculate new cart totals
+        cart_items = Cart.objects.filter(user=user)
+        subtotal = sum(item.book.price * item.quantity for item in cart_items)
+        tax = subtotal * TAX_RATE
+        total = subtotal + tax
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Book added to cart',
+            'cart_count': cart_items.count(),
+            'subtotal': float(subtotal),
+            'tax': float(tax),
+            'total': float(total)
+        })
+        
+    except Book.DoesNotExist:
+        return JsonResponse({'error': 'Book not found'}, status=404)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    except Exception as e:
+        print(f"Error adding to cart: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+def update_cart(request):
+    """Update quantity of a book in the cart."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    # Get the user from session
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        return JsonResponse({'error': 'Please login to update cart'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        cart_item_id = data.get('cart_item_id')
+        quantity = int(data.get('quantity'))
+        
+        # Get user
+        user = User.objects.get(user_id=user_id)
+        
+        # Get cart item and verify ownership
+        cart_item = get_object_or_404(Cart, id=cart_item_id, user=user)
+        
+        # Handle quantity changes
+        if quantity <= 0:
+            # Remove item if quantity is 0 or negative
+            cart_item.delete()
+            message = 'Item removed from cart'
+        else:
+            # Update quantity
+            cart_item.quantity = quantity
+            cart_item.save()
+            message = 'Cart updated'
+        
+        # Calculate new cart totals
+        cart_items = Cart.objects.filter(user=user)
+        subtotal = sum(item.book.price * item.quantity for item in cart_items)
+        tax = subtotal * TAX_RATE
+        total = subtotal + tax
+        
+        return JsonResponse({
+            'success': True,
+            'message': message,
+            'item_price': float(cart_item.book.price) if quantity > 0 else 0,
+            'subtotal': float(subtotal),
+            'tax': float(tax),
+            'total': float(total)
+        })
+        
+    except Cart.DoesNotExist:
+        return JsonResponse({'error': 'Cart item not found'}, status=404)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    except Exception as e:
+        print(f"Error updating cart: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+def remove_from_cart(request):
+    """Remove an item from the cart."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    # Get the user from session
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        return JsonResponse({'error': 'Please login to remove items'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        cart_item_id = data.get('cart_item_id')
+        
+        # Get user
+        user = User.objects.get(user_id=user_id)
+        
+        # Get cart item and verify ownership
+        cart_item = get_object_or_404(Cart, id=cart_item_id, user=user)
+        
+        # Remove the item
+        cart_item.delete()
+        
+        # Calculate new cart totals
+        cart_items = Cart.objects.filter(user=user)
+        subtotal = sum(item.book.price * item.quantity for item in cart_items)
+        tax = subtotal * TAX_RATE
+        total = subtotal + tax
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Item removed from cart',
+            'subtotal': float(subtotal),
+            'tax': float(tax),
+            'total': float(total)
+        })
+        
+    except Cart.DoesNotExist:
+        return JsonResponse({'error': 'Cart item not found'}, status=404)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    except Exception as e:
+        print(f"Error removing from cart: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+def complete_order(request):
+    """Process the checkout and complete the order."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    # Get the user from session
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        return JsonResponse({'error': 'Please login to complete checkout'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        
+        # Get user and cart items
+        user = User.objects.get(user_id=user_id)
+        cart_items = Cart.objects.filter(user=user)
+        
+        if not cart_items.exists():
+            return JsonResponse({'error': 'Your cart is empty'}, status=400)
+        
+        # Process payment information
+        payment_method = data.get('payment_method', '')
+        
+        # Here you would typically:
+        # 1. Create an Order model instance
+        # 2. Create OrderItems from cart items
+        # 3. Process payment through a payment gateway
+        # 4. Mark order as paid if successful
+        
+        # For this example, we'll just clear the cart
+        # In a real app, you'd save the order details before clearing
+        
+        # Generate a random order number for demonstration
+        order_number = f"CB-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        
+        # Clear the cart after successful order
+        cart_items.delete()
+        
+        # Store order info in session for the success page
+        request.session['last_order'] = {
+            'order_number': order_number,
+            'order_date': datetime.now().strftime('%Y-%m-%d'),
+            'payment_method': payment_method,
+            # You'd include other order details here
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Order completed successfully',
+            'order_number': order_number,
+            'redirect': '/orderSuccessful/'
+        })
+        
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    except Exception as e:
+        print(f"Error completing order: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
 
 def orderSuccess(request):
-    return render(request, 'beblio/OrderSuccessful.html')
+    """Display the order confirmation page."""
+    # Get the order data from session that was stored during checkout
+    last_order = request.session.get('last_order', {})
+    if not last_order:
+        # If no order info in session, redirect to home
+        return redirect('index')
+    
+    # Clear the order from session after displaying it
+    # This prevents users from refreshing the success page multiple times
+    request.session.pop('last_order', None)
+    
+    return render(request, 'beblio/OrderSuccessful.html', {
+        'order': last_order
+    })
 
 @csrf_exempt
 def book_operations(request, book_id=None):

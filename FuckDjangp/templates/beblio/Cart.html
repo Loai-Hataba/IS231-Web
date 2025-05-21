@@ -47,7 +47,9 @@
                     </div>
                     
                     <button class="btn btn-primary checkout-btn">Proceed to Checkout</button>
-                    <button class="btn btn-outline continue-btn" onclick="window.location.href='../../BookList/booklist.html'">Continue Shopping</button>
+                    {% url 'book_list' as book_list_url %}
+                    <button class="btn btn-outline continue-btn" onclick="window.location.href='{{ book_list_url }}'">Continue Shopping</button>
+
                 </div>
             </div>
         </div>

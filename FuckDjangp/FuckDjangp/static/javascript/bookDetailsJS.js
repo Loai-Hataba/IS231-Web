@@ -88,13 +88,49 @@ document.addEventListener('DOMContentLoaded', function() {
             `).join('')}
         `;
 
-
-        // Add to cart functionality
+        // Add to cart functionality using AJAX
         const addToCartBtn = document.querySelector('.add-to-cart-btn');
         if (addToCartBtn) {
             addToCartBtn.addEventListener('click', function() {
-                addToCart(selectedBook);
-                window.location.href = '{% url "cart" %}';
+                // Get the book ID from the selected book
+                const bookId = selectedBook.id;
+                
+                // Send AJAX request to add item to cart
+                fetch('/cart/add/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') // Get CSRF token
+                    },
+                    body: JSON.stringify({ book_id: bookId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success notification
+                        showNotification('Book added to cart successfully!');
+                        
+                        // Option to redirect to cart
+                        setTimeout(() => {
+                            window.location.href = '/cart/';
+                        }, 1000);
+                    } else if (data.error) {
+                        // Handle errors (like user not logged in)
+                        if (data.error.includes('login')) {
+                            // If user needs to log in
+                            showNotification('Please log in to add items to cart', 'error');
+                            setTimeout(() => {
+                                window.location.href = '/login/';
+                            }, 1000);
+                        } else {
+                            showNotification(data.error, 'error');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
+                    showNotification('Error adding to cart. Please try again.', 'error');
+                });
             });
         }
 
@@ -117,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const bookCard = document.createElement('div');
                             bookCard.className = 'book-card';
                             bookCard.innerHTML = `
-                                <img src="${book.cover_image || '/static/images/bookList/booklist_image_1.jpg'}" alt="${book.title}">
+                                <img src="/static/images/bookList/${book.cover_image || 'placeholder.jpg'}" alt="${book.title}">
                                 <h3 class="book-card-title">${book.title}</h3>
                                 <p class="book-card-author">${book.author}</p>
                             `;
@@ -148,27 +184,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return '★'.repeat(fullStars) + (halfStar ? '⯨' : '') + '☆'.repeat(emptyStars);
     }
-
-    // Updated addToCart function
-    function addToCart(book) {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existingItemIndex = cart.findIndex(item => item.id === book.id);
-
-        if (existingItemIndex !== -1) {
-            cart[existingItemIndex].quantity += 1;
-        } else {
-            cart.push({
-                id: book.id,
-                title: book.title,
-                author: book.author,
-                price: book.price || 4.99,
-                quantity: 1,
-                imagePath: book.cover_image,
-                rentalPeriod: '30 days'
-            });
+    
+    // Helper function to show notifications
+    function showNotification(message, type = 'success') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        // Add to body
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        // Remove after delay
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
         }
-
-        localStorage.setItem('cart', JSON.stringify(cart));
+        return cookieValue;
     }
 
     // Tab switching functionality
