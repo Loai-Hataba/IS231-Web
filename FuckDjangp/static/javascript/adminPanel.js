@@ -26,14 +26,7 @@ function setupEventListeners() {
 
 // Function to show the add admin modal
 function showAddAdminModal() {
-    const modal = document.getElementById('add-admin-modal');
-    const form = document.getElementById('add-admin-form');
-    
-    // Reset form
-    form.reset();
-    
-    // Show modal
-    modal.style.display = 'block';
+    window.location.href = '/add-admin/';  // Update the URL here
 }
 
 // Function to close the add admin modal

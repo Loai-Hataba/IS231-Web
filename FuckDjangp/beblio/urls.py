@@ -23,4 +23,5 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('orderSuccessful/', views.orderSuccess, name='orderSuccessful'),
     path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
+    path('add-admin/', views.add_admin_page, name='add_admin_page'),  # Update this URL
 ]

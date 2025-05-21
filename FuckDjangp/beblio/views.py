@@ -308,3 +308,40 @@ def delete_book(request, book_id):
         'error': 'Method not allowed'
     }, status=405)
 
+@csrf_exempt
+def add_admin_page(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)  # Debug print
+            
+            # Check if email already exists
+            if Admin.objects.filter(email=data['email']).exists():
+                return JsonResponse({
+                    'error': 'Email already registered',
+                    'field': 'email'
+                }, status=400)
+
+            # Create new admin
+            admin = Admin.objects.create(
+                firstname=data['firstname'],
+                lastname=data['lastname'],
+                email=data['email'],
+                password=data['password']
+            )
+            
+            return JsonResponse({
+                'message': 'Admin created successfully',
+                'redirect': '/adminPanel/'
+            })
+
+        except Exception as e:
+            print(f"Error creating admin: {str(e)}")  # Debug print
+            return JsonResponse({
+                'error': str(e),
+                'field': 'email'
+            }, status=400)
+    
+    # For GET requests, render the add admin form
+    return render(request, 'beblio/AddAdmin.html')
+
