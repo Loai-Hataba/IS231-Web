@@ -55,12 +55,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${
                     selectedBook.inStock
                     ? `
-        <div class="price-container">
-            <span class="book-price">$${selectedBook.price || '4.99'}</span>
-        </div>
-        <button class="btn add-to-cart-btn">Add to shopping cart</button>
-    `
-    : `<p class="unavailable-message">This book is currently unavailable.</p>`
+                <div class="price-container">
+                    <span class="book-price">$${selectedBook.price || '4.99'}</span>
+                </div>
+                <button class="btn add-to-cart-btn">Add to shopping cart</button>
+            `
+            : `<p class="unavailable-message">This book is currently unavailable.</p>`
 }
                 
                 <div class="description">
@@ -68,21 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>${selectedBook.description}</p>
                 </div>
             </div>
-        `;
-
-        // Populate reviews dynamically
-        reviewsContainer.innerHTML = selectedBook.reviews.map(review => `
-            <div class="review">
-                <div class="review-header">
-                    <div class="reviewer">
-                        <h4>${review.reviewer}</h4>
-                        <div class="stars">${generateStars(review.rating)}</div>
-                    </div>
-                    <div class="review-date">${review.date}</div>
-                </div>
-                <p>${review.text}</p>
-            </div>
-        `).join('');
+        `;        // Reviews are now static in the HTML
+        // Removing dynamic review population
 
         // Populate quotes dynamically
         quotesContainer.innerHTML = `
