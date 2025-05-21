@@ -81,28 +81,32 @@ def books(request: HttpRequest) -> HttpResponse:
 def get_books(request: HttpRequest) -> HttpResponse:
     books_data = Book.objects.all() 
     
-    # Convert to list of dictionaries for JSON serialization
+    
     books_list = []
     for book in books_data:
-        book_dict = {
-            'id': book.id,
-            'title': book.title,
-            'author': book.author,
-            'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
-            'isbn': book.isbn,
-            'pages': book.pages,
-            'cover_image': book.cover_image,
-            'language': book.language,
-            'description': book.description,
-            'rating': float(book.rating) if book.rating else 0,
-            'publisher': book.publisher,
-            'in_stock': book.in_stock,
-            'quote': book.quote,
-            'tags': list(book.tags.values_list('name', flat=True))
-        }
-        books_list.append(book_dict)
+        try:
+            book_dict = {
+                'id': book.id,
+                'title': book.title,
+                'author': book.author,
+                'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
+                'isbn': book.isbn,
+                'pages': book.pages,
+                'cover_image': book.cover_image,
+                'language': book.language,
+                'description': book.description,
+                'rating': float(book.rating) if book.rating else 0,
+                'publisher': book.publisher,
+                'in_stock': book.in_stock,
+                'quote': book.quote,
+                'tags': book.tags
+            }
+            books_list.append(book_dict)
+        except Exception as e:
+            print(f"Error processing book {book.id}: {str(e)}")
+            continue
         
-    return JsonResponse(books_list, safe=False)
+    return JsonResponse({"books" : books_list})
 
 
 ## Abdallah :
