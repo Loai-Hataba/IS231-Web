@@ -22,5 +22,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+     path('django-admin/', admin.site.urls),  # Rename Django's admin URL
     path('', include('beblio.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

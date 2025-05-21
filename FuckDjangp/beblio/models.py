@@ -2,10 +2,9 @@ from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
 # Create your models here.
-class Book(models.Model):
+class Book(models.Model):    
     title = models.CharField(max_length=200, null=True)
     author = models.CharField(max_length=100)
-    published_date = models.DateField()
     isbn = models.CharField(max_length=13, unique=True)
     pages = models.IntegerField()
     cover_image = models.URLField(blank=True, null=True)
@@ -18,6 +17,7 @@ class Book(models.Model):
     in_stock = models.BooleanField(default=True)
     review = models.ManyToManyField('review', blank=True)
     quote = models.TextField(blank=True, null=True)
+    genre = models.TextField(blank=True, null=True)  # Uncomment and make it optional
 
     def __str__(self):
         return self.title

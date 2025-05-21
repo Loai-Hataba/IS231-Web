@@ -4,19 +4,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const bookContainer = document.getElementById('book-container');
     const reviewsContainer = document.getElementById('reviews');
     const quotesContainer = document.getElementById('quotes');
-    const detailsContainer = document.getElementById('details');
 
-    // Use the book data provided by Django template
-    // This will be initialized in the template with book_json
+    // Loading book from database
     const selectedBook = window.selectedBook;
     console.log('Selected book from server:', selectedBook);
     
     if (selectedBook) {
-        console.log(`Loading book "${selectedBook.title}" with inStock set to: ${selectedBook.inStock}`);
-        
+        console.log(`Loading book "${selectedBook.title}" with published date: ${selectedBook.publishDate}`);
         // Use the image path from the book data or fallback to default
-        const imageUrl = '/static/images/bookList/' + selectedBook.imagePath;
-        console.log("Loading image from:", imageUrl);
+        let imageUrl = selectedBook.imagePath;
+        imageUrl = '/static/images/bookList/' + imageUrl;
         
         bookContainer.innerHTML = `
             <div class="book-cover">
@@ -31,11 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="book-meta">
                     <div class="meta-item">
                         <span class="meta-label">Publisher</span>
-                        <span class="meta-value">${selectedBook.publisher}</span>
+                        <span class="meta-value">${selectedBook.publisher || ''}</span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Published</span>
-                        <span class="meta-value">${selectedBook.publishDate}</span>
+                        <span class="meta-value">${selectedBook.publishDate || ''}</span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Pages</span>
@@ -89,19 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <blockquote>"${quote}"</blockquote>
                 </div>
             `).join('')}
-        `;
-
-        // Populate details dynamically
-        detailsContainer.innerHTML = `
-            <h2 class="section-title">Book Details</h2>
-            <div class="details-grid">
-                ${selectedBook.details.map(detail => `
-                    <div class="details-card">
-                        <h3>${detail.title}</h3>
-                        <p>${detail.text}</p>
-                    </div>
-                `).join('')}
-            </div>
         `;
 
 
