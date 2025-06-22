@@ -1,4 +1,3 @@
-/* Cart icon and badge styles */
 .cart-icon {
     position: relative;
     display: inline-flex;
@@ -9,35 +8,7 @@
     margin-right: 15px;
 }
 
-.cart-badge {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background-color: #e74c3c;
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: none; /* Hidden by default, shown when items in cart */
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: bold;
-}
-
 .header-actions {
     display: flex;
     align-items: center;
-}
-
-@media (max-width: 768px) {
-    .cart-icon {
-        margin-right: 10px;
-    }
-    
-    .cart-badge {
-        width: 16px;
-        height: 16px;
-        font-size: 10px;
-    }
 }
