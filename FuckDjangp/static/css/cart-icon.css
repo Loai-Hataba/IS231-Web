@@ -1,11 +1,7 @@
-.cart-icon {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    text-decoration: none;
-    margin-right: 15px;
+.cart-icon img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
 }
 
 .header-actions {
