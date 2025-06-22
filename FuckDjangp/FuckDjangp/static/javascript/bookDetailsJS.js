@@ -103,10 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Show success notification
                         showNotification('Book added to cart successfully!');
                         
-                        // Option to redirect to cart
-                        setTimeout(() => {
-                            window.location.href = '/cart/';
-                        }, 1000);
+                        // Update the cart count in the navigation
+                        updateCartCount(data.cart_count);
                     } else if (data.error) {
                         // Handle errors (like user not logged in)
                         if (data.error.includes('login')) {
@@ -218,6 +216,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
+
+    // Function to update cart count badge
+    function updateCartCount(count) {
+        const cartBadge = document.querySelector('.cart-badge');
+        if (cartBadge) {
+            cartBadge.textContent = count;
+            cartBadge.style.display = count > 0 ? 'flex' : 'none';
+        }
+    }
+    
+    // Initialize cart count on page load
+    function initCartCount() {
+        fetch('/cart/count/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateCartCount(data.cart_count);
+                }
+            })
+            .catch(error => console.error('Error fetching cart count:', error));
+    }
+    
+    // Initialize cart count when page loads
+    initCartCount();
 
     // Tab switching functionality
     tabs.forEach((tab, index) => {

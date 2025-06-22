@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - 📚 Conquista Beblio</title>
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart-icon.css' %}">
     <!-- <link rel="stylesheet" href="{% static 'utils/navStyles.css' %}"> -->
-    <script defer src="{% static 'js/Cart.js' %}"></script>
+    <script defer src="{% static 'javascript/Cart.js' %}"></script>
 </head>
 <body>
     <header>
@@ -26,6 +27,29 @@
             
             <div class="cart-container">
                 <div class="cart-items">
+                    {% if cart_items and cart_items|length > 0 %}
+                        {% for item in cart_items %}
+                        <div class="cart-item" data-id="{{ item.id }}">
+                            <div class="book-cover">
+                                <img src="{% static 'images/bookList/' %}{{ item.book.cover_image|default:'placeholder.jpg' }}" alt="{{ item.book.title }}">
+                            </div>
+                            <div class="book-info">
+                                <h3>{{ item.book.title }}</h3>
+                                <p class="author">by {{ item.book.author }}</p>
+                                <p class="rental-period">Rental Period: 30 days</p>
+                            </div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus">-</button>
+                                <input type="number" value="{{ item.quantity }}" min="1" class="quantity-input">
+                                <button class="quantity-btn plus">+</button>
+                            </div>
+                            <div class="book-price">${{ item.book.price|floatformat:2 }}</div>
+                            <button class="remove-btn">✕</button>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-cart-message">Your cart is empty</div>
+                    {% endif %}
                 </div>
                 
                 <div class="cart-summary">
@@ -34,19 +58,19 @@
                     <div class="price-summary">
                         <div class="price-row">
                             <span>Subtotal</span>
-                            <span>$0.00</span>
+                            <span>${{ subtotal|default:'0.00'|floatformat:2 }}</span>
                         </div>
                         <div class="price-row">
                             <span>Tax</span>
-                            <span>$0.00</span>
+                            <span>${{ tax|default:'0.00'|floatformat:2 }}</span>
                         </div>
                         <div class="price-total">
                             <span>Total</span>
-                            <span>$0.00</span>
+                            <span>${{ total|default:'0.00'|floatformat:2 }}</span>
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary checkout-btn">Proceed to Checkout</button>
+                    <button class="btn btn-primary checkout-btn" {% if not cart_items %}disabled{% endif %}>Proceed to Checkout</button>
                     {% url 'book_list' as book_list_url %}
                     <button class="btn btn-outline continue-btn" onclick="window.location.href='{{ book_list_url }}'">Continue Shopping</button>
 
@@ -63,5 +87,10 @@
           <a href="{% url 'contactUs' %}">Contact Us</a>
         </div>
     </footer>
+
+    <script>
+        // Debug cart contents
+        console.log('Cart items:', "{{ cart_items|length|default:'0' }}");
+    </script>
 </body>
 </html>

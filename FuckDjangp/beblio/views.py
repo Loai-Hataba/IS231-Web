@@ -893,3 +893,26 @@ def book_form(request, book_id=None):
         except Book.DoesNotExist:
             return redirect('admin_panel')
 
+@csrf_exempt
+def get_cart_count(request):
+    """Get the number of items in the user's cart."""
+    # Get the user from session
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        return JsonResponse({'success': True, 'cart_count': 0})
+    
+    try:
+        user = User.objects.get(user_id=user_id)
+        cart_count = Cart.objects.filter(user=user).count()
+        
+        return JsonResponse({
+            'success': True,
+            'cart_count': cart_count
+        })
+    except User.DoesNotExist:
+        return JsonResponse({'success': True, 'cart_count': 0})
+    except Exception as e:
+        print(f"Error getting cart count: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
