@@ -10,7 +10,13 @@
 #     if request.method == 'GET':
 #         books_data = Book.objects.all()
 #         books_json = serialize('json', books_data)
-#         response = HttpResponse(books_json, content_type='application/json')
+#         response = HttpResponse           # Calculate cart totals
+        # subtotal = sum(Decimal(str(item.book.price or 0)) * Decimal(str(item.quantity)) for item in cart_items) 
+        # tax = subtotal * Decimal(str(TAX_RATE))
+        # total = subtotal + tax # Calculate cart totals
+        # subtotal = sum(Decimal(str(item.book.price or 0)) * Decimal(str(item.quantity)) for item in cart_items)
+        # tax = subtotal * Decimal(str(TAX_RATE))
+        # total = subtotal + taxks_json, content_type='application/json')
 #         return response
 #     elif request.method == 'POST':
 #         # Handle POST request to add a new book
@@ -475,7 +481,44 @@ def  help(request):
     return render(request, 'beblio/help.html')
 
 def paymentMethod(request):
-    return render(request, 'beblio/PaymentMethod.html')
+    """View for displaying the payment page with cart items."""
+    # Get the user from session
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        # If user is not logged in, redirect to login
+        return redirect('login')
+    
+    try:
+        # Get the user and their cart items
+        user = User.objects.get(user_id=user_id)
+        cart_items = Cart.objects.filter(user=user).select_related('book')
+        
+        if not cart_items.exists():
+            # If cart is empty, redirect to cart page
+            return redirect('cart')
+        
+        # Calculate cart totals
+        subtotal = sum(Decimal(str(item.book.price or 0)) * Decimal(str(item.quantity)) for item in cart_items)
+        tax = subtotal * Decimal(str(TAX_RATE))
+        total = subtotal + tax
+        
+        # Pass data to template
+        context = {
+            'cart_items': cart_items,
+            'subtotal': subtotal,
+            'tax': tax,
+            'total': total,
+            'user': user
+        }
+        
+        return render(request, 'beblio/PaymentMethod.html', context)
+        
+    except User.DoesNotExist:
+        return redirect('login')
+    except Exception as e:
+        print(f"Error loading payment page: {str(e)}")
+        return render(request, 'beblio/Cart.html', {'error': str(e)})
 
 @csrf_exempt
 def cart(request):
@@ -493,8 +536,8 @@ def cart(request):
         cart_items = Cart.objects.filter(user=user).select_related('book')
         
         # Calculate cart totals
-        subtotal = sum(Decimal(str(item.book.price)) * item.quantity for item in cart_items)
-        tax = subtotal * TAX_RATE
+        subtotal = sum(Decimal(str(item.book.price or 0)) * Decimal(str(item.quantity)) for item in cart_items)
+        tax = subtotal * Decimal(str(TAX_RATE))
         total = subtotal + tax
         
         # Pass data to template
@@ -551,7 +594,7 @@ def add_to_cart(request):
         
         # Calculate new cart totals
         cart_items = Cart.objects.filter(user=user)
-        subtotal = sum(Decimal(str(item.book.price)) * item.quantity for item in cart_items)
+        subtotal = sum(Decimal(str(item.book.price or 0)) * item.quantity for item in cart_items)
         tax = subtotal * TAX_RATE
         total = subtotal + tax
         
@@ -608,17 +651,17 @@ def update_cart(request):
         
         # Calculate new cart totals
         cart_items = Cart.objects.filter(user=user)
-        subtotal = sum(item.book.price * item.quantity for item in cart_items)
-        tax = subtotal * TAX_RATE
+        subtotal = sum(Decimal(str(item.book.price or 0)) * Decimal(str(item.quantity)) for item in cart_items)
+        tax = subtotal * Decimal(str(TAX_RATE))
         total = subtotal + tax
         
         return JsonResponse({
             'success': True,
             'message': message,
-            'item_price': float(cart_item.book.price) if quantity > 0 else 0,
-            'subtotal': float(subtotal),
-            'tax': float(tax),
-            'total': float(total)
+            'item_price': float(cart_item.book.price or 0) if quantity > 0 else 0,
+            'subtotal': float(subtotal) if subtotal else 0,
+            'tax': float(tax) if tax else 0,
+            'total': float(total) if total else 0
         })
         
     except Cart.DoesNotExist:
@@ -656,7 +699,7 @@ def remove_from_cart(request):
         
         # Calculate new cart totals
         cart_items = Cart.objects.filter(user=user)
-        subtotal = sum(item.book.price * item.quantity for item in cart_items)
+        subtotal = sum(Decimal(str(item.book.price or 0)) * item.quantity for item in cart_items)
         tax = subtotal * TAX_RATE
         total = subtotal + tax
         
@@ -710,19 +753,26 @@ def complete_order(request):
         # For this example, we'll just clear the cart
         # In a real app, you'd save the order details before clearing
         
+        # Calculate totals before clearing the cart
+        subtotal = sum(Decimal(str(item.book.price or 0)) * Decimal(str(item.quantity)) for item in cart_items)
+        tax = subtotal * Decimal(str(TAX_RATE))
+        total = subtotal + tax
+        
         # Generate a random order number for demonstration
         order_number = f"CB-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        
-        # Clear the cart after successful order
-        cart_items.delete()
         
         # Store order info in session for the success page
         request.session['last_order'] = {
             'order_number': order_number,
             'order_date': datetime.now().strftime('%Y-%m-%d'),
             'payment_method': payment_method,
-            # You'd include other order details here
+            'subtotal': float(subtotal),
+            'tax': float(tax),
+            'total': float(total)
         }
+        
+        # Clear the cart after successful order
+        cart_items.delete()
         
         return JsonResponse({
             'success': True,
@@ -738,7 +788,31 @@ def complete_order(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 def orderSuccess(request):
-    return render(request, 'beblio/OrderSuccessful.html')
+    """Display the order success page with order details."""
+    # Get order information from session
+    last_order = request.session.get('last_order', {})
+    
+    # Get user information
+    user_id = request.session.get('user_id')
+    user = None
+    if user_id:
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            pass
+    
+    # Get order details
+    context = {
+        'order_number': last_order.get('order_number', 'CB-202506XX'),
+        'order_date': last_order.get('order_date', datetime.now().strftime('%Y-%m-%d')),
+        'payment_method': last_order.get('payment_method', 'Card'),
+        'subtotal': last_order.get('subtotal', 0),
+        'tax': last_order.get('tax', 0),
+        'total': last_order.get('total', 0),
+        'user': user
+    }
+    
+    return render(request, 'beblio/OrderSuccessful.html', context)
 
 @csrf_exempt
 def book_operations(request, book_id=None):

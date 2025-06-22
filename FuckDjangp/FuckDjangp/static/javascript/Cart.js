@@ -70,8 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Update price display
                 const priceElement = cartItemElement.querySelector('.book-price');
-                if (priceElement && data.item_price) {
-                    priceElement.textContent = '$' + (data.item_price * quantity).toFixed(2);
+                if (priceElement && data.item_price !== undefined) {
+                    const itemPrice = parseFloat(data.item_price);
+                    priceElement.textContent = '$' + (itemPrice * quantity).toFixed(2);
                 }
                 
                 // Update totals

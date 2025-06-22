@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - 📚 Conquista Beblio</title>
     <link rel="stylesheet" href="{% static 'css/paymentStyles.css' %}">
-    <script defer src="{% static 'js/PaymentMethod.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/checkout-items.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart-icon.css' %}">
+    <script defer src="{% static 'javascript/PaymentMethod.js' %}"></script>
 </head>
 <body>
     <header>
@@ -14,7 +16,15 @@
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="{% url 'cart' %}">Cart</a></li>
+                <li>
+                    <a href="{% url 'cart' %}" class="cart-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                    </a>
+                </li>
                 <li><a href="{% url 'aboutUs' %}">About Us</a></li>
             </ul>
         </nav>
@@ -103,24 +113,43 @@
             <div class="order-summary">
                 <h2 class="section-title">Order Summary</h2>
                 <div class="book-items">
+                    {% if cart_items %}
+                        {% for item in cart_items %}
+                        <div class="book-item">
+                            <div class="book-image">
+                                <img src="{% static 'images/bookList/' %}{{ item.book.cover_image|default:'placeholder.jpg' }}" alt="{{ item.book.title }}">
+                            </div>
+                            <div class="book-details">
+                                <h3>{{ item.book.title }}</h3>
+                                <p class="book-author">by {{ item.book.author }}</p>
+                                <div class="book-price-qty">
+                                    <span class="book-price">${{ item.book.price|floatformat:2 }}</span>
+                                    <span class="book-qty">x {{ item.quantity }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-cart-message">Your cart is empty</div>
+                    {% endif %}
                 </div>
                 
                 <div class="price-summary">
                     <div class="price-sub">
                         <span>Subtotal</span>
-                        <span>$0.00</span>
+                        <span>${{ subtotal|floatformat:2 }}</span>
                     </div>
                     <div class="price-tax">
                         <span>Tax</span>
-                        <span>$0.00</span>
+                        <span>${{ tax|floatformat:2 }}</span>
                     </div>
                     <div class="price-total">
                         <span>Total</span>
-                        <span>$0.00</span>
+                        <span>${{ total|floatformat:2 }}</span>
                     </div>
                 </div>
                 {% url 'cart' as cart_url %}
-                <button class="btn" onclick="window.location.href='{{ book_list_url }}'">Return to Cart</button>
+                <button class="btn" onclick="window.location.href='{{ cart_url }}'">Return to Cart</button>
             </div>
         </div>
     </div>

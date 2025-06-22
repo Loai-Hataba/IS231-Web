@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Successful - 📚 Conquista Beblio</title>
     <link rel="stylesheet" href="{% static 'css/OrderSuccessful.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart-icon.css' %}">
     <script defer src="{% static 'js/OrderSuccessful.js' %}"></script>
 </head>
 <body>
@@ -24,12 +25,12 @@
             <div class="success-icon">✓</div>
             <h1>Order Successful!</h1>
             <p>Thank you for your purchase. Your books are now available in your library.</p>
-            <div class="order-number">Order #: CB-2025042501</div>
+            <div class="order-number">Order #: {{ order_number }}</div>
             
             <div class="delivery-info">
-                <h3>Rental Period</h3>
-                <p>Your rental period begins today: April 25, 2025</p>
-                <p>Rental ends: May 25, 2025</p>
+                <h3>Order Details</h3>
+                <p>Order Date: {{ order_date }}</p>
+                <p>Payment Method: {{ payment_method|default:"Card" }}</p>
             </div>
         </div>
 
@@ -42,15 +43,15 @@
             <div class="order-summary">
                 <div class="order-sub">
                     <span>Subtotal</span>
-                    <span>$0.00</span>
+                    <span>${{ subtotal|floatformat:2 }}</span>
                 </div>
                 <div class="order-tax">
                     <span>Tax</span>
-                    <span>$0.00</span>
+                    <span>${{ tax|floatformat:2 }}</span>
                 </div>
                 <div class="order-total">
                     <span>Total</span>
-                    <span>$0.00</span>
+                    <span>${{ total|floatformat:2 }}</span>
                 </div>
             </div>
         </div>
