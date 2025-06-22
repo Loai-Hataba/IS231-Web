@@ -79,33 +79,5 @@
     </footer>
 
     <script src="../../static/javascript/list.js"></script>
-    <script>
-      // Function to update cart count badge
-      function updateCartCount(count) {
-          const cartBadge = document.querySelector('.cart-badge');
-          if (cartBadge) {
-              cartBadge.textContent = count;
-              cartBadge.style.display = count > 0 ? 'flex' : 'none';
-          }
-      }
-      
-      // Fetch cart count from server
-      function fetchCartCount() {
-          fetch('/cart/count/')
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      updateCartCount(data.cart_count);
-                  }
-              })
-              .catch(error => console.error('Error fetching cart count:', error));
-      }
-      
-      // Initialize cart count when page loads
-      document.addEventListener('DOMContentLoaded', function() {
-          fetchCartCount();
-      });
-    </script>
-
   </body>
 </html>
