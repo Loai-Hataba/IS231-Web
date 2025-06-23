@@ -1,4 +1,4 @@
-.cart-icon img {
+/* .cart-icon img {
     width: 24px;
     height: 24px;
     vertical-align: middle;
@@ -7,4 +7,16 @@
 .header-actions {
     display: flex;
     align-items: center;
+} */
+
+
+.cart-icon {
+    margin-left: auto;
+    display: flex;
 }
+
+.cart-icon img {
+    margin-left: auto;
+    display: flex;
+}
+
