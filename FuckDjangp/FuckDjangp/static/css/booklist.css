@@ -24,7 +24,7 @@ header {
     box-shadow: var(--box-shadow);
 }
 
-header nav ul li.navigation.button .sign-up a {
+.sign-up {
     background-color: #a17d4d;
     color: white;
     padding: 8px 16px;
@@ -32,9 +32,11 @@ header nav ul li.navigation.button .sign-up a {
     text-decoration: none;
     transition: all 0.3s ease;
     font-weight: 500;
+    display: inline-block;
+    margin-left: 15px;
 }
 
-header nav ul li.navigation.button .sign-up a:hover {
+.sign-up:hover {
     background-color: #86683d;
     transform: translateY(-2px);
 }

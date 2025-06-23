@@ -23,19 +23,11 @@
           placeholder="Search for books..."
         />
       </div>
-      <nav>
-        <ul>
-          <li class="navigation button">
-            <a href="{% url 'cart' %}" class="cart-icon">
-              <img src="{% static 'images/paymentMethods/cart.png' %}" alt="Cart Icon" />
-            </a>
-          </li>
-          <li class="navigation button">
-            <div class="sign-up">
-              <a href="{% url 'user_profile' %}">User Profile</a>
-            </div>
-          </li>
-        </ul>
+      <nav class="header-actions">
+          <a href="{% url 'cart' %}" class="cart-icon">
+            <img src="{% static 'images/paymentMethods/cart.png' %}" alt="Cart Icon" />
+          </a>
+            <a href="{% url 'user_profile' %}" class = "sign-up">User Profile</a>
       </nav>
     </header>
 
