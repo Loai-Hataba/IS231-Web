@@ -76,20 +76,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     function filterAndRenderBooks(filteredBooks) {
   
       if (currentFilter !== 'All') {
-        filteredBooks = filteredBooks.filter(book => 
-          book.tags.includes(currentFilter)
-        );
+        filteredBooks = filteredBooks.filter(book => {
+          if (!book.genre) return false;
+          return book.genre.split(',').map(g => g.trim()).includes(currentFilter);
+        });
       }
       
       if (searchQuery) {
-        filteredBooks = filteredBooks.filter(book => 
-          book.title.toLowerCase().includes(searchQuery) || 
-          book.author.toLowerCase().includes(searchQuery) ||
-          book.description.toLowerCase().includes(searchQuery) ||
-          book.tags.some(tag => tag.toLowerCase().includes(searchQuery))
-        );
+        filteredBooks = filteredBooks.filter(book => {
+          // Search in title, author, description, and genre (as tags)
+          const genres = book.genre ? book.genre.split(',').map(g => g.trim().toLowerCase()) : [];
+          return (
+            book.title.toLowerCase().includes(searchQuery) ||
+            book.author.toLowerCase().includes(searchQuery) ||
+            book.description.toLowerCase().includes(searchQuery) ||
+            genres.some(g => g.includes(searchQuery))
+          );
+        });
       }
-      
+
       renderBooks(filteredBooks);
     }
   
