@@ -10,113 +10,6 @@ from decimal import Decimal
 # Add this constant at the top
 TAX_RATE = Decimal('0.08')  # 8% tax rate
 
-@csrf_exempt
-def books(request: HttpRequest) -> HttpResponse:
-    if request.method == 'GET':
-        try:
-            books_data = Book.objects.all()
-            books_list = []
-            for book in books_data:
-                try:
-                    book_dict = {
-                        'id': book.id,
-                        'title': book.title,
-                        'author': book.author,
-                        'isbn': book.isbn,
-                        'pages': book.pages,
-                        'cover_image': book.cover_image,
-                        'language': book.language,
-                        'description': book.description,
-                        'rating': float(book.rating) if book.rating else 0,
-                        'publisher': book.publisher,
-                        'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
-                        'in_stock': book.in_stock,
-                        'quote': book.quote,
-                        'tags': list(book.tags.values_list('name', flat=True)),
-                        'genre': book.genre,
-                        'price': float(book.price)
-                    }
-                    books_list.append(book_dict)
-                except Exception as e:
-                    print(f"Error processing book {book.id}: {str(e)}")
-                    continue
-            
-            return JsonResponse(books_list, safe=False)
-            
-        except Exception as e:
-            print(f"Error loading books: {str(e)}")  # Add debugging
-            return JsonResponse({
-                'error': 'Failed to load books',
-                'details': str(e)
-            }, status=500)
-    elif request.method == 'POST':
-        # Handle POST request to add a new book
-        books_json = json.loads(request.body)
-        book = Book(
-            title=books_json.get('title'),
-            author=books_json.get('author'),
-            published_date=books_json.get('published_date'),
-            isbn=books_json.get('isbn'),
-            pages=books_json.get('pages'),
-            cover_image=books_json.get('cover_image'),
-            language=books_json.get('language'),
-            description=books_json.get('description'),
-            rating=books_json.get('rating'),
-            publisher=books_json.get('publisher'),
-            in_stock=books_json.get('in_stock', True),
-            quote=books_json.get('quote'),
-            genre=books_json.get('genre'),
-            price=books_json.get('price')
-        )
-        book.save()
-        tags_list = books_json.get('tags', [])
-        for tag_name in tags_list:
-            tag, created = tags.objects.get_or_create(name=tag_name)
-            book.tags.add(tag)
-        review_list = books_json.get('review', [])
-        for review_data in review_list:
-            review_obj = review(
-                user=review_data.get('user'),
-                rating=review_data.get('rating'),
-                comment=review_data.get('comment')
-            )
-            review_obj.save()
-            book.review.add(review_obj)
-        return HttpResponse(status=201)
-
-@csrf_exempt
-def get_books(request: HttpRequest) -> HttpResponse:
-    books_data = Book.objects.all() 
-    
-    
-    books_list = []
-    for book in books_data:
-
-
-        book_dict = {
-            'id': book.id,
-            'title': book.title,
-            'author': book.author,
-            'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
-            'isbn': book.isbn,
-            'pages': book.pages,
-            'cover_image': book.cover_image,
-            'language': book.language,
-            'description': book.description,
-            'rating': float(book.rating) if book.rating else 0,
-            'publisher': book.publisher,
-            'in_stock': book.in_stock,
-            'quote': book.quote,
-            'tags': list(book.tags.values_list('name', flat=True)),
-            'genre' : book.genre,
-            'price' : book.price
-        }
-        books_list.append(book_dict)
-
-        
-    return JsonResponse({"books" : books_list})
-
-
 ## Abdallah :
 
 def index (request ) :
@@ -790,4 +683,147 @@ def get_cart_count(request):
     except Exception as e:
         print(f"Error getting cart count: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
+
+
+# sfsf
+
+
+@csrf_exempt
+def books(request: HttpRequest) -> HttpResponse:
+    if request.method == 'GET':
+        try:
+            books_data = Book.objects.all()
+            books_list = []
+            for book in books_data:
+                try:
+                    book_dict = {
+                        'id': book.id,
+                        'title': book.title,
+                        'author': book.author,
+                        'isbn': book.isbn,
+                        'pages': book.pages,
+                        'cover_image': book.cover_image,
+                        'language': book.language,
+                        'description': book.description,
+                        'rating': float(book.rating) if book.rating else 0,
+                        'publisher': book.publisher,
+                        'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
+                        'in_stock': book.in_stock,
+                        'quote': book.quote,
+                        'tags': list(book.tags.values_list('name', flat=True)),
+                        'genre': book.genre,
+                        'price': float(book.price)
+                    }
+                    books_list.append(book_dict)
+                except Exception as e:
+                    print(f"Error processing book {book.id}: {str(e)}")
+                    continue
+            
+            return JsonResponse(books_list, safe=False)
+            
+        except Exception as e:
+            print(f"Error loading books: {str(e)}")  # Add debugging
+            return JsonResponse({
+                'error': 'Failed to load books',
+                'details': str(e)
+            }, status=500)
+    elif request.method == 'POST':
+        # Handle POST request to add a new book
+        books_json = json.loads(request.body)
+        book = Book(
+            title=books_json.get('title'),
+            author=books_json.get('author'),
+            published_date=books_json.get('published_date'),
+            isbn=books_json.get('isbn'),
+            pages=books_json.get('pages'),
+            cover_image=books_json.get('cover_image'),
+            language=books_json.get('language'),
+            description=books_json.get('description'),
+            rating=books_json.get('rating'),
+            publisher=books_json.get('publisher'),
+            in_stock=books_json.get('in_stock', True),
+            quote=books_json.get('quote'),
+            genre=books_json.get('genre'),
+            price=books_json.get('price')
+        )
+        book.save()
+        tags_list = books_json.get('tags', [])
+        for tag_name in tags_list:
+            tag, created = tags.objects.get_or_create(name=tag_name)
+            book.tags.add(tag)
+        review_list = books_json.get('review', [])
+        for review_data in review_list:
+            review_obj = review(
+                user=review_data.get('user'),
+                rating=review_data.get('rating'),
+                comment=review_data.get('comment')
+            )
+            review_obj.save()
+            book.review.add(review_obj)
+        return HttpResponse(status=201)
+
+@csrf_exempt
+def get_books(request: HttpRequest) -> HttpResponse:
+    books_data = Book.objects.all() 
+    
+    
+    books_list = []
+    for book in books_data:
+
+
+        book_dict = {
+            'id': book.id,
+            'title': book.title,
+            'author': book.author,
+            'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
+            'isbn': book.isbn,
+            'pages': book.pages,
+            'cover_image': book.cover_image,
+            'language': book.language,
+            'description': book.description,
+            'rating': float(book.rating) if book.rating else 0,
+            'publisher': book.publisher,
+            'in_stock': book.in_stock,
+            'quote': book.quote,
+            'tags': list(book.tags.values_list('name', flat=True)),
+            'genre' : book.genre,
+            'price' : book.price
+        }
+        books_list.append(book_dict)
+
+        
+    return JsonResponse({"books" : books_list})
+
+
+@csrf_exempt
+def get_some_books(request: HttpRequest) -> HttpResponse:
+    books_data = Book.objects.all()[:6]
+    
+    
+    books_list = []
+    for book in books_data:
+
+
+        book_dict = {
+            'id': book.id,
+            'title': book.title,
+            'author': book.author,
+            'published_date': book.published_date.strftime('%Y-%m-%d') if book.published_date else None,
+            'isbn': book.isbn,
+            'pages': book.pages,
+            'cover_image': book.cover_image,
+            'language': book.language,
+            'description': book.description,
+            'rating': float(book.rating) if book.rating else 0,
+            'publisher': book.publisher,
+            'in_stock': book.in_stock,
+            'quote': book.quote,
+            'tags': list(book.tags.values_list('name', flat=True)),
+            'genre' : book.genre,
+            'price' : book.price
+        }
+        books_list.append(book_dict)
+
+        
+    return JsonResponse({"books" : books_list})
 

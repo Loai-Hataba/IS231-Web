@@ -12,40 +12,30 @@ document.addEventListener('DOMContentLoaded', async function() {
     let books = []; // Initialize books as an empty array
     
     //initialize the page
-    async function load_Books() {
+    async function load_InitialBooks() {
         try {
-            // Check if we have cached books data
-            const cachedBooks = localStorage.getItem('cachedBooks');
-            if (cachedBooks) {
-                const parsedBooks = JSON.parse(cachedBooks);
-                const cacheTime = localStorage.getItem('booksCacheTime');
-                // Use cache if it's less than 5 minutes old
-                if (cacheTime && (Date.now() - parseInt(cacheTime)) < 300000) {
-                    return parsedBooks;
-                }
-            }
-
-            // If no cache or cache is old, fetch new data
-            const response = await fetch('/getBooks/');  
+            const response = await fetch('/getSomeBooks/');  
             const data = await response.json();
-            
-            // Save to localStorage with timestamp
-            localStorage.setItem('cachedBooks', JSON.stringify(data.books));
-            localStorage.setItem('booksCacheTime', Date.now().toString());
-            
             return data.books;
         } catch (error) {
-            console.error('Error fetching books:', error);
-            // If fetch fails, try to use cached data regardless of age
-            const cachedBooks = localStorage.getItem('cachedBooks');
-            return cachedBooks ? JSON.parse(cachedBooks) : [];
+            console.error('Error fetching initial books:', error);
+            return [];
+        }
+    }
+
+    async function load_AllBooks() {
+        try {
+            const response = await fetch('/getBooks/');  
+            const data = await response.json();
+            return data.books;
+        } catch (error) {
+            console.error('Error fetching all books:', error);
+            return [];
         }
     }
     
-    books = await load_Books();
-    console.log(books);
-    // Change initial display to show first 6 books instead of 9
-    displayedBooks = books.slice(0, 6);
+    books = await load_InitialBooks();
+    displayedBooks = books;
     renderBooks(displayedBooks);
   
     filterButtons.forEach(button => {
@@ -65,46 +55,46 @@ document.addEventListener('DOMContentLoaded', async function() {
       filterAndRenderBooks(displayedBooks);
     });
   
-    showMoreButton.addEventListener('click', function() {
+    showMoreButton.addEventListener('click', async function() {
       if (!showingAdditional) {
+        // Load all books when showing more
+        const allBooks = await load_AllBooks();
         showingAdditional = true;
-        // Show next 6 books
-        const currentLength = displayedBooks.length;
-        displayedBooks = books.slice(0, currentLength + 6);
-        
-        // Hide button if all books are shown
-        if (displayedBooks.length >= books.length) {
-            this.style.display = 'none';
-        }
+        books = allBooks;
+        displayedBooks = books;
+        this.textContent = 'Show Less Books';
       } else {
         showingAdditional = false;
-        // Reset to first 6 books
-        displayedBooks = books.slice(0, 6);
-        this.style.display = 'block';
+        // Reset to initial books
+        books = await load_InitialBooks();
+        displayedBooks = books;
         this.textContent = 'Show More Books';
       }
       filterAndRenderBooks(displayedBooks);
     });
   
     function filterAndRenderBooks(filteredBooks) {
-      
-
-      
+  
       if (currentFilter !== 'All') {
-        filteredBooks = filteredBooks.filter(book => 
-          book.tags.includes(currentFilter)
-        );
+        filteredBooks = filteredBooks.filter(book => {
+          if (!book.genre) return false;
+          return book.genre.split(',').map(g => g.trim()).includes(currentFilter);
+        });
       }
       
       if (searchQuery) {
-        filteredBooks = filteredBooks.filter(book => 
-          book.title.toLowerCase().includes(searchQuery) || 
-          book.author.toLowerCase().includes(searchQuery) ||
-          book.description.toLowerCase().includes(searchQuery) ||
-          book.tags.some(tag => tag.toLowerCase().includes(searchQuery))
-        );
+        filteredBooks = filteredBooks.filter(book => {
+          // Search in title, author, description, and genre (as tags)
+          const genres = book.genre ? book.genre.split(',').map(g => g.trim().toLowerCase()) : [];
+          return (
+            book.title.toLowerCase().includes(searchQuery) ||
+            book.author.toLowerCase().includes(searchQuery) ||
+            book.description.toLowerCase().includes(searchQuery) ||
+            genres.some(g => g.includes(searchQuery))
+          );
+        });
       }
-      
+
       renderBooks(filteredBooks);
     }
   
@@ -246,7 +236,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   `;
   document.head.appendChild(style);
-  
+
     // Navigate to book details page with book data
     function navigateToBookDetails(book) {
       localStorage.setItem('selectedBook', JSON.stringify(book));
