@@ -1,7 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Add any interactive behaviors for the order success page here
-    
-    // For example, handling the "Continue Shopping" button
+document.addEventListener('DOMContentLoaded', function () {    
     const continueShoppingBtn = document.querySelector('.btn');
     if (continueShoppingBtn) {
         continueShoppingBtn.addEventListener('click', function() {
