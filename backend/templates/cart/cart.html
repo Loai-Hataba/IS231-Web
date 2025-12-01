@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - 📚 Conquista Beblio</title>
+    <link rel="stylesheet" href="{% static 'css/cart/cart.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'utils/navStyles.css' %}"> -->
+    <script defer src="{% static 'js/cart/cart.js' %}"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">📚 Conquista Beblio</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'aboutUs' %}">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Your Cart</h1>
+            
+            <div class="cart-container">
+                <div class="cart-items">
+                </div>
+                
+                <div class="cart-summary">
+                    <h2 class="section-title">Order Summary</h2>
+                    
+                    <div class="price-summary">
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span>$0.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Tax</span>
+                            <span>$0.00</span>
+                        </div>
+                        <div class="price-total">
+                            <span>Total</span>
+                            <span>$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary checkout-btn">Proceed to Checkout</button>
+                    {% url 'book_list' as book_list_url %}
+                    <button class="btn btn-outline continue-btn" onclick="window.location.href='{{ book_list_url }}'">Continue Shopping</button>
+
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div>
+          <a href="{% url 'help' %}">Help</a>
+          <a href="{% url 'privacyPolicy' %}">Privacy</a>
+          <a href="{% url 'termsOfUse' %}">Terms</a>
+          <a href="{% url 'contactUs' %}">Contact Us</a>
+        </div>
+    </footer>
+</body>
+</html>

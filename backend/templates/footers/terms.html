@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms and Conditions - Conquista Beblio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/shared/footerNavigationStyles.css' %}">
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      📚 Conquista Beblio
+    </div>
+    <div class="nav-links">
+      <a href="{% url 'index' %}">Home</a>
+      <a href="{% url 'aboutUs' %}">About Us</a>
+      <a href="{% url 'signup' %}" style="background: #111; color: white; padding: 2px 14px; border-radius: 16px;">Sign up</a>
+    </div>
+  </div>
+
+  <div class="content-container">
+    <div class="header-section">
+      <h1>Terms and Conditions</h1>
+      <div class="subtext">Please read these terms carefully before using our services.</div>
+    </div>
+
+    <div class="content-section">
+      <div class="toc">
+        <h3>Table of Contents</h3>
+        <ul>
+          <li><a href="#agreement">User Agreement</a></li>
+          <li><a href="#account">Account Requirements</a></li>
+          <li><a href="#services">Library Services</a></li>
+          <li><a href="#borrowing">Borrowing & Returns</a></li>
+          <li><a href="#content">Content Usage</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#termination">Termination</a></li>
+          <li><a href="#amendments">Amendments</a></li>
+        </ul>
+      </div>
+
+      <div id="agreement" class="content-section">
+        <h2>1. User Agreement</h2>
+        <p>Welcome to Conquista Beblio. By accessing or using our services, you agree to comply with these Terms and Conditions. These terms govern both our digital platform and access to physical libraries within Egypt.</p>
+      </div>
+
+      <div id="account" class="content-section">
+        <h2>2. Account Requirements</h2>
+        <p>You must be at least 13 years old to create an account. You are responsible for maintaining the confidentiality of your account details and for all activities carried out using your account credentials.</p>
+      </div>
+
+      <div id="services" class="content-section">
+        <h2>3. Library Services</h2>
+        <p>Conquista Beblio provides access to eBooks, audiobooks, and physical materials. Services may vary by location. Arabic and English content is available based on user preference.</p>
+      </div>
+
+      <div id="borrowing" class="content-section">
+        <h2>4. Borrowing & Returns</h2>
+        <p>Borrowed digital items are returned automatically after the lending period. Physical books must be returned to any Conquista Beblio branch within 14 days. Late returns may lead to temporary account suspension or late fees.</p>
+      </div>
+
+      <div id="content" class="content-section">
+        <h2>5. Content Usage</h2>
+        <p>All content is for personal, educational, or recreational use only. Redistribution, reproduction, or commercial use of library materials without written permission is strictly prohibited.</p>
+      </div>
+
+      <div id="privacy" class="content-section">
+        <h2>6. Privacy Policy</h2>
+        <p>We care about your privacy. Please review our <a href="privacy.html">Privacy Policy</a> for details on how we collect, protect, and use your data.</p>
+      </div>
+
+      <div id="termination" class="content-section">
+        <h2>7. Termination</h2>
+        <p>We reserve the right to suspend or terminate your account at any time if we detect misuse, violation of terms, or suspicious activity that could compromise the platform or our community.</p>
+      </div>
+
+      <div id="amendments" class="content-section">
+        <h2>8. Amendments</h2>
+        <p>These terms may be updated periodically. Continued use of Conquista Beblio services after updates means you agree to the revised terms. Users will be notified of major changes via email or platform notifications.</p>
+      </div>
+    </div>
+
+
+    <div class="footer">
+      <a href="{% url 'help' %}">Help</a>
+      <a href="{% url 'privacyPolicy' %}">Privacy</a>
+      <a href="{% url 'termsOfUse' %}" style="font-weight: 600;">Terms</a>
+      <a href="{% url 'contactUs' %}">Contact Us</a>
+    </div>
+  </div>
+</body>
+</html>
