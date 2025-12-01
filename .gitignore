@@ -1,2 +1,48 @@
-venv
+# Python-related files
 *.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.sqlite3
+
+# Django-related files
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Environment files
+.env
+*.venv
+venv/
+
+# IDE-related files
+.idea/
+*.iml
+.vscode/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Static and media files
+static/
+media/
+
+# Backup files
+*.bak
+*.swp
+*.swo
+*.orig
+*.rej
+
+# Node.js-related files
+node_modules/
+
+# Other temporary files
+*.tmp
+*.temp
+*.log

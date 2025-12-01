@@ -1,4 +1,4 @@
-# IS231-Web
+# Conquista Beblio
 
 A comprehensive web application developed as part of the IS231 course, focusing on full-stack development using Django for the backend and modern frontend technologies.
 
@@ -15,7 +15,7 @@ A comprehensive web application developed as part of the IS231 course, focusing 
 
 ## Project Overview
 
-The IS231-Web project is designed to manage a library system, allowing users to browse, borrow, and manage books. It integrates a Django backend with a responsive frontend to provide a seamless user experience.
+The Conquista Beblio project is designed to manage a library system, allowing users to browse, borrow, and manage books. It integrates a Django backend with a responsive frontend to provide a seamless user experience.
 
 ## Features
 
@@ -34,17 +34,24 @@ The IS231-Web project is designed to manage a library system, allowing users to 
 ## Project Structure
 
 ```
-IS231-Web/
-├── Frontend/                 # Frontend assets
-├── books/                    # Django app for book management
-├── conquista_beblio/         # Main Django project directory
-├── library/                  # Additional Django app
-├── static/                   # Static files (CSS, JS, images)
-├── templates/                # HTML templates
-├── db.sqlite3                # SQLite database
-├── manage.py                 # Django management script
-├── README.md                 # Project documentation
-└── readme.txt                # Additional notes
+Conquista-Beblio/
+├── backend/                 # Backend Django project
+│   ├── core/                # Core Django settings and configurations
+│   ├── static/              # Static files for the backend
+│   ├── templates/           # Templates for the backend
+│   ├── manage.py            # Django management script
+│   └── db.sqlite3           # SQLite database
+├── frontend/                # Frontend assets
+│   ├── AdminPanel/          # Admin panel-related files
+│   ├── BookDetails/         # Book details page assets
+│   ├── BookList/            # Book list page assets
+│   ├── PaymentMethod/       # Payment-related assets
+│   ├── Sign up & Log in & About Us/ # Authentication and informational pages
+│   ├── js/                  # Shared JavaScript files
+│   ├── utils/               # Utility scripts and styles
+│   └── assets/              # Shared assets like images
+├── README.md                # Project documentation
+└── .gitignore               # Git ignore rules
 ```
 
 ## Installation
@@ -52,8 +59,8 @@ IS231-Web/
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/Loai-Hataba/IS231-Web.git
-   cd IS231-Web
+   git clone https://github.com/Abdallah229/Conquista-Beblio.git
+   cd Conquista-Beblio
    ```
 
 2. **Create a virtual environment**:
