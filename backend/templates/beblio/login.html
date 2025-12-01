@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Conquista Beblio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  <script src="{% static 'js/login.js' %}"></script>
+</head>
+<body>
+  <div id="header">
+    <div id="logo">
+      📚 Conquista Beblio
+    </div>
+    <div id="nav-links">
+      <a href="{% url 'index' %}">Home</a>
+      <a href="{% url 'aboutUs' %}">About us</a>
+      <a href="{% url 'signup' %}" style="background: #111; color: white; padding: 2px 14px; border-radius: 16px;">Sign up</a>
+    </div>
+  </div>
+
+  <div id="login-card">
+    <h2>Log in</h2>
+    <div id="subtext-top">Welcome back! Log in to continue your literary journey.</div>
+
+    <form id="login-form" method="post" 
+    data-booklist-url="{% url 'book_list' %}"
+    data-admin-url="{% url 'admin_panel' %}">
+      {% csrf_token %}
+      <div class="input-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="user@example.com" required maxlength="50" />
+      </div>
+
+      <div class="input-group password-field">
+        <label for="password">Password</label>
+        <div class="password-container">
+            <input type="password" id="password" required />
+            <span class="password-toggle" onclick="togglePassword('password', this)">👁️</span>
+        </div>
+      </div>
+
+      <div id="remember-user">
+        <input type="checkbox" id="rememberMe" />
+        <label for="rememberMe">Remember me</label>
+      </div>
+
+      <button type="submit" id="login-button">Log In</button>
+      <div id="subtext-bottom">
+        <a href="{% url 'forgotPassword' %}">Forgot your password?</a>
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+      </div>
+    </form>
+    <div id="divider">or</div>
+    <div id="footer">
+      <a href="{% url 'help' %}">Help</a>
+      <a href="{% url 'privacyPolicy' %}">Privacy</a>
+      <a href="{% url 'termsOfUse' %}">Terms</a>
+      <a href="{% url 'contactUs' %}">Contact Us</a>
+    </div>
+  </div>
+</body>
+</html>

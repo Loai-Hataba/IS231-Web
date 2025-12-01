@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book List</title>
+    <link rel="stylesheet" href="{% static 'css/booklist.css' %}" />
+    <!--<link rel="stylesheet" href="{% static 'utils/navStyles.css' %}" />-->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <a href="{% url 'index' %}" class="back-button">←</a>
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search for books..."
+        />
+      </div>
+      <nav>
+        <ul>
+          <li class="navigation button">
+            <div class="sign-up">
+              <a href="{% url 'user_profile' %}">User Profile</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="filter-bar">
+      <button class="filter-button">All</button>
+      <button class="filter-button">Fiction</button>
+      <button class="filter-button">Non-Fiction</button>
+      <button class="filter-button">Science</button>
+      <button class="filter-button">History</button>
+    </div>
+
+    <div class="books-container">
+      <div class="book-row">
+      </div>
+        
+      <div class="book-row">
+      </div>
+
+      <div class="book-row">
+      </div>
+
+      <div class="book-row">
+      </div>
+
+      <div class="show-more-container">
+        <button class="show-more-button">Show More Books</button>
+      </div>
+    </div>
+    <footer class="footer">
+      <div>
+        <a href="{% url 'help' %}">Help</a>
+        <a href="{% url 'privacyPolicy' %}">Privacy</a>
+        <a href="{% url 'termsOfUse' %}">Terms</a>
+        <a href="{% url 'contactUs' %}">Contact Us</a>
+      </div>
+    </footer>
+
+    <script src="../../static/js/list.js"></script>
+
+  </body>
+</html>
